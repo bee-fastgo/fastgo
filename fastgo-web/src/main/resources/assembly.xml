@@ -24,15 +24,6 @@
 				<include>NOTICE*</include>
 			</includes>
 		</fileSet>
-
-		<fileSet>
-			<directory>${project.basedir}\src\main\resources\scripts</directory>
-			<outputDirectory></outputDirectory>
-			<includes>
-				<include>startup.*</include>
-			</includes>
-		</fileSet>
-
 		<fileSet>
 			<directory>${project.build.directory}</directory>
 			<outputDirectory></outputDirectory>
