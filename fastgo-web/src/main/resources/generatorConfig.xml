@@ -35,7 +35,7 @@
         </javaTypeResolver>
 
         <!-- 生成文件位置 -->
-        <javaModelGenerator targetPackage="com.spring.simple.development.demo.model"
+        <javaModelGenerator targetPackage="com.bee.team.fastgo.model"
                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
@@ -45,20 +45,20 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.spring.simple.development.demo.mapper" targetProject="src/main/java">
+                             targetPackage="com.bee.team.fastgo.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
         <table tableName="t_channel" domainObjectName="ChannelDo">
             <property name="stateAction" value="false"/>
-            <property name="boPackage" value="com.spring.simple.development.demo.service"/>
+            <property name="boPackage" value="com.bee.team.fastgo.service"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <ignoreColumn   column="ID" />
-            <ignoreColumn 	column="gmt_create" />
-            <ignoreColumn 	column="creator" />
-            <ignoreColumn 	column="gmt_modified" />
-            <ignoreColumn   column="modifier" />
-            <ignoreColumn   column="is_deleted" />
+            <ignoreColumn column="ID"/>
+            <ignoreColumn column="gmt_create"/>
+            <ignoreColumn column="creator"/>
+            <ignoreColumn column="gmt_modified"/>
+            <ignoreColumn column="modifier"/>
+            <ignoreColumn column="is_deleted"/>
         </table>
     </context>
 </generatorConfiguration>

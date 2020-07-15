@@ -2,7 +2,6 @@ package com.bee.team.fastgo.controller;
 
 import com.acl.xauth.anno.authc.NoAuth;
 import com.alibaba.lava.privilege.PrivilegeInfo;
-import com.bee.team.fastgo.service.TestDemoBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

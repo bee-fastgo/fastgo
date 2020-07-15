@@ -1,6 +1,5 @@
-package com.spring.simple.development.demo;
+package com.bee.team.fastgo;
 
-import com.bee.team.fastgo.service.TestDemoBo;
 import com.spring.simple.development.core.annotation.config.EnableMybatis;
 import com.spring.simple.development.core.annotation.config.EnableSwagger;
 import com.spring.simple.development.core.annotation.config.EnableWebMvc;
