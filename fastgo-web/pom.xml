@@ -15,6 +15,21 @@
     <version>1.0</version>
     <dependencies>
         <dependency>
+            <artifactId>fastgo-config</artifactId>
+            <groupId>com.bee.team</groupId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>fastgo-project</artifactId>
+            <groupId>com.bee.team</groupId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>fastgo-server</artifactId>
+            <groupId>com.bee.team</groupId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>

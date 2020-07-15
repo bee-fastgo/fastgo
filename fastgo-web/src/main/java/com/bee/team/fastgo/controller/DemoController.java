@@ -18,24 +18,15 @@ import java.io.IOException;
  **/
 @RestController
 public class DemoController {
-    @Autowired
-    private TestDemoBo testDemoBo;
-    @Autowired
-    PrivilegeInfo privilegeInfo;
-//    @NoAuth
-//    @RequestMapping("/index")
-//    public String index(HttpServletRequest request,HttpServletResponse response) {
-//       AccountUtils.getCurrentAccount();
-//        return AccountUtils.getCurrentAccount().toString();
-//    }
+
     @NoAuth
     @RequestMapping("/noPermission")
     public String noPermission() {
         return "noPermission";
     }
+
     @RequestMapping("/testPermission")
-    public String testPermission(HttpServletRequest request,HttpServletResponse response) throws IOException {
-        testDemoBo.getData("1");
+    public String testPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return "testPermission";
     }
 }

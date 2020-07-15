@@ -48,12 +48,12 @@
         <dependency>
             <artifactId>simple-development-core-alert-sdk</artifactId>
             <groupId>com.spring</groupId>
-            <version>1.0</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <artifactId>simple-development-core-mongodb</artifactId>
             <groupId>com.spring</groupId>
-            <version>1.0</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>com.spring</groupId>

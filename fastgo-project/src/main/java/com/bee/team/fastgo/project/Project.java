@@ -1,4 +1,4 @@
-package com.bee.team.fastgo.config;
+package com.bee.team.fastgo.project;
 
 /**
  * @description:

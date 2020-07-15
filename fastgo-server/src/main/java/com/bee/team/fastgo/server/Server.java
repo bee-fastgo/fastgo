@@ -1,4 +1,4 @@
-package com.bee.team.server;
+package com.bee.team.fastgo.server;
 
 /**
  * @description:
