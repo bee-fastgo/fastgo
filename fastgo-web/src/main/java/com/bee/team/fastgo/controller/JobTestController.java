@@ -33,7 +33,7 @@ public class JobTestController {
     @RequestMapping("/test")
     @ResponseBody
     public ReturnT<String> test(HttpServletRequest request, @RequestBody(required = false) String data) {
-        JobTriggerPoolHelper.trigger(1, TriggerTypeEnum.MANUAL, -1, null, "dir", "127.0.0.1:8081");
+        JobTriggerPoolHelper.trigger(1, TriggerTypeEnum.MANUAL, -1, null, "md D:\\test", "127.0.0.1:8081");
         return null;
     }
 

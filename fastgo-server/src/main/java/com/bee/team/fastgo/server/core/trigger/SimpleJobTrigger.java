@@ -134,7 +134,7 @@ public class SimpleJobTrigger {
         triggerParam.setLogDateTime(jobLog.getTriggerTime().getTime());
         triggerParam.setGlueType(jobInfo.getGlueType());
         // temp
-        triggerParam.setGlueType("setGlueType");
+        triggerParam.setGlueType("GLUE_POWERSHELL");
 
         triggerParam.setGlueSource(jobInfo.getGlueSource());
         //triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
@@ -162,7 +162,7 @@ public class SimpleJobTrigger {
         }
 
         // 4、trigger remote executor
-        address = "http://127.0.0.1:9999";
+        address = "http://172.22.5.6:9999";
         ReturnT<String> triggerResult = null;
         if (address != null) {
             triggerResult = runExecutor(triggerParam, address);
