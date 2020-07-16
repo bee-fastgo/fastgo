@@ -2,7 +2,8 @@ package com.bee.team.fastgo;
 
 
 import com.spring.simple.development.core.annotation.config.*;
-import com.spring.simple.development.core.baseconfig.tomcat.SimpleApplication;
+import com.spring.simple.development.core.baseconfig.tomcat.SimpleBootApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @Author luke
@@ -13,10 +14,9 @@ import com.spring.simple.development.core.baseconfig.tomcat.SimpleApplication;
 @EnableWebMvc
 @EnableSwagger
 @EnableMybatis
-@EnableDataProcess
-@SpringSimpleApplication
+@SpringBootApplication
 public class App {
     public static void main(String[] args) {
-        SimpleApplication.run(App.class);
+        SimpleBootApplication.run(App.class, args);
     }
 }

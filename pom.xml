@@ -18,27 +18,27 @@
         <dependency>
             <groupId>com.spring</groupId>
             <artifactId>simple-development-core-valid</artifactId>
-            <version>1.2</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>com.spring</groupId>
             <artifactId>simple-development-core-redis</artifactId>
-            <version>1.2</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>com.spring</groupId>
             <artifactId>simple-development-core-swagger</artifactId>
-            <version>1.2</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>com.spring</groupId>
             <artifactId>simple-development-core-mvc</artifactId>
-            <version>1.2</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>com.spring</groupId>
             <artifactId>simple-development-core-jdbc</artifactId>
-            <version>1.2</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>com.spring</groupId>
@@ -48,22 +48,17 @@
         <dependency>
             <artifactId>simple-development-core-alert-sdk</artifactId>
             <groupId>com.spring</groupId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <artifactId>simple-development-core-mongodb</artifactId>
-            <groupId>com.spring</groupId>
-            <version>1.2</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>com.spring</groupId>
             <artifactId>simple-development-core</artifactId>
-            <version>2.5</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <artifactId>simple-development-core-data-process</artifactId>
             <groupId>com.spring</groupId>
-            <version>1.2</version>
+            <version>3.0</version>
         </dependency>
     </dependencies>
 </project>

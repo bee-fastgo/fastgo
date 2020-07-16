@@ -61,7 +61,7 @@
     </profiles>
     <!--MAVEN打包duboo可执行jar begin -->
     <build>
-        <finalName>fastgo</finalName>
+        <finalName>simple-development-demo</finalName>
 
         <resources>
             <resource>
@@ -104,67 +104,21 @@
                         <dependency>
                             <groupId>com.spring</groupId>
                             <artifactId>simple-development-generator</artifactId>
-                            <version>1.0</version>
+                            <version>3.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <classesDirectory>target/classes/</classesDirectory>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.bee.team.fastgo.App</mainClass>
-                            <!-- 打包时 MANIFEST.MF文件不记录的时间戳版本 -->
-                            <useUniqueVersions>false</useUniqueVersions>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                        </manifest>
-                        <manifestEntries>
-                            <Class-Path>.</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.3.1.RELEASE</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
                         <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <type>jar</type>
-                            <includeTypes>jar</includeTypes>
-                            <outputDirectory>
-                                ${project.build.directory}/lib
-                            </outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/resources/assembly.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
+                            <goal>repackage</goal>
                         </goals>
                     </execution>
                 </executions>

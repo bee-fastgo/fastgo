@@ -1,16 +1,14 @@
 package com.bee.team.fastgo.service.impl;
 
 import com.alibaba.lava.base.AbstractLavaBoImpl;
-import com.bee.team.fastgo.dpo.ChannelDpo;
 import com.spring.simple.development.core.annotation.base.IsApiService;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
-import com.spring.simple.development.core.component.data.process.hander.DataProcessHelper;
-import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.bee.team.fastgo.mapper.ChannelDoMapperExt;
 import com.bee.team.fastgo.model.ChannelDo;
 import com.bee.team.fastgo.model.ChannelDoExample;
 import com.bee.team.fastgo.service.ChannelBo;
 import com.bee.team.fastgo.vo.ChannelVo;
+import com.spring.simple.development.core.component.mvc.BaseSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +26,10 @@ public class ChannelBoImpl extends AbstractLavaBoImpl<ChannelDo, ChannelDoMapper
 
     @Autowired
     private BaseSupport baseSupport;
-    @Autowired
-    private DataProcessHelper dataProcessHelper;
 
     @Override
     public List<ChannelVo> getData(ChannelVo channelVo) {
-        ChannelDpo channelDpo = baseSupport.objectCopy(channelVo, ChannelDpo.class);
-        List<ChannelDo> executor = dataProcessHelper.executor(channelDpo, ChannelDo.class);
-        return baseSupport.listCopy(executor, ChannelVo.class);
+        return null;
     }
 
     @Override
