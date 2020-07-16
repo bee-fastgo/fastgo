@@ -8,7 +8,7 @@
         <groupId>com.bee.team</groupId>
         <version>1.0</version>
     </parent>
-    <artifactId>fastgo-job-clientt</artifactId>
+    <artifactId>fastgo-job-client</artifactId>
     <packaging>jar</packaging>
 
     <name>fastgo-job-client</name>
