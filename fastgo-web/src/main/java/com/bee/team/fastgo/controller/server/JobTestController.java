@@ -1,4 +1,4 @@
-package com.bee.team.fastgo.controller;
+package com.bee.team.fastgo.controller.server;
 
 import com.bee.team.fastgo.server.core.thread.JobTriggerPoolHelper;
 import com.bee.team.fastgo.server.core.trigger.TriggerTypeEnum;

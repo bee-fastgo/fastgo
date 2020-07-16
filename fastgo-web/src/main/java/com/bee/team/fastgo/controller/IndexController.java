@@ -1,8 +1,6 @@
 package com.bee.team.fastgo.controller;
 
-import com.acl.xauth.anno.authc.NoAuth;
-import com.alibaba.lava.privilege.PrivilegeInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.spring.simple.development.core.annotation.base.NoLogin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,16 +15,11 @@ import java.io.IOException;
  * @Description //TODO
  **/
 @RestController
-public class DemoController {
+public class IndexController {
 
-    @NoAuth
+    @NoLogin
     @RequestMapping("/noPermission")
     public String noPermission() {
         return "noPermission";
-    }
-
-    @RequestMapping("/testPermission")
-    public String testPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return "testPermission";
     }
 }
