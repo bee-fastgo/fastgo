@@ -41,7 +41,7 @@ public class SimpleJobConfig {
     private int logRetentionDays;
 
 
-    @Bean(initMethod = "start")
+    @Bean
     public SimpleJobSpringExecutor simpleJobExecutor() {
         logger.info(">>>>>>>>>>> simple-job config init.");
         SimpleJobSpringExecutor simpleJobSpringExecutor = new SimpleJobSpringExecutor();

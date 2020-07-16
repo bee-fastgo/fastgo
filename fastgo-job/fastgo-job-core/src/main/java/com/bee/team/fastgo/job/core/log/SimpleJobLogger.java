@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by luke on 17/4/28.
  */
 public class SimpleJobLogger {
-    private static Logger logger = LoggerFactory.getLogger("xxl-job logger");
+    private static Logger logger = LoggerFactory.getLogger("simple-job logger");
 
     /**
      * append log

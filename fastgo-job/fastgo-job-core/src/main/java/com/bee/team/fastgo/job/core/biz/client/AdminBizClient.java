@@ -2,7 +2,7 @@ package com.bee.team.fastgo.job.core.biz.client;
 
 import com.bee.team.fastgo.job.core.biz.AdminBiz;
 import com.bee.team.fastgo.job.core.biz.model.RegistryParam;
-import com.bee.team.fastgo.job.core.util.XxlJobRemotingUtil;
+import com.bee.team.fastgo.job.core.util.SimpleJobRemotingUtil;
 import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
 
@@ -34,17 +34,17 @@ public class AdminBizClient implements AdminBiz {
 
     @Override
     public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
-        return XxlJobRemotingUtil.postBody(addressUrl+"api/callback", accessToken, timeout, callbackParamList, String.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl+"api/callback", accessToken, timeout, callbackParamList, String.class);
     }
 
     @Override
     public ReturnT<String> registry(RegistryParam registryParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "api/registry", accessToken, timeout, registryParam, String.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl + "api/registry", accessToken, timeout, registryParam, String.class);
     }
 
     @Override
     public ReturnT<String> registryRemove(RegistryParam registryParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, timeout, registryParam, String.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl + "api/registryRemove", accessToken, timeout, registryParam, String.class);
     }
 
 }

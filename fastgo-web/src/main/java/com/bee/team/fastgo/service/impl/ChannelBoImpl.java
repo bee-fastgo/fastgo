@@ -15,11 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@IsApiService
 public class ChannelBoImpl extends AbstractLavaBoImpl<ChannelDo, ChannelDoMapperExt, ChannelDoExample> implements ChannelBo {
 
     @Autowired
-    @NoApiMethod
     public void setBaseMapper(ChannelDoMapperExt mapper) {
         setMapper(mapper);
     }

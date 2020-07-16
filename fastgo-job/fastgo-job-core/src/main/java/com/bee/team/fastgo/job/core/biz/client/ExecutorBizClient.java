@@ -2,7 +2,7 @@ package com.bee.team.fastgo.job.core.biz.client;
 
 import com.bee.team.fastgo.job.core.biz.ExecutorBiz;
 import com.bee.team.fastgo.job.core.biz.model.*;
-import com.bee.team.fastgo.job.core.util.XxlJobRemotingUtil;
+import com.bee.team.fastgo.job.core.util.SimpleJobRemotingUtil;
 
 /**
  * admin api test
@@ -30,27 +30,27 @@ public class ExecutorBizClient implements ExecutorBiz {
 
     @Override
     public ReturnT<String> beat() {
-        return XxlJobRemotingUtil.postBody(addressUrl+"beat", accessToken, timeout, null, String.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl+"beat", accessToken, timeout, null, String.class);
     }
 
     @Override
     public ReturnT<String> idleBeat(IdleBeatParam idleBeatParam){
-        return XxlJobRemotingUtil.postBody(addressUrl+"idleBeat", accessToken, timeout, idleBeatParam, String.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl+"idleBeat", accessToken, timeout, idleBeatParam, String.class);
     }
 
     @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "run", accessToken, timeout, triggerParam, String.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl + "run", accessToken, timeout, triggerParam, String.class);
     }
 
     @Override
     public ReturnT<String> kill(KillParam killParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "kill", accessToken, timeout, killParam, String.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl + "kill", accessToken, timeout, killParam, String.class);
     }
 
     @Override
     public ReturnT<LogResult> log(LogParam logParam) {
-        return XxlJobRemotingUtil.postBody(addressUrl + "log", accessToken, timeout, logParam, LogResult.class);
+        return SimpleJobRemotingUtil.postBody(addressUrl + "log", accessToken, timeout, logParam, LogResult.class);
     }
 
 }

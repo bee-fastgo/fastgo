@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 /**
- * xxl-job executor (for spring)
+ * simple-job executor (for spring)
  *
  * @author luke 2018-11-01 09:24:52
  */
@@ -70,7 +70,7 @@ public class SimpleJobSpringExecutor extends SimpleJobExecutor implements Applic
                     String name = serviceBean.getClass().getAnnotation(JobHandler.class).value();
                     IJobHandler handler = (IJobHandler) serviceBean;
                     if (loadJobHandler(name) != null) {
-                        throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
+                        throw new RuntimeException("simple-job jobhandler[" + name + "] naming conflicts.");
                     }
                     registJobHandler(name, handler);
                 }
@@ -97,7 +97,7 @@ public class SimpleJobSpringExecutor extends SimpleJobExecutor implements Applic
                             }
                         });
             } catch (Throwable ex) {
-                logger.error("xxl-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
+                logger.error("simple-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
             }
             if (annotatedMethods==null || annotatedMethods.isEmpty()) {
                 continue;
@@ -112,19 +112,19 @@ public class SimpleJobSpringExecutor extends SimpleJobExecutor implements Applic
 
                 String name = simpleJob.value();
                 if (name.trim().length() == 0) {
-                    throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
+                    throw new RuntimeException("simple-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
                 }
                 if (loadJobHandler(name) != null) {
-                    throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
+                    throw new RuntimeException("simple-job jobhandler[" + name + "] naming conflicts.");
                 }
 
                 // execute method
                 if (!(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].isAssignableFrom(String.class))) {
-                    throw new RuntimeException("xxl-job method-jobhandler param-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
+                    throw new RuntimeException("simple-job method-jobhandler param-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
                             "The correct method format like \" public ReturnT<String> execute(String param) \" .");
                 }
                 if (!method.getReturnType().isAssignableFrom(ReturnT.class)) {
-                    throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
+                    throw new RuntimeException("simple-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
                             "The correct method format like \" public ReturnT<String> execute(String param) \" .");
                 }
                 method.setAccessible(true);
@@ -138,7 +138,7 @@ public class SimpleJobSpringExecutor extends SimpleJobExecutor implements Applic
                         initMethod = bean.getClass().getDeclaredMethod(simpleJob.init());
                         initMethod.setAccessible(true);
                     } catch (NoSuchMethodException e) {
-                        throw new RuntimeException("xxl-job method-jobhandler initMethod invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
+                        throw new RuntimeException("simple-job method-jobhandler initMethod invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
                     }
                 }
                 if (simpleJob.destroy().trim().length() > 0) {
@@ -146,7 +146,7 @@ public class SimpleJobSpringExecutor extends SimpleJobExecutor implements Applic
                         destroyMethod = bean.getClass().getDeclaredMethod(simpleJob.destroy());
                         destroyMethod.setAccessible(true);
                     } catch (NoSuchMethodException e) {
-                        throw new RuntimeException("xxl-job method-jobhandler destroyMethod invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
+                        throw new RuntimeException("simple-job method-jobhandler destroyMethod invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
                     }
                 }
 

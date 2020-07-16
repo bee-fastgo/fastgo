@@ -121,7 +121,7 @@ public class JobThread extends Thread{
 					ShardingUtil.setShardingVo(new ShardingUtil.ShardingVO(triggerParam.getBroadcastIndex(), triggerParam.getBroadcastTotal()));
 
 					// execute
-					SimpleJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
+					SimpleJobLogger.log("<br>----------- simple-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
 
 					if (triggerParam.getExecutorTimeout() > 0) {
 						// limit timeout
@@ -140,7 +140,7 @@ public class JobThread extends Thread{
 							executeResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
 						} catch (TimeoutException e) {
 
-							SimpleJobLogger.log("<br>----------- xxl-job job execute timeout");
+							SimpleJobLogger.log("<br>----------- simple-job job execute timeout");
 							SimpleJobLogger.log(e);
 
 							executeResult = new ReturnT<String>(IJobHandler.FAIL_TIMEOUT.getCode(), "job execute timeout ");
@@ -161,7 +161,7 @@ public class JobThread extends Thread{
 										:executeResult.getMsg());
 						executeResult.setContent(null);	// limit obj size
 					}
-					SimpleJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
+					SimpleJobLogger.log("<br>----------- simple-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 
 				} else {
 					if (idleTimes > 30) {
@@ -180,7 +180,7 @@ public class JobThread extends Thread{
 				String errorMsg = stringWriter.toString();
 				executeResult = new ReturnT<String>(ReturnT.FAIL_CODE, errorMsg);
 
-				SimpleJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- xxl-job job execute end(error) -----------");
+				SimpleJobLogger.log("<br>----------- JobThread Exception:" + errorMsg + "<br>----------- simple-job job execute end(error) -----------");
 			} finally {
                 if(triggerParam != null) {
                     // callback handler info
@@ -213,6 +213,6 @@ public class JobThread extends Thread{
 			logger.error(e.getMessage(), e);
 		}
 
-		logger.info(">>>>>>>>>>> xxl-job JobThread stoped, hashCode:{}", Thread.currentThread());
+		logger.info(">>>>>>>>>>> simple-job JobThread stoped, hashCode:{}", Thread.currentThread());
 	}
 }

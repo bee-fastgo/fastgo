@@ -4,7 +4,7 @@ import com.bee.team.fastgo.job.core.biz.ExecutorBiz;
 import com.bee.team.fastgo.job.core.biz.impl.ExecutorBizImpl;
 import com.bee.team.fastgo.job.core.biz.model.*;
 import com.bee.team.fastgo.job.core.util.ThrowableUtil;
-import com.bee.team.fastgo.job.core.util.XxlJobRemotingUtil;
+import com.bee.team.fastgo.job.core.util.SimpleJobRemotingUtil;
 import com.bee.team.fastgo.job.core.thread.ExecutorRegistryThread;
 import com.bee.team.fastgo.job.core.util.GsonTool;
 import io.netty.bootstrap.ServerBootstrap;
@@ -58,7 +58,7 @@ public class EmbedServer {
                         new RejectedExecutionHandler() {
                             @Override
                             public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                                throw new RuntimeException("xxl-job, EmbedServer bizThreadPool is EXHAUSTED!");
+                                throw new RuntimeException("simple-job, EmbedServer bizThreadPool is EXHAUSTED!");
                             }
                         });
 
@@ -83,7 +83,7 @@ public class EmbedServer {
                     // bind
                     ChannelFuture future = bootstrap.bind(port).sync();
 
-                    logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, port);
+                    logger.info(">>>>>>>>>>> simple-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, port);
 
                     // start registry
                     startRegistry(appname, address);
@@ -93,9 +93,9 @@ public class EmbedServer {
 
                 } catch (InterruptedException e) {
                     if (e instanceof InterruptedException) {
-                        logger.info(">>>>>>>>>>> xxl-job remoting server stop.");
+                        logger.info(">>>>>>>>>>> simple-job remoting server stop.");
                     } else {
-                        logger.error(">>>>>>>>>>> xxl-job remoting server error.", e);
+                        logger.error(">>>>>>>>>>> simple-job remoting server error.", e);
                     }
                 } finally {
                     // stop
@@ -122,7 +122,7 @@ public class EmbedServer {
 
         // stop registry
         stopRegistry();
-        logger.info(">>>>>>>>>>> xxl-job remoting server destroy success.");
+        logger.info(">>>>>>>>>>> simple-job remoting server destroy success.");
     }
 
 
@@ -156,7 +156,7 @@ public class EmbedServer {
             String uri = msg.uri();
             HttpMethod httpMethod = msg.method();
             boolean keepAlive = HttpUtil.isKeepAlive(msg);
-            String accessTokenReq = msg.headers().get(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN);
+            String accessTokenReq = msg.headers().get(SimpleJobRemotingUtil.XXL_JOB_ACCESS_TOKEN);
 
             // invoke
             bizThreadPool.execute(new Runnable() {
@@ -235,7 +235,7 @@ public class EmbedServer {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            logger.error(">>>>>>>>>>> xxl-job provider netty_http server caught exception", cause);
+            logger.error(">>>>>>>>>>> simple-job provider netty_http server caught exception", cause);
             ctx.close();
         }
 
@@ -243,7 +243,7 @@ public class EmbedServer {
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             if (evt instanceof IdleStateEvent) {
                 ctx.channel().close();      // beat 3N, close if idle
-                logger.debug(">>>>>>>>>>> xxl-job provider netty_http server close an idle channel.");
+                logger.debug(">>>>>>>>>>> simple-job provider netty_http server close an idle channel.");
             } else {
                 super.userEventTriggered(ctx, evt);
             }

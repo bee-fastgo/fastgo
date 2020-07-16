@@ -5,4 +5,5 @@ import com.bee.team.fastgo.model.ChannelDo;
 import com.bee.team.fastgo.model.ChannelDoExample;
 
 public interface ChannelDoMapperExt extends LavaMapper<ChannelDo, ChannelDoExample> {
+
 }

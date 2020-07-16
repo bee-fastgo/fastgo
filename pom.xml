@@ -12,6 +12,7 @@
         <module>fastgo-config</module>
         <module>fastgo-server</module>
         <module>fastgo-web</module>
+        <module>fastgo-job</module>
     </modules>
 
     <dependencies>
@@ -43,7 +44,7 @@
         <dependency>
             <groupId>com.spring</groupId>
             <artifactId>simple-development-core</artifactId>
-            <version>2.5</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <artifactId>simple-development-core-alert-sdk</artifactId>
@@ -61,4 +62,16 @@
             <version>3.0</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>manila.releases</id>
+            <name>Internal Releases</name>
+            <url>http://47.115.89.120:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>manila.Snapshots</id>
+            <name>Internal Snapshots</name>
+            <url>http://47.115.89.120:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

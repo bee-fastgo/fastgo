@@ -16,9 +16,9 @@ import java.security.cert.X509Certificate;
 /**
  * @author luke 2018-11-25 00:55:31
  */
-public class XxlJobRemotingUtil {
-    private static Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
-    public static final String XXL_JOB_ACCESS_TOKEN = "XXL-JOB-ACCESS-TOKEN";
+public class SimpleJobRemotingUtil {
+    private static Logger logger = LoggerFactory.getLogger(SimpleJobRemotingUtil.class);
+    public static final String XXL_JOB_ACCESS_TOKEN = "SIMPLE-JOB-ACCESS-TOKEN";
 
 
     // trust-https start
