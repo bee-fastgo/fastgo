@@ -103,7 +103,7 @@
                         <dependency>
                             <groupId>com.spring</groupId>
                             <artifactId>simple-development-generator</artifactId>
-                            <version>3.0</version>
+                            <version>1.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
