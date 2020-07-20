@@ -1,11 +1,16 @@
 package com.bee.team.fastgo.service.server.impl;
 
 import com.alibaba.lava.base.AbstractLavaBoImpl;
+import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.job.core.biz.model.RegistryParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
+import com.bee.team.fastgo.job.core.handler.IJobHandler;
 import com.bee.team.fastgo.mapper.ServiceDoMapperExt;
+import com.bee.team.fastgo.model.ServerExecutorLogDo;
 import com.bee.team.fastgo.model.ServiceDo;
 import com.bee.team.fastgo.model.ServiceDoExample;
+import com.bee.team.fastgo.server.core.model.SimpleJobLog;
+import com.bee.team.fastgo.service.server.ServerExecutorLogBo;
 import com.bee.team.fastgo.service.server.ServiceBo;
 import com.bee.team.fastgo.vo.server.ModifyServiceVo;
 import com.bee.team.fastgo.vo.server.ServiceVo;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,6 +32,9 @@ public class ServiceBoImpl extends AbstractLavaBoImpl<ServiceDo, ServiceDoMapper
 
     @Autowired
     private BaseSupport baseSupport;
+
+    @Autowired
+    private ServerExecutorLogBo serverExecutorLogBo;
 
     @Autowired
     public void setBaseMapper(ServiceDoMapperExt mapper) {
@@ -60,7 +69,7 @@ public class ServiceBoImpl extends AbstractLavaBoImpl<ServiceDo, ServiceDoMapper
 
 
     @Override
-    public ReturnT<String> serviceRegistry(RegistryParam registryParam) {
+    public ReturnT<String> registry(RegistryParam registryParam) {
         // valid
         if (!StringUtils.hasText(registryParam.getRegistryGroup())
                 || !StringUtils.hasText(registryParam.getRegistryKey())
@@ -68,16 +77,16 @@ public class ServiceBoImpl extends AbstractLavaBoImpl<ServiceDo, ServiceDoMapper
             return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
         }
         ServiceDoExample serviceDoExample = new ServiceDoExample();
-        serviceDoExample.createCriteria().andServerIpEqualTo(registryParam.getRegistryValue());
+        serviceDoExample.createCriteria().andServerIpEqualTo(registryParam.getRegistryValue().replaceAll("http://","").replaceAll(":9999/",""));
         List<ServiceDo> serviceDoList = this.mapper.selectByExample(serviceDoExample);
         if (CollectionUtils.isEmpty(serviceDoList)) {
             // 自动注册
             ServiceDo serviceDo = new ServiceDo();
             serviceDo.setServerName(registryParam.getRegistryGroup());
-            serviceDo.setServerIp(registryParam.getRegistryValue());
+            serviceDo.setServerIp(registryParam.getRegistryValue().replaceAll("http://","").replaceAll(":9999/",""));
             serviceDo.setServerStatus(CommonConstant.CODE2);
             serviceDo.setType(CommonConstant.CODE2);
-            serviceDo.setServiceToken(registryParam.getRegistryKey());
+            serviceDo.setClientName(registryParam.getRegistryKey());
             insert(serviceDo);
         } else {
             // 更新服务状态
@@ -97,16 +106,16 @@ public class ServiceBoImpl extends AbstractLavaBoImpl<ServiceDo, ServiceDoMapper
             return new ReturnT<String>(ReturnT.FAIL_CODE, "Illegal Argument.");
         }
         ServiceDoExample serviceDoExample = new ServiceDoExample();
-        serviceDoExample.createCriteria().andServerIpEqualTo(registryParam.getRegistryValue());
+        serviceDoExample.createCriteria().andServerIpEqualTo(registryParam.getRegistryValue().replaceAll("http://","").replaceAll(":9999/",""));
         List<ServiceDo> serviceDoList = this.mapper.selectByExample(serviceDoExample);
         if (CollectionUtils.isEmpty(serviceDoList)) {
             // 自动注册
             ServiceDo serviceDo = new ServiceDo();
             serviceDo.setServerName(registryParam.getRegistryGroup());
-            serviceDo.setServerIp(registryParam.getRegistryValue());
+            serviceDo.setServerIp(registryParam.getRegistryValue().replaceAll("http://","").replaceAll(":9999/",""));
             serviceDo.setServerStatus(CommonConstant.CODE1);
             serviceDo.setType(CommonConstant.CODE2);
-            serviceDo.setServiceToken(registryParam.getRegistryKey());
+            serviceDo.setClientName(registryParam.getRegistryKey());
             insert(serviceDo);
         } else {
             // 更新服务状态

@@ -20,7 +20,7 @@ public class ScriptJobHandler extends IJobHandler {
     private String gluesource;
     private GlueTypeEnum glueType;
 
-    public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType){
+    public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType) {
         this.jobId = jobId;
         this.glueUpdatetime = glueUpdatetime;
         this.gluesource = gluesource;
@@ -30,9 +30,9 @@ public class ScriptJobHandler extends IJobHandler {
         File glueSrcPath = new File(SimpleJobFileAppender.getGlueSrcPath());
         if (glueSrcPath.exists()) {
             File[] glueSrcFileList = glueSrcPath.listFiles();
-            if (glueSrcFileList!=null && glueSrcFileList.length>0) {
+            if (glueSrcFileList != null && glueSrcFileList.length > 0) {
                 for (File glueSrcFileItem : glueSrcFileList) {
-                    if (glueSrcFileItem.getName().startsWith(String.valueOf(jobId)+"_")) {
+                    if (glueSrcFileItem.getName().startsWith(String.valueOf(jobId) + "_")) {
                         glueSrcFileItem.delete();
                     }
                 }
@@ -49,7 +49,7 @@ public class ScriptJobHandler extends IJobHandler {
     public ReturnT<String> execute(String param) throws Exception {
 
         if (!glueType.isScript()) {
-            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "glueType["+ glueType +"] invalid.");
+            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "glueType[" + glueType + "] invalid.");
         }
 
         // cmd
@@ -70,21 +70,29 @@ public class ScriptJobHandler extends IJobHandler {
         // log file
         String logFileName = SimpleJobFileAppender.contextHolder.get();
 
-        // script params：0=param、1=分片序号、2=分片总数
-        ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
-        String[] scriptParams = new String[3];
-        scriptParams[0] = param;
-        scriptParams[1] = String.valueOf(shardingVO.getIndex());
-        scriptParams[2] = String.valueOf(shardingVO.getTotal());
+        // script params：
+        String shardingVo = ShardingUtil.getShardingVo();
+        String[] scriptParams;
+        if (shardingVo != null) {
+            String[] params = shardingVo.split(",");
+            scriptParams = new String[params.length + 1];
+            scriptParams[0] = param;
+            for (int i = 0; i < params.length; i++) {
+                scriptParams[i + 1] = params[i];
+            }
+        } else {
+            scriptParams = new String[1];
+            scriptParams[0] = param;
+        }
 
         // invoke
-        SimpleJobLogger.log("----------- script file:"+ scriptFileName +" -----------");
+        SimpleJobLogger.log("----------- script file:" + scriptFileName + " -----------");
         int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
 
         if (exitValue == 0) {
             return IJobHandler.SUCCESS;
         } else {
-            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value("+exitValue+") is failed");
+            return new ReturnT<String>(IJobHandler.FAIL.getCode(), "script exit value(" + exitValue + ") is failed");
         }
 
     }

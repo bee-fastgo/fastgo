@@ -1,12 +1,15 @@
 package com.bee.team.fastgo.service.server;
 
 import com.alibaba.lava.base.LavaBo;
+import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.job.core.biz.model.RegistryParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
 import com.bee.team.fastgo.model.ServiceDo;
 import com.bee.team.fastgo.model.ServiceDoExample;
 import com.bee.team.fastgo.vo.server.ModifyServiceVo;
 import com.bee.team.fastgo.vo.server.ServiceVo;
+
+import java.util.List;
 
 /**
  * 服务器资源管理
@@ -49,7 +52,7 @@ public interface ServiceBo extends LavaBo<ServiceDo, ServiceDoExample> {
      * @Date 11:20 2020/7/20 0020
      * @Param [registryParam]
      **/
-    ReturnT<String> serviceRegistry(RegistryParam registryParam);
+    ReturnT<String> registry(RegistryParam registryParam);
 
     /**
      * @return void

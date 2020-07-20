@@ -2,6 +2,8 @@ package com.bee.team.fastgo.server.core.thread;
 
 
 import com.bee.team.fastgo.server.core.conf.SimpleJobAdminConfig;
+import com.bee.team.fastgo.server.core.model.SimpleJobAddress;
+import com.bee.team.fastgo.server.core.model.SimpleJobInfo;
 import com.bee.team.fastgo.server.core.trigger.SimpleJobTrigger;
 import com.bee.team.fastgo.server.core.trigger.TriggerTypeEnum;
 import org.slf4j.Logger;
@@ -70,16 +72,13 @@ public class JobTriggerPoolHelper {
     /**
      * add trigger
      */
-    public void addTrigger(final int jobId,
-                           final TriggerTypeEnum triggerType,
-                           final int failRetryCount,
-                           final String executorShardingParam,
-                           final String executorParam,
-                           final String addressList) {
+    public void addTrigger(SimpleJobInfo jobInfo,
+                           TriggerTypeEnum triggerType,
+                           SimpleJobAddress simpleJobAddress) {
 
         // choose thread pool
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
-        AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
+        AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobInfo.getId());
         if (jobTimeoutCount != null && jobTimeoutCount.get() > 10) {      // job-timeout 10 times in 1 min
             triggerPool_ = slowTriggerPool;
         }
@@ -93,7 +92,7 @@ public class JobTriggerPoolHelper {
 
                 try {
                     // do trigger
-                    SimpleJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
+                    SimpleJobTrigger.trigger(jobInfo, triggerType, simpleJobAddress);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 } finally {
@@ -108,7 +107,7 @@ public class JobTriggerPoolHelper {
                     // incr timeout-count-map
                     long cost = System.currentTimeMillis() - start;
                     if (cost > 500) {       // ob-timeout threshold 500ms
-                        AtomicInteger timeoutCount = jobTimeoutCountMap.putIfAbsent(jobId, new AtomicInteger(1));
+                        AtomicInteger timeoutCount = jobTimeoutCountMap.putIfAbsent(jobInfo.getId().intValue(), new AtomicInteger(1));
                         if (timeoutCount != null) {
                             timeoutCount.incrementAndGet();
                         }
@@ -134,16 +133,16 @@ public class JobTriggerPoolHelper {
     }
 
     /**
-     * @param jobId
-     * @param triggerType
-     * @param failRetryCount        >=0: use this param
-     *                              <0: use param from job info config
-     * @param executorShardingParam
-     * @param executorParam         null: use job param
-     *                              not null: cover job param
-     */
-    public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam, String addressList) {
-        helper.addTrigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
+     * @return void
+     * @Author luke
+     * @Description 触发任务
+     * @Date 14:51 2020/7/20 0020
+     * @Param [jobInfo, triggerType, executorShardingParam, simpleJobAddress]
+     **/
+    public static void trigger(SimpleJobInfo jobInfo,
+                               TriggerTypeEnum triggerType,
+                               SimpleJobAddress simpleJobAddress) {
+        helper.addTrigger(jobInfo, triggerType, simpleJobAddress);
     }
 
 }

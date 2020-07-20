@@ -15,11 +15,11 @@
     <version>1.0</version>
 
     <dependencies>
-        <dependency>
-            <groupId>com.spring</groupId>
-            <artifactId>simple-development-code-generate</artifactId>
-            <version>3.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.spring</groupId>-->
+<!--            <artifactId>simple-development-code-generate</artifactId>-->
+<!--            <version>3.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.bee.team</groupId>
             <artifactId>fastgo-common</artifactId>
