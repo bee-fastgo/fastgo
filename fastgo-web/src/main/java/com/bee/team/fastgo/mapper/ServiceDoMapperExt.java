@@ -1,4 +1,8 @@
 package com.bee.team.fastgo.mapper;
 
-public interface ServiceDoMapperExt extends com.alibaba.lava.base.LavaMapper<com.bee.team.fastgo.model.ServiceDo, com.bee.team.fastgo.model.ServiceDoExample> {
+import com.alibaba.lava.base.LavaMapper;
+import com.bee.team.fastgo.model.ServiceDo;
+import com.bee.team.fastgo.model.ServiceDoExample;
+
+public interface ServiceDoMapperExt extends LavaMapper<ServiceDo, ServiceDoExample> {
 }
