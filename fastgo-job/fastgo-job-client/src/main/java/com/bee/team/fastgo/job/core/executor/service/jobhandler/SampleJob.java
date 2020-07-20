@@ -49,28 +49,6 @@ public class SampleJob {
     }
 
 
-    /**
-     * 2、分片广播任务
-     */
-    @SimpleJob("shardingJobHandler")
-    public ReturnT<String> shardingJobHandler(String param) throws Exception {
-
-        // 分片参数
-        ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
-        SimpleJobLogger.log("分片参数：当前分片序号 = {}, 总分片数 = {}", shardingVO.getIndex(), shardingVO.getTotal());
-
-        // 业务逻辑
-        for (int i = 0; i < shardingVO.getTotal(); i++) {
-            if (i == shardingVO.getIndex()) {
-                SimpleJobLogger.log("第 {} 片, 命中分片开始处理", i);
-            } else {
-                SimpleJobLogger.log("第 {} 片, 忽略", i);
-            }
-        }
-
-        return ReturnT.SUCCESS;
-    }
-
 
     /**
      * 3、命令行任务

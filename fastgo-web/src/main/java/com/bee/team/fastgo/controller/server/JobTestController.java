@@ -1,5 +1,9 @@
 package com.bee.team.fastgo.controller.server;
 
+import com.bee.team.fastgo.hander.SimpleExecutorCmd;
+import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;
+import com.bee.team.fastgo.server.core.model.SimpleJobAddress;
+import com.bee.team.fastgo.server.core.model.SimpleJobInfo;
 import com.bee.team.fastgo.server.core.thread.JobTriggerPoolHelper;
 import com.bee.team.fastgo.server.core.trigger.TriggerTypeEnum;
 import org.springframework.stereotype.Controller;
@@ -13,16 +17,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
  * @author luke
  * @date 17/5/10
  */
 @Controller
 @RequestMapping("/api")
 public class JobTestController {
-
-    @Resource
-    private AdminBiz adminBiz;
 
     /**
      * api
@@ -32,9 +32,9 @@ public class JobTestController {
      */
     @RequestMapping("/test")
     @ResponseBody
-    public ReturnT<String> test(HttpServletRequest request, @RequestBody(required = false) String data) {
-        JobTriggerPoolHelper.trigger(1, TriggerTypeEnum.MANUAL, -1, null, "md D:\\test", "127.0.0.1:8081");
-        return null;
+    public String test(HttpServletRequest request, @RequestBody(required = false) String data) {
+        String logId = SimpleExecutorCmd.executorOneIpCmd(GlueTypeEnum.GLUE_SHELL, "ls /data", null, -1, "172.22.5.77");
+        return logId;
     }
 
 }

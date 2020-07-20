@@ -118,7 +118,7 @@ public class JobThread extends Thread{
 					// log filename, like "logPath/yyyy-MM-dd/9999.log"
 					String logFileName = SimpleJobFileAppender.makeLogFileName(new Date(triggerParam.getLogDateTime()), triggerParam.getLogId());
 					SimpleJobFileAppender.contextHolder.set(logFileName);
-					ShardingUtil.setShardingVo(new ShardingUtil.ShardingVO(triggerParam.getBroadcastIndex(), triggerParam.getBroadcastTotal()));
+					ShardingUtil.setShardingVo(triggerParam.getExecutorParams());
 
 					// execute
 					SimpleJobLogger.log("<br>----------- simple-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());

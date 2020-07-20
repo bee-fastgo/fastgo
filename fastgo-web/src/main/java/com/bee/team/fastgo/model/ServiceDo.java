@@ -51,7 +51,7 @@ public class ServiceDo extends LavaDo {
     /**
      * 服务调用token
      */
-    private String serviceToken;
+    private String clientName;
 
     @Override
     public String getBoQualifiedIntfName() {

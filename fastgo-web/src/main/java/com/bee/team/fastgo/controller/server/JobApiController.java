@@ -2,6 +2,7 @@ package com.bee.team.fastgo.controller.server;
 
 
 import com.bee.team.fastgo.server.core.conf.SimpleJobAdminConfig;
+import com.bee.team.fastgo.service.server.ServerExecutorLogBo;
 import com.bee.team.fastgo.service.server.ServiceBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,12 +29,10 @@ import java.util.List;
 @RequestMapping("/api")
 public class JobApiController {
 
-    @Resource
-    private AdminBiz adminBiz;
-
     @Autowired
     private ServiceBo serviceBo;
-
+    @Autowired
+    private ServerExecutorLogBo serverExecutorLogBo;
     /**
      * api
      *
@@ -61,13 +60,13 @@ public class JobApiController {
         // services mapping
         if ("callback".equals(uri)) {
             List<HandleCallbackParam> callbackParamList = GsonTool.fromJson(data, List.class, HandleCallbackParam.class);
-            return adminBiz.callback(callbackParamList);
+            return serverExecutorLogBo.callback(callbackParamList);
         } else if ("registry".equals(uri)) {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
-            return adminBiz.registry(registryParam);
+            return serviceBo.registry(registryParam);
         } else if ("registryRemove".equals(uri)) {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
-            return adminBiz.registryRemove(registryParam);
+            return serviceBo.registryRemove(registryParam);
         } else {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping(" + uri + ") not found.");
         }

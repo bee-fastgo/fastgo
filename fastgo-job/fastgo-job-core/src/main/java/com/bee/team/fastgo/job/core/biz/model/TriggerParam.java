@@ -20,10 +20,7 @@ public class TriggerParam implements Serializable{
 
     private String glueType;
     private String glueSource;
-    private long glueUpdatetime;
-
-    private int broadcastIndex;
-    private int broadcastTotal;
+    private long glueUpdateTime;
 
 
     public int getJobId() {
@@ -98,30 +95,13 @@ public class TriggerParam implements Serializable{
         this.glueSource = glueSource;
     }
 
-    public long getGlueUpdatetime() {
-        return glueUpdatetime;
+    public long getGlueUpdateTime() {
+        return glueUpdateTime;
     }
 
-    public void setGlueUpdatetime(long glueUpdatetime) {
-        this.glueUpdatetime = glueUpdatetime;
+    public void setGlueUpdateTime(long glueUpdateTime) {
+        this.glueUpdateTime = glueUpdateTime;
     }
-
-    public int getBroadcastIndex() {
-        return broadcastIndex;
-    }
-
-    public void setBroadcastIndex(int broadcastIndex) {
-        this.broadcastIndex = broadcastIndex;
-    }
-
-    public int getBroadcastTotal() {
-        return broadcastTotal;
-    }
-
-    public void setBroadcastTotal(int broadcastTotal) {
-        this.broadcastTotal = broadcastTotal;
-    }
-
 
     @Override
     public String toString() {
@@ -135,9 +115,7 @@ public class TriggerParam implements Serializable{
                 ", logDateTime=" + logDateTime +
                 ", glueType='" + glueType + '\'' +
                 ", glueSource='" + glueSource + '\'' +
-                ", glueUpdatetime=" + glueUpdatetime +
-                ", broadcastIndex=" + broadcastIndex +
-                ", broadcastTotal=" + broadcastTotal +
+                ", glueUpdatetime=" + glueUpdateTime +
                 '}';
     }
 
