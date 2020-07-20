@@ -58,31 +58,27 @@ public class ServerExecutorLogBoImpl extends AbstractLavaBoImpl<ServerExecutorLo
         if (serverExecutorLogDo == null) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "log item not found.");
         }
-        if (serverExecutorLogDo.getHandleCode() > 0) {
-            // avoid repeat callback, trigger child job etc
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "log repeate callback.");
-        }
+//        if (serverExecutorLogDo.getHandleCode() > 0) {
+//                // avoid repeat callback, trigger child job etc
+//            return new ReturnT<String>(ReturnT.FAIL_CODE, "log repeate callback.");
+//        }
 
 
         // handle msg
-        StringBuffer handleWebMsg = new StringBuffer();
-        if (serverExecutorLogDo.getHandleWebMsg() != null) {
-            handleWebMsg.append(serverExecutorLogDo.getHandleWebMsg()).append("<br>");
-        }
+        StringBuffer handleMsg = new StringBuffer();
         if (handleCallbackParam.getExecuteResult().getMsg() != null) {
-            handleWebMsg.append(handleCallbackParam.getExecuteResult().getMsg());
+            handleMsg.append("<br>"+handleCallbackParam.getExecuteResult().getMsg()+"</br>");
         }
 
-        // text最大64kb 避免长度过长
-        if (handleWebMsg.length() > 15000) {
-            handleWebMsg = new StringBuffer(handleWebMsg.substring(0, 15000));
+        if (handleMsg.length() > 15000) {
+            handleMsg = new StringBuffer(handleMsg.substring(0, 15000));  // text最大64kb 避免长度过长
         }
 
         // success, save log
         serverExecutorLogDo.setHandleTime(new Date());
         serverExecutorLogDo.setHandleCode(handleCallbackParam.getExecuteResult().getCode());
 
-        serverExecutorLogDo.setHandleWebMsg(handleWebMsg.toString());
+        serverExecutorLogDo.setHandleWebMsg(handleMsg.toString());
         serverExecutorLogDo.setHandleMsg(handleCallbackParam.getExecuteResult().getMsg());
         serverExecutorLogDo.setStatus(CommonConstant.CODE1);
         this.modifyServerExecutorLogDo(serverExecutorLogDo);

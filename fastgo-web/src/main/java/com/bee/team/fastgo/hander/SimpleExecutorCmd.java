@@ -41,7 +41,7 @@ public class SimpleExecutorCmd implements InitializingBean {
     @Resource
     private ServerExecutorLogBo serverExecutorLogBo;
 
-    public static String executorOneIpCmd(GlueTypeEnum glueTypeEnum, String scriptSource, String params, int executorTimeout, String ip) {
+    public static String executorCmd(GlueTypeEnum glueTypeEnum, String scriptSource, String params, int executorTimeout, String ip) {
         // 构建执行脚本
         SimpleJobInfo simpleJobInfo = getSimpleJobInfo(scriptSource, params, executorTimeout, glueTypeEnum);
 
@@ -50,32 +50,16 @@ public class SimpleExecutorCmd implements InitializingBean {
         simpleJobAddress.setAddressType(0);
         simpleJobAddress.setAddressList(ip);
 
+        ServerExecutorLogDo beforeServerExecutorLogDo = new ServerExecutorLogDo();
+        beforeServerExecutorLogDo.setId(simpleJobInfo.getId());
+        beforeServerExecutorLogDo.setExecutorAddress(ip);
+        SimpleExecutorCmd.simpleExecutorCmd.serverExecutorLogBo.addServerExecutorLogDo(beforeServerExecutorLogDo);
+
         List<SimpleJobLog> triggerResult = SimpleJobTrigger.trigger(simpleJobInfo, TriggerTypeEnum.API, simpleJobAddress);
         ServerExecutorLogDo serverExecutorLogDo = SimpleExecutorCmd.simpleExecutorCmd.baseSupport.objectCopy(triggerResult.get(0), ServerExecutorLogDo.class);
         serverExecutorLogDo.setStatus(CommonConstant.CODE0);
-        SimpleExecutorCmd.simpleExecutorCmd.serverExecutorLogBo.addServerExecutorLogDo(serverExecutorLogDo);
+        SimpleExecutorCmd.simpleExecutorCmd.serverExecutorLogBo.modifyServerExecutorLogDo(serverExecutorLogDo);
         return String.valueOf(serverExecutorLogDo.getId());
-    }
-
-
-    public static List<String> executorMultipleIpCmd(GlueTypeEnum glueTypeEnum, String scriptSource, String params, int executorTimeout, String ips) {
-        List<String> logIds = new ArrayList<>();
-        // 构建执行脚本
-        SimpleJobInfo simpleJobInfo = getSimpleJobInfo(scriptSource, params, executorTimeout, glueTypeEnum);
-
-        // 执行的服务器
-        SimpleJobAddress simpleJobAddress = new SimpleJobAddress();
-        simpleJobAddress.setAddressType(0);
-        simpleJobAddress.setAddressList(ips);
-
-        List<SimpleJobLog> triggerResult = SimpleJobTrigger.trigger(simpleJobInfo, TriggerTypeEnum.MANUAL, simpleJobAddress);
-        for (SimpleJobLog simpleJobLog : triggerResult) {
-            logIds.add(String.valueOf(simpleJobLog.getId()));
-            ServerExecutorLogDo serverExecutorLogDo = SimpleExecutorCmd.simpleExecutorCmd.baseSupport.objectCopy(simpleJobLog, ServerExecutorLogDo.class);
-            serverExecutorLogDo.setStatus(CommonConstant.CODE0);
-            SimpleExecutorCmd.simpleExecutorCmd.serverExecutorLogBo.addServerExecutorLogDo(serverExecutorLogDo);
-        }
-        return logIds;
     }
 
     @Override

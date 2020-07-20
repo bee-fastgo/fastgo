@@ -33,7 +33,9 @@ public class JobTestController {
     @RequestMapping("/test")
     @ResponseBody
     public String test(HttpServletRequest request, @RequestBody(required = false) String data) {
-        String logId = SimpleExecutorCmd.executorOneIpCmd(GlueTypeEnum.GLUE_SHELL, "ls /data", null, -1, "172.22.5.77");
+        String cmd = request.getParameter("cmd");
+        String ip = request.getParameter("ip");
+        String logId = SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, cmd, null, -1, ip);
         return logId;
     }
 
