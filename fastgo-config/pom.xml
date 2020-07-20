@@ -14,5 +14,11 @@
     <packaging>jar</packaging>
     <version>1.0</version>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.bee.team</groupId>
+            <artifactId>fastgo-common</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>
