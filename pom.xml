@@ -13,6 +13,7 @@
         <module>fastgo-server</module>
         <module>fastgo-web</module>
         <module>fastgo-job</module>
+        <module>fastgo-common</module>
     </modules>
 
     <dependencies>
