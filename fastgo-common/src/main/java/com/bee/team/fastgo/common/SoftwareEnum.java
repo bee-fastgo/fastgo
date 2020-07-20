@@ -13,7 +13,10 @@ public enum SoftwareEnum {
     MONGODB("mongodb"),
     CASSANDRA("cassandra"),
     SHIRO("shiro"),
-    ELASTICSEARCH("elasticsearch");
+    ELASTICSEARCH("elasticsearch"),
+    FLUME("flume"),
+    ZOOKEEPER("zookeeper");
+
 
     private String softwareName;
 
