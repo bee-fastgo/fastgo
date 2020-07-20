@@ -72,22 +72,17 @@ public class ScriptJobHandler extends IJobHandler {
 
         // script params：
         String shardingVo = ShardingUtil.getShardingVo();
-        String[] scriptParams;
+        SimpleJobLogger.log("----------- script file:" + scriptFileName + " -----------");
+        String[] scriptParams = null;
+        int exitValue;
         if (shardingVo != null) {
-            String[] params = shardingVo.split(",");
-            scriptParams = new String[params.length + 1];
-            scriptParams[0] = param;
-            for (int i = 0; i < params.length; i++) {
-                scriptParams[i + 1] = params[i];
-            }
+            scriptParams = shardingVo.split(",");
+            exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
         } else {
-            scriptParams = new String[1];
-            scriptParams[0] = param;
+            exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName);
         }
 
         // invoke
-        SimpleJobLogger.log("----------- script file:" + scriptFileName + " -----------");
-        int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
 
         if (exitValue == 0) {
             return IJobHandler.SUCCESS;
