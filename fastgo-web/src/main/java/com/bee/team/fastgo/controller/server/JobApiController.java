@@ -2,22 +2,20 @@ package com.bee.team.fastgo.controller.server;
 
 
 import com.bee.team.fastgo.server.core.conf.SimpleJobAdminConfig;
+import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.service.server.ServerExecutorLogBo;
-import com.bee.team.fastgo.service.server.ServiceBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bee.team.fastgo.job.core.biz.AdminBiz;
 import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.job.core.biz.model.RegistryParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
 import com.bee.team.fastgo.job.core.util.GsonTool;
 import com.bee.team.fastgo.job.core.util.SimpleJobRemotingUtil;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -30,9 +28,10 @@ import java.util.List;
 public class JobApiController {
 
     @Autowired
-    private ServiceBo serviceBo;
+    private ServerBo serverBo;
     @Autowired
     private ServerExecutorLogBo serverExecutorLogBo;
+
     /**
      * api
      *
@@ -63,10 +62,10 @@ public class JobApiController {
             return serverExecutorLogBo.callback(callbackParamList);
         } else if ("registry".equals(uri)) {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
-            return serviceBo.registry(registryParam);
+            return serverBo.registry(registryParam);
         } else if ("registryRemove".equals(uri)) {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
-            return serviceBo.registryRemove(registryParam);
+            return serverBo.registryRemove(registryParam);
         } else {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping(" + uri + ") not found.");
         }

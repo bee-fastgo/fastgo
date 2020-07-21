@@ -1,23 +1,14 @@
 package com.bee.team.fastgo.service.server;
 
 import com.alibaba.lava.base.LavaBo;
-import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.job.core.biz.model.RegistryParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
-import com.bee.team.fastgo.model.ServiceDo;
-import com.bee.team.fastgo.model.ServiceDoExample;
-import com.bee.team.fastgo.vo.server.ModifyServiceVo;
-import com.bee.team.fastgo.vo.server.ServiceVo;
+import com.bee.team.fastgo.model.ServerDo;
+import com.bee.team.fastgo.model.ServerDoExample;
+import com.bee.team.fastgo.vo.server.ModifyServerVo;
+import com.bee.team.fastgo.vo.server.ServerVo;
 
-import java.util.List;
-
-/**
- * 服务器资源管理
- *
- * @author luke
- */
-public interface ServiceBo extends LavaBo<ServiceDo, ServiceDoExample> {
-
+public interface ServerBo extends LavaBo<ServerDo, ServerDoExample> {
     /**
      * @return void
      * @Author luke
@@ -25,7 +16,7 @@ public interface ServiceBo extends LavaBo<ServiceDo, ServiceDoExample> {
      * @Date 11:48 2020/7/20 0020
      * @Param [serviceVo]
      **/
-    void addServiceDo(ServiceVo serviceVo);
+    void addServerDo(ServerVo serverVo);
 
     /**
      * @return void
@@ -34,7 +25,7 @@ public interface ServiceBo extends LavaBo<ServiceDo, ServiceDoExample> {
      * @Date 11:50 2020/7/20 0020
      * @Param [serviceVo]
      **/
-    void modifyServiceDo(ModifyServiceVo modifyServiceVo);
+    void modifyServerDo(ModifyServerVo modifyServerVo);
 
     /**
      * @return com.bee.team.fastgo.model.ServiceDo
@@ -43,7 +34,7 @@ public interface ServiceBo extends LavaBo<ServiceDo, ServiceDoExample> {
      * @Date 11:12 2020/7/20 0020
      * @Param [ip]
      **/
-    ServiceDo getServiceDoByIp(String ip);
+    ServerDo getServerDoByIp(String ip);
 
     /**
      * @return void

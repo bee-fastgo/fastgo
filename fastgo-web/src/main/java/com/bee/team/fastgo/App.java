@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Description 程序启动
  **/
 @EnableAlert
-@EnableRedis
 @EnableWebMvc
 @EnableSwagger
 @EnableMybatis

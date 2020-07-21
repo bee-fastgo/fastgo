@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2020/07/20
  */
 @Data
-public class ServiceVo {
+public class ModifyServerVo {
     /**
      * id
      */
@@ -37,21 +37,4 @@ public class ServiceVo {
      * ssh密码
      */
     private String sshPassword;
-
-    /**
-     * 1:未连接
-     * 2:已连接
-     */
-    private String serverStatus;
-
-    /**
-     * 1:手动注册
-     * 2:自动注册
-     */
-    private String type;
-
-    /**
-     * 服务调用token
-     */
-    private String serviceToken;
 }

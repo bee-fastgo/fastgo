@@ -7,19 +7,19 @@
     <!-- 生成dal配置 -->
     <context id="simple-demo" targetRuntime="MyBatis3">
         <property name="suppressAllComments" value="true"/>
-        <property name="useActualColumnNames" value="false"/>
+        <property name="useActualColumnNames" value="true"/>
 
         <!-- 配置插件 -->
         <plugin type="com.alibaba.lava.dal.common.MultiDbPaginationPlugin"/>
         <plugin type="com.alibaba.lava.dal.common.BoPlugin">
             <property name="basePath"
-                      value="D:\code\javacode\fastgo\fastgo-web\src\main\java"/>
+                      value="D:\workspace\fastgo\fastgo-web\src\main\java"/>
         </plugin>
         <plugin type="com.spring.simple.development.generator.plugin.LombokPlugin"/>
 
         <!-- 自定义注释生成器 -->
         <commentGenerator type="com.spring.simple.development.generator.MySQLCommentGenerator">
-            <property name="author" value="jgz"/>
+            <property name="author" value="liko"/>
             <property name="dateFormat" value="yyyy/MM/dd"/>
         </commentGenerator>
 
@@ -49,19 +49,8 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-<!--        <table tableName="t_channel" domainObjectName="ChannelDo">-->
-<!--            <property name="stateAction" value="false"/>-->
-<!--            <property name="boPackage" value="com.bee.team.fastgo.service"/>-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--            <ignoreColumn column="ID"/>-->
-<!--            <ignoreColumn column="gmt_create"/>-->
-<!--            <ignoreColumn column="creator"/>-->
-<!--            <ignoreColumn column="gmt_modified"/>-->
-<!--            <ignoreColumn column="modifier"/>-->
-<!--            <ignoreColumn column="is_deleted"/>-->
-<!--        </table>-->
-
-        <table tableName="t_server_script" domainObjectName="ServerScriptDo">
+        <table tableName="t_server" domainObjectName="ServerDo">
+            <property name="useActualColumnNames" value="true"/>
             <property name="stateAction" value="false"/>
             <property name="boPackage" value="com.bee.team.fastgo.service.server"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
@@ -72,5 +61,18 @@
             <ignoreColumn column="modifier"/>
             <ignoreColumn column="is_deleted"/>
         </table>
+
+<!--        <table tableName="t_server_executor_log" domainObjectName="ServerExecutorLogDo">-->
+<!--            <property name="useActualColumnNames" value="true"/>-->
+<!--            <property name="stateAction" value="false"/>-->
+<!--            <property name="boPackage" value="com.bee.team.fastgo.service.server"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--            <ignoreColumn column="ID"/>-->
+<!--            <ignoreColumn column="gmt_create"/>-->
+<!--            <ignoreColumn column="creator"/>-->
+<!--            <ignoreColumn column="gmt_modified"/>-->
+<!--            <ignoreColumn column="modifier"/>-->
+<!--            <ignoreColumn column="is_deleted"/>-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>

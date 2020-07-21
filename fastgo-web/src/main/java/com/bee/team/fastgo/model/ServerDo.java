@@ -7,10 +7,10 @@ import lombok.Data;
  * @description MyBatis Generator 自动创建,对应数据表为：t_server
  *
  * @author liko
- * @date   2020/07/20
+ * @date   2020/07/21
  */
 @Data
-public class ServiceDo extends LavaDo {
+public class ServerDo extends LavaDo {
     /**
      * 服务器名称
      */
@@ -55,6 +55,6 @@ public class ServiceDo extends LavaDo {
 
     @Override
     public String getBoQualifiedIntfName() {
-        return "com.bee.team.fastgo.service.server.ServiceBo";
+        return "com.bee.team.fastgo.service.server.ServerBo";
     }
 }
