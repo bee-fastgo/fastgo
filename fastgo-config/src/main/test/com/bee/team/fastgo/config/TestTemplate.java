@@ -88,10 +88,11 @@ public class TestTemplate {
     public void testUpdateTemplate() {
         Map<String, Object> query = new HashMap<>();
         query.put("name", "张三");
-        query.put("age", 21);
+        query.put("age", 20);
         Map<String, Object> update = new HashMap<>();
-        update.put("name", "埃玛米");
-        update.put("country", "萨诺");
+        update.put("name", "涨价的啥子");
+        update.put("s.country", "沙漠地图");
+        update.put("county", "米拉码");
         UpdateResult result = configTemplateBo.updateTemplate(query, update);
         System.out.println(result);
     }

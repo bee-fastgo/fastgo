@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName ConfigTemplateBoImpl
@@ -112,14 +113,15 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
 
     @Override
     public List findTemplateListByCondition(Map map, Class t) {
-        if (map.isEmpty()) {
-            // 抛出异常
+        Query query = new Query();
+        // 如果map为空，就查询所有的模板信息
+        if (!map.isEmpty()) {
+            List<Object> list = Arrays.asList(map.keySet().toArray());
+            // 定义查询条件
+            Criteria criteria = new Criteria();
+            list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
+            query.addCriteria(criteria);
         }
-        List<Object> list = Arrays.asList(map.keySet().toArray());
-        // 定义查询条件
-        Criteria criteria = new Criteria();
-        list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
-        Query query = new Query(criteria);
         return template.find(query, t, MongoCollectionValue.CONFIG_TEMPLATE);
     }
 
@@ -130,14 +132,16 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
 
     @Override
     public Long countTemplateByCondition(Map map) {
-        if (map.isEmpty()) {
-            // 抛出异常
+        Query query = new Query();
+
+        // 如果map为空，就查询所有的模板信息的数量
+        if (!map.isEmpty()) {
+            List<Object> list = Arrays.asList(map.keySet().toArray());
+            // 定义查询条件
+            Criteria criteria = new Criteria();
+            list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
+            query.addCriteria(criteria);
         }
-        List<Object> list = Arrays.asList(map.keySet().toArray());
-        // 定义查询条件
-        Criteria criteria = new Criteria();
-        list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
-        Query query = new Query(criteria);
         return template.count(query, MongoCollectionValue.CONFIG_TEMPLATE);
     }
 }
