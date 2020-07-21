@@ -25,6 +25,6 @@ notify:
     - fastgo-web
   script:
     - echo "=============== 钉钉通知  ==============="
-    - /data/alert.sh 94ccad2234fece2fb6a6a3510e77dbf17096a684411014678024dfcede7769a7  蜂·极Go http://172.22.5.248:10000/doc.html 15010343670
+    - /data/alert.sh 94ccad2234fece2fb6a6a3510e77dbf17096a684411014678024dfcede7769a7  蜂·极Go http://172.22.5.248:9999/doc.html 15010343670
   only:
     - dev
