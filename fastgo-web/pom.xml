@@ -60,7 +60,7 @@
     </profiles>
     <!--MAVEN打包duboo可执行jar begin -->
     <build>
-        <finalName>simple-development-demo</finalName>
+        <finalName>fastgo-web</finalName>
 
         <resources>
             <resource>

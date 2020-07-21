@@ -1,0 +1,30 @@
+image: maven:latest
+
+# 缓存服务, 如果有文件需要多个stages共用，例如jar/war包
+cache:
+  paths:
+    - target/
+# 本次构建的阶段：push notify
+stages:
+  - push
+  - notify
+# push
+push:
+  stage: push
+  tags:
+    - fastgo-web
+  script:
+    - echo "=============== push到指定服务器部署 ==============="
+    - ssh root@172.22.5.248 "/data/project/fastgo.sh"
+  only:
+    - dev
+# 通知
+notify:
+  stage: notify
+  tags:
+    - fastgo-web
+  script:
+    - echo "=============== 钉钉通知  ==============="
+    - /data/alert.sh 94ccad2234fece2fb6a6a3510e77dbf17096a684411014678024dfcede7769a7  蜂·极Go http://172.22.5.248:10000/doc.html 15010343670
+  only:
+    - dev
