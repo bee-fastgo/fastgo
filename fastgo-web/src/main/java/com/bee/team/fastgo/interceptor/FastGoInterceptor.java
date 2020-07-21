@@ -14,6 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author luke
+ */
 @SimpleInterceptor
 public class FastGoInterceptor implements HandlerInterceptor {
 
@@ -28,6 +31,6 @@ public class FastGoInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler, Exception e) throws Exception {
-        IdempotentHandler.clearIdempotentModel();
+
     }
 }
