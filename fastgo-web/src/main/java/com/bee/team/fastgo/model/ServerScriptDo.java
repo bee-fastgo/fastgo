@@ -6,25 +6,25 @@ import lombok.Data;
 /**
  * @description MyBatis Generator 自动创建,对应数据表为：t_server_script
  *
- * @author jgz
- * @date   2020/07/20
+ * @author liko
+ * @date   2020/07/22
  */
 @Data
 public class ServerScriptDo extends LavaDo {
     /**
      * 脚本key
      */
-    private String scriptkey;
+    private String scriptKey;
 
     /**
      * 脚本名
      */
-    private String scriptname;
+    private String scriptName;
 
     /**
      * 字典名
      */
-    private String dictionaryname;
+    private String softwareName;
 
     /**
      * 版本
