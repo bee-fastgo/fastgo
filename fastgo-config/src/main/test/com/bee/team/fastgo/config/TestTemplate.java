@@ -156,4 +156,10 @@ public class TestTemplate {
         Long count = configTemplateBo.countTemplateByCondition(map);
         System.out.println(count);
     }
+
+    @Test
+    public void testStr(){
+        String str="com.jjj.ggg.hhh";
+        System.out.println(str.replace(".","-"));
+    }
 }

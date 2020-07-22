@@ -15,13 +15,13 @@ import java.util.Map;
  **/
 public interface ConfigProjectBo<T> {
     /**
-     * @return map 返回项目的配置信息
+     * @return String配置code码
      * @Author xqx
      * @Description 添加项目配置信息
      * @Date 18:38 2020/7/20
      * @Param map 添加的参数
      **/
-    Map<String, Object> insertProject(Map<String, Map<String, Object>> map);
+    String insertProject(Map<String, Map<String, Object>> map);
 
     /**
      * @return DeleteResult
@@ -73,7 +73,7 @@ public interface ConfigProjectBo<T> {
     /**
      * @return list
      * @Author xqx
-     * @Description 根据条件获取配置信息列表
+     * @Description 根据条件获取配置信息列表(模糊查询)
      * @Date 9:15 2020/7/21
      * @Param map 参数信息
      * @Param t 返回的数据类型
@@ -100,7 +100,7 @@ public interface ConfigProjectBo<T> {
     /**
      * @return long
      * @Author xqx
-     * @Description
+     * @Description 模糊查询项目数量
      * @Date 9:18 2020/7/21
      * @Param map 参数类
      **/
