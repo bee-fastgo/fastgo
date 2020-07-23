@@ -7,8 +7,8 @@ package com.bee.team.fastgo.common;
  */
 public enum SoftwareEnum {
 
-    MYSQL("redis"),
-    REDIS("mysql"),
+    MYSQL("mysql"),
+    REDIS("redis"),
     KAFKA("kafka"),
     MONGODB("mongodb"),
     CASSANDRA("cassandra"),

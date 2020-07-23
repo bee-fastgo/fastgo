@@ -36,7 +36,8 @@ public class ServerScriptDo extends LavaDo {
 1.安装
 2.修改
 3.重启
-4.卸载
+4.停止
+5.卸载
      */
     private String type;
 
