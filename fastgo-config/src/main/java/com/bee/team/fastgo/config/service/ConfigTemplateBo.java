@@ -74,7 +74,7 @@ public interface ConfigTemplateBo<T> {
     /**
      * @return List
      * @Author xqx
-     * @Description 根据条件获取模板信息集合
+     * @Description 根据条件获取模板信息集合(模糊查询)
      * @Date 15:38 2020/7/20
      * @Param map 查询条件
      * @Param t 返回类型
@@ -103,7 +103,7 @@ public interface ConfigTemplateBo<T> {
     /**
      * @return
      * @Author xqx
-     * @Description 获取指定条件的模板的数量
+     * @Description 获取指定条件的模板的数量(模糊查询)
      * @Date 15:44 2020/7/20
      * @Param map 查询条件参数
      **/

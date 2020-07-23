@@ -4,6 +4,7 @@ import com.bee.team.fastgo.config.common.MongoCollectionValue;
 import com.bee.team.fastgo.config.service.ConfigTemplateBo;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.spring.simple.development.support.utils.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -16,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @ClassName ConfigTemplateBoImpl
@@ -35,6 +35,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
         if (map.isEmpty()) {
             // 抛出异常
         }
+        map.put("code", RandomUtils.getRandomStr(16));
         return template.insert(map, MongoCollectionValue.CONFIG_TEMPLATE);
     }
 
@@ -119,7 +120,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
             List<Object> list = Arrays.asList(map.keySet().toArray());
             // 定义查询条件
             Criteria criteria = new Criteria();
-            list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
+            list.stream().forEach(key -> criteria.and(key.toString()).regex(".*" + map.get(key) + ".*"));
             query.addCriteria(criteria);
         }
         return template.find(query, t, MongoCollectionValue.CONFIG_TEMPLATE);
@@ -133,13 +134,12 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
     @Override
     public Long countTemplateByCondition(Map map) {
         Query query = new Query();
-
         // 如果map为空，就查询所有的模板信息的数量
         if (!map.isEmpty()) {
             List<Object> list = Arrays.asList(map.keySet().toArray());
             // 定义查询条件
             Criteria criteria = new Criteria();
-            list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
+            list.stream().forEach(key -> criteria.and(key.toString()).regex(".*" + map.get(key) + ".*"));
             query.addCriteria(criteria);
         }
         return template.count(query, MongoCollectionValue.CONFIG_TEMPLATE);
