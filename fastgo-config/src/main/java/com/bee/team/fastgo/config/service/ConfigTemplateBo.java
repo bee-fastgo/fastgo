@@ -43,6 +43,15 @@ public interface ConfigTemplateBo<T> {
      **/
     UpdateResult updateTemplate(Map<String, Object> conditionMap, Map<String, Object> setMap);
 
+    /**
+     * @return UpdateResult
+     * @Author xqx
+     * @Description 删除模板里面的一条数据(一个键值对)
+     * @Date 13:42 2020/7/23
+     * @Param code 唯一标识
+     * @Param key 要移除的key
+     **/
+    UpdateResult removeOneDataByCondition(String code, String key);
 
     /**
      * @return DeleteResult
@@ -61,6 +70,7 @@ public interface ConfigTemplateBo<T> {
      * @Param
      **/
     DeleteResult removeAllTemplates();
+
 
     /**
      * @return

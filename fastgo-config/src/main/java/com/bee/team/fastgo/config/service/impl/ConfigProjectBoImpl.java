@@ -2,6 +2,7 @@ package com.bee.team.fastgo.config.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.team.fastgo.config.common.MongoCollectionValue;
+import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.config.service.ConfigTemplateBo;
 import com.mongodb.client.result.DeleteResult;
@@ -51,23 +52,23 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         List<Map<String, Object>> list = configTemplateBo.findAllTemplateList(Map.class);
         list.stream().forEach(e -> {
             // 如果包含模板中的name，就将模板的数据添加到map中
-            if (map.containsKey(e.get("name"))) {
+            if (map.containsKey(e.get(MongoCommonValue.TEMPLATE_NAME))) {
                 Map<String, Object> map1 = (Map<String, Object>) map.get(e.get("name"));
-                // 过滤name和id
-                e.remove("name");
-                e.remove("_id");
-                e.remove("code");
+                // 过滤name、id和code
+                e.remove(MongoCommonValue.TEMPLATE_NAME);
+                e.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
+                e.remove(MongoCommonValue.TEMPLATE_CODE);
                 map1.putAll(e);
             }
         });
         // 给项目设置唯一标识
-        Map<String, Object> newInsertBaseMap = (Map<String, Object>) map.get("base");
-        newInsertBaseMap.put("configCode", RandomUtils.getRandomStr(16));
-        map.remove("base");
-        map.put("base", newInsertBaseMap);
+        Map<String, Object> newInsertBaseMap = (Map<String, Object>) map.get(MongoCommonValue.PROJECT_BASE_KEY);
+        newInsertBaseMap.put(MongoCommonValue.PROJECT_CODE, RandomUtils.getRandomStr(16));
+        map.remove(MongoCommonValue.PROJECT_BASE_KEY);
+        map.put(MongoCommonValue.PROJECT_BASE_KEY, newInsertBaseMap);
         // 添加成功获取返回的基础base配置
-        Map<String, Object> returnBaseMap = (Map<String, Object>) template.insert(map, MongoCollectionValue.CONFIG_PROJECT).get("base");
-        return returnBaseMap.get("configCode").toString();
+        Map<String, Object> returnBaseMap = (Map<String, Object>) template.insert(map, MongoCollectionValue.CONFIG_PROJECT).get(MongoCommonValue.PROJECT_BASE_KEY);
+        return returnBaseMap.get(MongoCommonValue.PROJECT_CODE).toString();
     }
 
     @Override
@@ -89,17 +90,25 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     }
 
     @Override
+    public UpdateResult removeOneDataByCondition(String code, String key) {
+        // MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE = base.configCode
+        Query query = new Query(Criteria.where(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE).is(code));
+        Update update = new Update().unset(key);
+        return template.updateFirst(query, update, MongoCollectionValue.CONFIG_PROJECT);
+    }
+
+    @Override
     public String getOneProjectConfigToJSON(Map map) {
         // 根据条件获取配置信息
         Map<String, Object> configMap = (Map<String, Object>) this.getOneProjectConfigInfo(map, Map.class);
 
         // 过滤id
-        configMap.remove("_id");
+        configMap.remove(MongoCommonValue.CONFIG_PROJECT_ID);
 
         Map<String, Object> baseMap = (Map<String, Object>) configMap.get("base");
-        baseMap.remove("name");
-        baseMap.remove("description");
-        baseMap.remove("configCode");
+        baseMap.remove(MongoCommonValue.PROJECT_NAME);
+        baseMap.remove(MongoCommonValue.PROJECT_DESCRIPTION);
+        baseMap.remove(MongoCommonValue.PROJECT_CODE);
 
         // 提取key
         List<Object> list = Arrays.asList(configMap.keySet().toArray());

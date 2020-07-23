@@ -1,11 +1,15 @@
 package com.bee.team.fastgo.service.config.impl;
 
+import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.service.config.ProjectConfigBo;
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
+import com.bee.team.fastgo.vo.config.req.RemoveProjectDataReqVo;
 import com.bee.team.fastgo.vo.config.req.SoftReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
+import com.mongodb.client.result.UpdateResult;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
+import com.spring.simple.development.support.exception.GlobalException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.bee.team.fastgo.exception.config.ProjectConfigException.REMOVE_PROJECT_FAILED;
+import static com.bee.team.fastgo.exception.config.ProjectConfigException.UPDATE_PROJECT_FAILED;
+import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 
 /**
  * @ClassName ConfigBoImpl
@@ -42,11 +50,12 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
             list = configProjectBo.getAllProjectConfigList(Map.class);
         } else {
             Map<String, Object> map = new HashMap<>();
-            map.put("name", "config");
+            // 根据项目名模糊搜索，key:项目名 value:关键字
+            map.put(MongoCommonValue.PROJECT_NAME, listProjectConfigsReqVo.getProjectName());
             list = configProjectBo.getProjectConfigList(map, Map.class);
         }
 
-        Integer total = list.size();
+        int total = list.size();
         // 如果list不为空，对list进行分页
         if (total > 0) {
             // 将分页后的数据放到返回对象中
@@ -64,7 +73,7 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
     @Override
     public Map<String, Object> getProjectConfigByCode(String projectCode) {
         Map<String, Object> map = new HashMap<>();
-        map.put("projectCode", projectCode);
+        map.put(MongoCommonValue.PROJECT_CODE, projectCode);
         return (Map<String, Object>) configProjectBo.getOneProjectConfigInfo(map, Map.class);
     }
 
@@ -72,13 +81,35 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
     public void updateProjectConfig(UpdateProjectConfigReqVo updateProjectConfigReqVo) {
         // 条件参数
         Map<String, Object> queryMap = new HashMap<>();
-        queryMap.put("projectCode", updateProjectConfigReqVo.getProjectCode());
+        queryMap.put(MongoCommonValue.PROJECT_CODE, updateProjectConfigReqVo.getProjectCode());
         // 要修改的参数
         Map<String, Object> updateMap = new HashMap<>();
         List<SoftReqVo> list = updateProjectConfigReqVo.getSoftReqVoList();
         // 提出软件名和key值，作为要修改的新参数，并且把key值的.换成-，例如mysql.spring-datasource****
-        list.stream().forEach(e->updateMap.put((e.getSoftName()+e.getMapReqVo().getKey().replace(".","-")),e.getMapReqVo().getValue()));
-        configProjectBo.updateOneProject(queryMap, updateMap);
+        list.stream().forEach(e -> updateMap.put((e.getSoftName() + e.getMapReqVo().getKey().replace(".", "-")), e.getMapReqVo().getValue()));
+        UpdateResult result = configProjectBo.updateOneProject(queryMap, updateMap);
+        if (result.getMatchedCount() < 1) {
+            throw new GlobalException(RES_DATA_NOT_EXIST, "要修改的项目不存在");
+        }
+
+        if (result.getModifiedCount() < 1) {
+            throw new GlobalException(UPDATE_PROJECT_FAILED);
+        }
+    }
+
+    @Override
+    public void removeProjectConfigOneData(RemoveProjectDataReqVo removeProjectDataReqVo) {
+        // 拼接key，例如：mysql.spring-datasource-**
+        String key = removeProjectDataReqVo.getSoftName() + "." + removeProjectDataReqVo.getKey().replace(".", "-");
+        UpdateResult result = configProjectBo.removeOneDataByCondition(removeProjectDataReqVo.getConfigCode(), key);
+
+        if (result.getMatchedCount() < 1) {
+            throw new GlobalException(RES_DATA_NOT_EXIST, "要修改的项目不存在");
+        }
+
+        if (result.getModifiedCount() < 1) {
+            throw new GlobalException(REMOVE_PROJECT_FAILED);
+        }
     }
 
 

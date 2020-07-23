@@ -1,6 +1,7 @@
 package com.bee.team.fastgo.service.config;
 
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
+import com.bee.team.fastgo.vo.config.req.RemoveProjectDataReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
@@ -39,4 +40,13 @@ public interface ProjectConfigBo {
      * @Param updateProjectConfigReqVo
      **/
     void updateProjectConfig(UpdateProjectConfigReqVo updateProjectConfigReqVo);
+
+    /**
+     * @return
+     * @Author xqx
+     * @Description 删除项目里面的某一个配置项
+     * @Date 14:57 2020/7/23
+     * @Param removeProjectDataReqVo
+     **/
+    void removeProjectConfigOneData(RemoveProjectDataReqVo removeProjectDataReqVo);
 }

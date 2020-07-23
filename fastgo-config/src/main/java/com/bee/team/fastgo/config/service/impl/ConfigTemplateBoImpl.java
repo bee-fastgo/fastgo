@@ -1,6 +1,7 @@
 package com.bee.team.fastgo.config.service.impl;
 
 import com.bee.team.fastgo.config.common.MongoCollectionValue;
+import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigTemplateBo;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -35,7 +36,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
         if (map.isEmpty()) {
             // 抛出异常
         }
-        map.put("code", RandomUtils.getRandomStr(16));
+        map.put(MongoCommonValue.TEMPLATE_CODE, RandomUtils.getRandomStr(16));
         return template.insert(map, MongoCollectionValue.CONFIG_TEMPLATE);
     }
 
@@ -59,6 +60,13 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
         Query query = new Query(criteria);
         // 根据条件删除指定的模板信息
         return template.remove(query, MongoCollectionValue.CONFIG_TEMPLATE);
+    }
+
+    @Override
+    public UpdateResult removeOneDataByCondition(String code, String key) {
+        Query query = new Query(Criteria.where(MongoCommonValue.TEMPLATE_CODE).is(code));
+        Update update = new Update().unset(key);
+        return template.updateFirst(query, update, MongoCollectionValue.CONFIG_TEMPLATE);
     }
 
     @Override

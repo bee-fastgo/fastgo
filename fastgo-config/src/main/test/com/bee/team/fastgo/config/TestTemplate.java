@@ -158,8 +158,13 @@ public class TestTemplate {
     }
 
     @Test
-    public void testStr(){
-        String str="com.jjj.ggg.hhh";
-        System.out.println(str.replace(".","-"));
+    public void testStr() {
+        String str = "com.jjj.ggg.hhh";
+        System.out.println(str.replace(".", "-"));
+    }
+
+    @Test
+    public void test7() {
+        System.out.println(configTemplateBo.removeOneDataByCondition("d9vwPOoNvk4iUWrs", "spring-simple-datasource-initialSize"));
     }
 }

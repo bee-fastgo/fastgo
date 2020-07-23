@@ -44,6 +44,11 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
             <version>2.3.1.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>com.spring</groupId>
+            <artifactId>simple-development-code-generate</artifactId>
+            <version>3.0</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

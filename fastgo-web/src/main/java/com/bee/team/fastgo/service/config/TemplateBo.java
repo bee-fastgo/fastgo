@@ -2,6 +2,7 @@ package com.bee.team.fastgo.service.config;
 
 import com.bee.team.fastgo.vo.config.req.InsertTemplateReqVo;
 import com.bee.team.fastgo.vo.config.req.ListTemplatesReqVO;
+import com.bee.team.fastgo.vo.config.req.RemoveTemplateDataReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateTemplateReqVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
@@ -60,4 +61,12 @@ public interface TemplateBo {
      **/
     void updateTemplate(UpdateTemplateReqVo updateTemplateReqVo);
 
+    /**
+     * @return
+     * @Author xqx
+     * @Description 删除模板的某一个配置项
+     * @Date 16:32 2020/7/23
+     * @Param removeTemplateDataReqVo
+     **/
+    void removeTemplateOneData(RemoveTemplateDataReqVo removeTemplateDataReqVo);
 }

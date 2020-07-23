@@ -120,4 +120,10 @@ public class TestProject {
         map.put("mysql.name", "mysql5.7");
         System.out.println(configProjectBo.countProjectByCondition(map));
     }
+
+    // 10、移除文档里面的某一条数据
+    @Test
+    public void removeOneData() {
+        System.out.println(configProjectBo.removeOneDataByCondition("UyRbVcaPnho33N85","spring.simple.datasource.minIdle"));
+    }
 }
