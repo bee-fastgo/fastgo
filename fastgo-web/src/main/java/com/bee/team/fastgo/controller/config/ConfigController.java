@@ -4,12 +4,12 @@ import com.bee.team.fastgo.service.config.ProjectConfigBo;
 import com.bee.team.fastgo.service.config.TemplateBo;
 import com.bee.team.fastgo.vo.config.req.*;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
-import com.spring.simple.development.core.annotation.base.swagger.Api;
-import com.spring.simple.development.core.annotation.base.swagger.ApiImplicitParam;
-import com.spring.simple.development.core.annotation.base.swagger.ApiOperation;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import com.spring.simple.development.support.exception.GlobalException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -40,7 +40,6 @@ public class ConfigController {
      */
     @RequestMapping(value = "/listProjectConfigs", method = RequestMethod.POST)
     @ApiOperation(value = "分页显示项目列表信息（模糊搜索）")
-    @ApiImplicitParam(name = "listProjectConfigsReqVo", description = "参数信息", resultDataType = ResBody.class)
     @ValidHandler(key = "listProjectConfigsReqVo", value = ListProjectConfigsReqVo.class, isReqBody = false)
     public ResBody getListProjectConfigs(@RequestBody ListProjectConfigsReqVo listProjectConfigsReqVo) {
         ResPageDTO resPageDTO = projectConfigBo.getProjectConfigList(listProjectConfigsReqVo);
@@ -49,7 +48,7 @@ public class ConfigController {
 
     @RequestMapping(value = "/getProjectConfigByCode", method = RequestMethod.POST)
     @ApiOperation(value = "项目的配置信息详情")
-    @ApiImplicitParam(name = "projectCode", description = "项目配置code", resultDataType = ResBody.class)
+    @ApiImplicitParam(name = "projectCode", value = "项目配置code", dataTypeClass = String.class)
     public ResBody getProjectConfigByCode(@RequestBody String projectCode) {
         if (StringUtils.isEmpty(projectCode)) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "code不能为空");
@@ -60,7 +59,6 @@ public class ConfigController {
 
     @RequestMapping(value = "/updateProjectConfig", method = RequestMethod.POST)
     @ApiOperation(value = "修改项目配置信息")
-    @ApiImplicitParam(name = "updateProjectConfigReqVo", description = "参数信息", resultDataType = ResBody.class)
     @ValidHandler(key = "updateProjectConfigReqVo", value = UpdateProjectConfigReqVo.class, isReqBody = false)
     public ResBody updateProjectConfig(@RequestBody UpdateProjectConfigReqVo updateProjectConfigReqVo) {
         if (CollectionUtils.isEmpty(updateProjectConfigReqVo.getSoftReqVoList())) {
@@ -72,7 +70,6 @@ public class ConfigController {
 
     @RequestMapping(value = "/removeProjectConfigOneData", method = RequestMethod.POST)
     @ApiOperation(value = "删除项目的某一个配置项")
-    @ApiImplicitParam(name = "removeProjectDataReqVo", description = "参数信息", resultDataType = ResBody.class)
     @ValidHandler(key = "removeProjectDataReqVo", value = RemoveProjectDataReqVo.class, isReqBody = false)
     public ResBody removeProjectConfigOneDate(@RequestBody RemoveProjectDataReqVo removeProjectDataReqVo) {
         projectConfigBo.removeProjectConfigOneData(removeProjectDataReqVo);
@@ -94,7 +91,6 @@ public class ConfigController {
      */
     @RequestMapping(value = "/listTemplates", method = RequestMethod.POST)
     @ApiOperation(value = "分页显示模板列表信息（模糊搜索）")
-    @ApiImplicitParam(name = "listTemplatesReqVO", description = "参数信息", resultDataType = ResBody.class)
     @ValidHandler(key = "listTemplatesReqVO", value = ListTemplatesReqVO.class, isReqBody = false)
     public ResBody getListTemplates(@RequestBody ListTemplatesReqVO listTemplatesReqVO) {
         ResPageDTO resPageDTO = templateBo.getTemplateConfigsList(listTemplatesReqVO);
@@ -103,7 +99,7 @@ public class ConfigController {
 
     @RequestMapping(value = "/getTemplateByCode", method = RequestMethod.POST)
     @ApiOperation(value = "获取模板的详细信息")
-    @ApiImplicitParam(name = "code", description = "模板code", resultDataType = ResBody.class)
+    @ApiImplicitParam(name = "code", value = "模板code", dataTypeClass = String.class)
     public ResBody getTemplateByCode(@RequestBody String code) {
         if (StringUtils.isEmpty(code)) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "code不能为空");
@@ -114,7 +110,6 @@ public class ConfigController {
 
     @RequestMapping(value = "/insertTemplate", method = RequestMethod.POST)
     @ApiOperation(value = "新增模板")
-    @ApiImplicitParam(name = "insertTemplateReqVo", description = "参数信息", resultDataType = ResBody.class)
     @ValidHandler(key = "insertTemplateReqVo", value = InsertTemplateReqVo.class, isReqBody = false)
     public ResBody insetTemplate(@RequestBody InsertTemplateReqVo insertTemplateReqVo) {
         templateBo.insetTemplate(insertTemplateReqVo);
@@ -124,7 +119,6 @@ public class ConfigController {
 
     @RequestMapping(value = "/updateTemplate", method = RequestMethod.POST)
     @ApiOperation(value = "修改模板")
-    @ApiImplicitParam(name = "updateTemplateReqVo", description = "参数信息", resultDataType = ResBody.class)
     @ValidHandler(key = "updateTemplateReqVo", value = UpdateTemplateReqVo.class, isReqBody = false)
     public ResBody updateTemplate(@RequestBody UpdateTemplateReqVo updateTemplateReqVo) {
         if (CollectionUtils.isEmpty(updateTemplateReqVo.getMapReqVos())) {
@@ -136,7 +130,6 @@ public class ConfigController {
 
     @RequestMapping(value = "/removeTemplateOneData", method = RequestMethod.POST)
     @ApiOperation(value = "删除模板的某一个配置项")
-    @ApiImplicitParam(name = "removeTemplateDataReqVo", description = "参数信息", resultDataType = ResBody.class)
     @ValidHandler(key = "removeTemplateDataReqVo", value = RemoveTemplateDataReqVo.class, isReqBody = false)
     public ResBody removeTemplateOneData(@RequestBody RemoveTemplateDataReqVo removeTemplateDataReqVo) {
         templateBo.removeTemplateOneData(removeTemplateDataReqVo);
@@ -145,7 +138,7 @@ public class ConfigController {
 
     @RequestMapping(value = "/removeTemplate", method = RequestMethod.POST)
     @ApiOperation(value = "删除模板")
-    @ApiImplicitParam(name = "code", description = "模板code", resultDataType = ResBody.class)
+    @ApiImplicitParam(name = "code", value = "模板code", dataTypeClass = String.class)
     public ResBody removeTemplate(@RequestBody String code) {
         templateBo.removeTemplate(code);
         return new ResBody().buildSuccessResBody();

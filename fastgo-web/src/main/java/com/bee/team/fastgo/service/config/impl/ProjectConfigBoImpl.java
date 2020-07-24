@@ -25,7 +25,7 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_D
 
 /**
  * @ClassName ConfigBoImpl
- * @Description
+ * @Description 项目配置的实现类
  * @Author xqx
  * @Date 2020/7/17 15:56
  * @Version 1.0
