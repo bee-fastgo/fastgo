@@ -51,7 +51,8 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
         } else {
             Map<String, Object> map = new HashMap<>();
             // 根据项目名模糊搜索，key:项目名 value:关键字
-            map.put(MongoCommonValue.PROJECT_NAME, listProjectConfigsReqVo.getProjectName());
+            // MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_NAME==base.name
+            map.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_NAME, listProjectConfigsReqVo.getProjectName());
             list = configProjectBo.getProjectConfigList(map, Map.class);
         }
 
@@ -73,7 +74,8 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
     @Override
     public Map<String, Object> getProjectConfigByCode(String projectCode) {
         Map<String, Object> map = new HashMap<>();
-        map.put(MongoCommonValue.PROJECT_CODE, projectCode);
+        // MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE== base.configCode
+        map.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, projectCode);
         return (Map<String, Object>) configProjectBo.getOneProjectConfigInfo(map, Map.class);
     }
 
