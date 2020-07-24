@@ -2,6 +2,7 @@ package com.bee.team.fastgo.config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
+import org.bson.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,8 +97,8 @@ public class TestProject {
     @Test
     public void testGetProjectList() {
         Map<String, Object> map = new HashMap<>();
-        map.put("李四.mysql.name", "mysql5.7");
-        List<Map<String, Object>> list = configProjectBo.getProjectConfigList(map, Map.class);
+//        map.put("李四.mysql.name", "mysql5.7");
+        List<Map<String, Object>> list = configProjectBo.getProjectConfigList(map, Document.class);
         System.out.println(list);
     }
 
@@ -124,6 +125,6 @@ public class TestProject {
     // 10、移除文档里面的某一条数据
     @Test
     public void removeOneData() {
-        System.out.println(configProjectBo.removeOneDataByCondition("UyRbVcaPnho33N85","spring.simple.datasource.minIdle"));
+        System.out.println(configProjectBo.removeOneDataByCondition("UyRbVcaPnho33N85", "spring.simple.datasource.minIdle"));
     }
 }

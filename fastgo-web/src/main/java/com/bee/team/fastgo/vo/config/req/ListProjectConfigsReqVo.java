@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * @ClassName ListProjectConfigsReqVo
@@ -16,7 +15,7 @@ import java.io.Serializable;
  **/
 @Data
 @ApiModel(value = "listProjectConfigsReqVo", description = "项目配置列表参数类")
-public class ListProjectConfigsReqVo implements Serializable {
+public class ListProjectConfigsReqVo {
     @ApiModelProperty(value = "开始页", example = "1", required = true)
     @NotNull(message = "分页参数不能为空")
     private Integer pageNum;

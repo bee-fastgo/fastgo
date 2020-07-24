@@ -76,7 +76,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         if (map.isEmpty()) {
             // 抛出异常
         }
-        List<Object> list = Arrays.asList(map.keySet());
+        List<Object> list = Arrays.asList(map.keySet().toArray());
         Criteria criteria = new Criteria();
         list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
         Query query = new Query(criteria);
@@ -125,7 +125,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     public UpdateResult updateOneProject(Map queryMap, Map updateMap) {
         // 修改条件，相当于mysql where子句
         Criteria criteria = new Criteria();
-        List<Object> list = Arrays.asList(queryMap.keySet());
+        List<Object> list = Arrays.asList(queryMap.keySet().toArray());
         list.stream().forEach(e -> criteria.and(e.toString()).is(queryMap.get(e)));
         Query query = new Query(criteria);
 
@@ -148,7 +148,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         // 获取所有的key,如果map是空，就默认查询所有的信息
         if (!map.isEmpty()) {
             Criteria criteria = new Criteria();
-            List<Object> list = Arrays.asList(map.keySet());
+            List<Object> list = Arrays.asList(map.keySet().toArray());
             list.stream().forEach(key -> criteria.and(key.toString()).regex(".*" + map.get(key) + ".*"));
             query.addCriteria(criteria);
         }
@@ -160,7 +160,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         if (map.isEmpty()) {
             // 抛出异常
         }
-        List<Object> list = Arrays.asList(map.keySet());
+        List<Object> list = Arrays.asList(map.keySet().toArray());
         Criteria criteria = new Criteria();
         list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
         Query query = new Query(criteria);
@@ -179,7 +179,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         // 获取所有的key,如果map是空，就默认查询所有的信息
         if (!map.isEmpty()) {
             Criteria criteria = new Criteria();
-            List<Object> list = Arrays.asList(map.keySet());
+            List<Object> list = Arrays.asList(map.keySet().toArray());
             list.stream().forEach(key -> criteria.and(key.toString()).regex(".*" + map.get(key) + ".*"));
             query.addCriteria(criteria);
         }

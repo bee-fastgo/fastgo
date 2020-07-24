@@ -4,10 +4,9 @@ import com.bee.team.fastgo.service.user.UserBo;
 import com.bee.team.fastgo.vo.user.AddUserReqVo;
 import com.bee.team.fastgo.vo.user.UserLoginReqVo;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
-import com.spring.simple.development.core.annotation.base.swagger.Api;
-import com.spring.simple.development.core.annotation.base.swagger.ApiImplicitParam;
-import com.spring.simple.development.core.annotation.base.swagger.ApiOperation;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,6 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "用户登录")
-    @ApiImplicitParam(name = "userLoginReqVo", description = "用户登录的参数", resultDataType = UserLoginReqVo.class)
     @ValidHandler(key = "userLoginReqVo", value = UserLoginReqVo.class, isReqBody = false)
     public ResBody userLogin(@RequestBody UserLoginReqVo userLoginReqVo) {
         userBo.login(userLoginReqVo.getUserName(), userLoginReqVo.getPassword());
@@ -38,7 +36,6 @@ public class LoginController {
 
     @RequestMapping(value = "/insertLogin", method = RequestMethod.POST)
     @ApiOperation(value = "用户注册")
-    @ApiImplicitParam(name = "addUserReqVo", description = "用户注册的参数", resultDataType = AddUserReqVo.class)
     @ValidHandler(key = "addUserReqVo", value = AddUserReqVo.class, isReqBody = false)
     public ResBody userAdd(@RequestBody AddUserReqVo addUserReqVo) {
         userBo.insertUser(addUserReqVo.getUserName(), addUserReqVo.getPassword());
