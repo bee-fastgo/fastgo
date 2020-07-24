@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bee.team.fastgo.mapper.ProfileSoftwareRelationDoMapperExt">
+
+    <!--批量新增项目环境，软件环境关联表-->
+    <insert id="batchInsertProfileSoftware">
+        insert into t_profile_software_relation (prifileCode,runServerIp,softwareCode,softwareConfig) values
+        <foreach collection="psDos" item="ProfileSoftwareRelationDo" separator=",">
+            (#{ProfileSoftwareRelationDo.prifileCode},
+            #{ProfileSoftwareRelationDo.runServerIp},
+            #{ProfileSoftwareRelationDo.softwareCode},
+            #{ProfileSoftwareRelationDo.softwareConfig})
+        </foreach>
+    </insert>
+
+</mapper>

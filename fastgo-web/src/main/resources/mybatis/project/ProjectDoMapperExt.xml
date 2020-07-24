@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bee.team.fastgo.mapper.ProjectDoMapperExt">
+
+    <!--查询后台项目列表-->
+    <select id="findBackPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
+        select projectName,projectDesc,gitUrl,projectStatus,packageName from t_project where projectType = '2'
+        limit #{start},#{limit}
+    </select>
+
+    <!--查询前台项目列表-->
+    <select id="findFrontPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
+        select projectName,projectDesc,gitUrl,projectStatus,packageName from t_project where projectType = '1'
+        limit #{start},#{limit}
+    </select>
+
+</mapper>
