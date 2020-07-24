@@ -26,7 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @time: 2020/7/21 0021 8:51
  */
 @Api(tags = "执行日志相关")
-@RestController("/logs")
+@RestController
+@RequestMapping("/logs")
 public class ServerExecutorLogController {
     @Autowired
     private BaseSupport baseSupport;

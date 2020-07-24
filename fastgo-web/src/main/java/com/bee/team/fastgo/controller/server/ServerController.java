@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @time: 2020/7/21 0021 8:51
  */
 @Api(tags = "服务器相关")
-@RestController("/server")
+@RestController
+@RequestMapping("/server")
 public class ServerController {
 
     @Autowired
