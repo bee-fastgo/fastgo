@@ -1,10 +1,7 @@
 package com.bee.team.fastgo;
 
 
-import com.spring.simple.development.core.annotation.config.EnableAlert;
-import com.spring.simple.development.core.annotation.config.EnableMybatis;
-import com.spring.simple.development.core.annotation.config.EnableSwagger;
-import com.spring.simple.development.core.annotation.config.EnableWebMvc;
+import com.spring.simple.development.core.annotation.config.*;
 import com.spring.simple.development.core.baseconfig.tomcat.SimpleBootApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;

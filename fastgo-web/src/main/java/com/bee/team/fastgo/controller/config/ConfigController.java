@@ -28,7 +28,8 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_P
  * @time: 2020/7/17 0017 10:32
  */
 @Api(tags = "配置中心")
-@RestController("/config")
+@RequestMapping("/config")
+@RestController
 public class ConfigController {
     @Autowired
     private ProjectConfigBo projectConfigBo;
@@ -68,28 +69,10 @@ public class ConfigController {
         return new ResBody().buildSuccessResBody();
     }
 
-    @RequestMapping(value = "/removeProjectConfigOneData", method = RequestMethod.POST)
-    @ApiOperation(value = "删除项目的某一个配置项")
-    @ValidHandler(key = "removeProjectDataReqVo", value = RemoveProjectDataReqVo.class, isReqBody = false)
-    public ResBody removeProjectConfigOneDate(@RequestBody RemoveProjectDataReqVo removeProjectDataReqVo) {
-        projectConfigBo.removeProjectConfigOneData(removeProjectDataReqVo);
-        return new ResBody().buildSuccessResBody();
-    }
-
     /*
-    二、自定义配置方案管理
+    二、模板库管理
      */
-    // 1、方案列表（分页）
-    // 2、方案的详细信息
-    // 3、新增方案
-    // 4、修改方案
-    // 5、删除方案
-
-
-    /*
-    三、模板库管理
-     */
-    @RequestMapping(value = "/listTemplates", method = RequestMethod.POST)
+    @RequestMapping(value = "/listTemplates", method = RequestMethod.POST, consumes = "application/json")
     @ApiOperation(value = "分页显示模板列表信息（模糊搜索）")
     @ValidHandler(key = "listTemplatesReqVO", value = ListTemplatesReqVO.class, isReqBody = false)
     public ResBody getListTemplates(@RequestBody ListTemplatesReqVO listTemplatesReqVO) {
@@ -140,6 +123,9 @@ public class ConfigController {
     @ApiOperation(value = "删除模板")
     @ApiImplicitParam(name = "code", value = "模板code", dataTypeClass = String.class)
     public ResBody removeTemplate(@RequestBody String code) {
+        if (StringUtils.isEmpty(code)) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "code不能为空");
+        }
         templateBo.removeTemplate(code);
         return new ResBody().buildSuccessResBody();
     }

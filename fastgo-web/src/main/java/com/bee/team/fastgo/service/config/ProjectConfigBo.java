@@ -41,12 +41,4 @@ public interface ProjectConfigBo {
      **/
     void updateProjectConfig(UpdateProjectConfigReqVo updateProjectConfigReqVo);
 
-    /**
-     * @return
-     * @Author xqx
-     * @Description 删除项目里面的某一个配置项
-     * @Date 14:57 2020/7/23
-     * @Param removeProjectDataReqVo
-     **/
-    void removeProjectConfigOneData(RemoveProjectDataReqVo removeProjectDataReqVo);
 }
