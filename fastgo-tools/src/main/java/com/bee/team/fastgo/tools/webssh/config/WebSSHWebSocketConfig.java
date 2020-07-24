@@ -23,8 +23,8 @@ public class WebSSHWebSocketConfig implements WebSocketConfigurer{
         //socket通道
         //指定处理器和路径
         webSocketHandlerRegistry.addHandler(webSSHWebSocketHandler, "/webssh")
-                .addInterceptors(new WebSocketInterceptor());
+                .addInterceptors(new WebSocketInterceptor())
         // 禁止跨越
-        //.setAllowedOrigins("*");
+        .setAllowedOrigins("*");
     }
 }
