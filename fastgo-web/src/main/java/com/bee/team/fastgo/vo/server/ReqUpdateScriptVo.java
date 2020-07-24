@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author jgz
  * @version 1.0
@@ -16,9 +18,11 @@ import lombok.Data;
 public class ReqUpdateScriptVo {
 
     @ApiModelProperty(value = "脚本key", example = "asdads",required = true)
+    @NotNull(message = "脚本key不能为空")
     private String scriptKey;
 
-    @ApiModelProperty(value = "脚本类容", example = "",required = true)
+    @ApiModelProperty(value = "脚本内容", example = "",required = true)
+    @NotNull(message = "脚本内容不能为空")
     private String script;
 
 
