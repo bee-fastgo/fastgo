@@ -1,7 +1,5 @@
 package com.bee.team.fastgo.controller.server;
 
-import com.bee.team.fastgo.hander.SimpleExecutorCmd;
-import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;
 import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.vo.server.AddServerVo;
 import com.bee.team.fastgo.vo.server.ModifyServerVo;
@@ -13,8 +11,12 @@ import com.spring.simple.development.core.component.mvc.res.ResBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @description:
@@ -38,8 +40,7 @@ public class ServerController {
     @RequestMapping(value = "/addServer", method = RequestMethod.POST)
     @ValidHandler(key = "addServerVo", value = AddServerVo.class)
     @ApiOperation(value = "添加服务器")
-    @ApiImplicitParam(name = "addServerVo", value = "添加服务器Vo对象", dataTypeClass = AddServerVo.class)
-    public ResBody<Void> addServer(AddServerVo addServerVo) {
+    public ResBody<Void> addServer(@ApiParam(name = "addServerVo", value = "添加服务器") @RequestBody AddServerVo addServerVo) {
         serverBo.addServerDo(addServerVo);
         return new ResBody().buildSuccessResBody();
     }
@@ -54,8 +55,7 @@ public class ServerController {
     @RequestMapping(value = "/modifyServer", method = RequestMethod.POST)
     @ValidHandler(key = "modifyServer", value = ModifyServerVo.class)
     @ApiOperation(value = "修改服务器")
-    @ApiImplicitParam(name = "modifyServerVo", value = "修改服务器Vo对象", dataTypeClass = ModifyServerVo.class)
-    public ResBody<Void> addServer(ModifyServerVo modifyServerVo) {
+    public ResBody<Void> modifyServer(@ApiParam(name = "modifyServerVo", value = "修改服务器Vo对象") @RequestBody ModifyServerVo modifyServerVo) {
         serverBo.modifyServerDo(modifyServerVo);
         return new ResBody().buildSuccessResBody();
     }
@@ -63,54 +63,8 @@ public class ServerController {
     @RequestMapping(value = "/getServerList", method = RequestMethod.POST)
     @ValidHandler(key = "queryServerVo", value = QueryServerVo.class)
     @ApiOperation(value = "查询服务器(分页)")
-    @ApiImplicitParam(name = "queryServerVo", value = "服务器查询对象", dataTypeClass = QueryServerVo.class)
-    public ResBody<ServerVo> addServer(QueryServerVo queryServerVo) {
+    public ResBody<ServerVo> getServerList(@ApiParam(name = "queryServerVo", value = "服务器查询对象") @RequestBody QueryServerVo queryServerVo) {
         ResPageDTO resPageDTO = serverBo.queryPageServer(queryServerVo);
         return new ResBody().buildSuccessResBody(resPageDTO);
-    }
-
-
-    @GetMapping(value = "/exec")
-    @ApiOperation(value = "执行测试脚本")
-    public ResBody<Void> exec(){
-        SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, "#!/bin/bash\n" +
-                "\n" +
-                "software=redis\n" +
-                "version=5.0.8\n" +
-                "targetPath=/data/fastgo/software\n" +
-                "\n" +
-                "# 安装wget\n" +
-                "if [[ -z $(rpm -qa | grep wget) ]];then\n" +
-                "\tyum -y install wget\n" +
-                "fi\n" +
-                "\n" +
-                "# 停止redis\n" +
-                "for pid in $(ps -A | grep $software | awk '{print $1}')\n" +
-                "do\n" +
-                "\tkill -9 $pid\n" +
-                "done\n" +
-                "\n" +
-                "\n" +
-                "# 下载redis\n" +
-                "wget $(pwd) \t\n" +
-                "\n" +
-                "# 如果基本文件夹不存在,则创建\n" +
-                "if [[ ! -d \"$targetPath\" ]];then\n" +
-                "\tmkdir -p $targetPath\n" +
-                "fi\n" +
-                "\n" +
-                "# 解压文件\n" +
-                "tar -zxf $(pwd)/$software-$version.tar.gz -C $targetPath\n" +
-                "\n" +
-                "# 启动\n" +
-                "$targetPath/$software-$version/redis-server $targetPath/$software-$version/redis.conf\n" +
-                "\n" +
-                "# 清理资源\n" +
-                "if [[ 0 -eq $? ]];then\n" +
-                "\techo \"redis install and run success...\"\n" +
-                "\techo \"clear package...\"\n" +
-                "\trm -rf $(pwd)/$software-$version.tar.gz\n" +
-                "fi", null, -1, "172.22.5.71");
-        return new ResBody().buildSuccessResBody();
     }
 }
