@@ -3,6 +3,8 @@ package com.bee.team.fastgo.service.user;
 import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.model.UserDoExample;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface UserBo extends com.alibaba.lava.base.LavaBo<UserDo, UserDoExample> {
     /**
      * @return
@@ -12,7 +14,7 @@ public interface UserBo extends com.alibaba.lava.base.LavaBo<UserDo, UserDoExamp
      * @Param userName 用户名
      * @Param password 密码
      **/
-    void login(String userName, String password);
+    void login(HttpServletRequest request, String userName, String password);
 
     /**
      * @return

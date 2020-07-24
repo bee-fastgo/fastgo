@@ -10,7 +10,7 @@ import com.spring.simple.development.support.exception.GlobalResponseCode;
  * @Version 1.0
  **/
 public class TemplateException {
-    public static final GlobalResponseCode INSERT_TEMPLATE_FAILED = new GlobalResponseCode(1100, "添加模板失败", "%s");
-    public static final GlobalResponseCode UPDATE_TEMPLATE_FAILED = new GlobalResponseCode(1101, "修改模板失败", "%s");
-    public static final GlobalResponseCode REMOVE_TEMPLATE_FAILED = new GlobalResponseCode(1102, "删除模板失败", "%s");
+    public static final GlobalResponseCode INSERT_TEMPLATE_FAILED = new GlobalResponseCode(1100, "添加模板失败", "添加模板失败");
+    public static final GlobalResponseCode UPDATE_TEMPLATE_FAILED = new GlobalResponseCode(1101, "修改模板失败", "修改模板失败");
+    public static final GlobalResponseCode REMOVE_TEMPLATE_FAILED = new GlobalResponseCode(1102, "删除模板失败", "删除模板失败");
 }

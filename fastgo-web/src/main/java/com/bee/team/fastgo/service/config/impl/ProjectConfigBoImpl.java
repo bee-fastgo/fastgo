@@ -4,7 +4,6 @@ import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.service.config.ProjectConfigBo;
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
-import com.bee.team.fastgo.vo.config.req.RemoveProjectDataReqVo;
 import com.bee.team.fastgo.vo.config.req.SoftReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
 import com.mongodb.client.result.UpdateResult;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.bee.team.fastgo.exception.config.ProjectConfigException.REMOVE_PROJECT_FAILED;
 import static com.bee.team.fastgo.exception.config.ProjectConfigException.UPDATE_PROJECT_FAILED;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 
@@ -98,21 +96,4 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
             throw new GlobalException(UPDATE_PROJECT_FAILED);
         }
     }
-
-    @Override
-    public void removeProjectConfigOneData(RemoveProjectDataReqVo removeProjectDataReqVo) {
-        // 拼接key，例如：mysql.spring-datasource-**
-        String key = removeProjectDataReqVo.getSoftName() + "." + removeProjectDataReqVo.getKey().replace(".", "-");
-        UpdateResult result = configProjectBo.removeOneDataByCondition(removeProjectDataReqVo.getConfigCode(), key);
-
-        if (result.getMatchedCount() < 1) {
-            throw new GlobalException(RES_DATA_NOT_EXIST, "要修改的项目不存在");
-        }
-
-        if (result.getModifiedCount() < 1) {
-            throw new GlobalException(REMOVE_PROJECT_FAILED);
-        }
-    }
-
-
 }

@@ -5,6 +5,7 @@ import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigTemplateBo;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,6 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
  * @ClassName ConfigTemplateBoImpl
@@ -51,7 +54,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
     @Override
     public DeleteResult removeTemplateByCondition(Map map) {
         if (map.isEmpty()) {
-            // 抛出异常
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数不能为空");
         }
         // 获取所有的条件key
         List<Object> keys = Arrays.asList(map.keySet().toArray());

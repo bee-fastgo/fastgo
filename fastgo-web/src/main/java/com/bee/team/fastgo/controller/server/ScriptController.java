@@ -7,11 +7,11 @@ import com.spring.simple.development.core.annotation.base.ValidHandler;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -55,11 +55,10 @@ public class ScriptController {
      * @date 10:03 2020/7/24
      * @Description
      */
-    @PostMapping(value = "/addScript")
+    @PostMapping(value = "/addScript",consumes = "application/json")
     @ApiOperation(value = "添加脚本")
     @ValidHandler(key = "reqAddScriptVo", value = ReqAddScriptVo.class,isReqBody = false)
-    @ApiImplicitParam(name = "reqAddScriptVo", value = "添加脚本实体", dataTypeClass = ReqAddScriptVo.class)
-    public ResBody<Void> addScript(ReqAddScriptVo reqAddScriptVo){
+    public ResBody<Void> addScript(@RequestBody ReqAddScriptVo reqAddScriptVo){
         serverScriptBo.saveScript(reqAddScriptVo);
         return new ResBody().buildSuccessResBody();
     }
@@ -72,28 +71,27 @@ public class ScriptController {
      * @date 10:04 2020/7/24
      * @Description
      */
-    @PostMapping(value = "/getScriptListPage")
+    @PostMapping(value = "/getScriptListPage",consumes = "application/json")
     @ApiOperation(value = "获取脚本列表分页(分页)")
     @ValidHandler(key = "queryScriptVo", value = QueryScriptVo.class,isReqBody = false)
-    @ApiImplicitParam(name = "queryScriptVo", value = "查询脚本分页对象", dataTypeClass = QueryScriptVo.class)
-    public ResBody<ResScriptVo> getScriptByPage(QueryScriptVo queryScriptVo){
+    public ResBody<ResScriptVo> getScriptByPage(@RequestBody QueryScriptVo queryScriptVo){
         ResPageDTO<ResScriptVo> resPageDTO = serverScriptBo.getScriptByPage(queryScriptVo);
         return new ResBody<ResScriptVo>().buildSuccessResBody(resPageDTO);
     }
 
     /**
      * 通过脚本key获取脚本信息
-     * @param scriptKey
+     * @param reqGetScriptInfoVo
      * @return {@link ResBody<ResScriptInfoVo>}
      * @author jgz
      * @date 13:18 2020/7/24
      * @Description
      */
-    @GetMapping(value = "/getScriptInfo")
+    @GetMapping(value = "/getScriptInfo",consumes = "application/json")
     @ApiOperation(value = "获取脚本信息")
-    @ApiImplicitParam(name = "scriptKey", value = "脚本key")
-    public ResBody<ResScriptInfoVo> getScriptInfo(String scriptKey){
-        ResScriptInfoVo resScriptInfoVo = serverScriptBo.getScriptInfoByScriptKey(scriptKey);
+    @ValidHandler(key = "reqGetScriptInfoVo", value = ReqGetScriptInfoVo.class,isReqBody = false)
+    public ResBody<ResScriptInfoVo> getScriptInfo(@RequestBody ReqGetScriptInfoVo reqGetScriptInfoVo){
+        ResScriptInfoVo resScriptInfoVo = serverScriptBo.getScriptInfoByScriptKey(reqGetScriptInfoVo.getScriptKey());
         return  new ResBody<ResScriptInfoVo>().buildSuccessResBody(resScriptInfoVo);
     }
 
@@ -105,22 +103,31 @@ public class ScriptController {
      * @date 13:18 2020/7/24
      * @Description
      */
-    @PostMapping(value = "/updateScript")
+    @PostMapping(value = "/updateScript",consumes = "application/json")
     @ApiOperation(value = "修改脚本内容")
     @ValidHandler(key = "reqUpdateScriptVo", value = ReqUpdateScriptVo.class,isReqBody = false)
-    @ApiImplicitParam(name = "reqUpdateScriptVo", value = "修改脚本内容对象", dataTypeClass = ReqUpdateScriptVo.class)
-    public ResBody<Void> updateScript(ReqUpdateScriptVo reqUpdateScriptVo){
+    public ResBody<Void> updateScript(@RequestBody ReqUpdateScriptVo reqUpdateScriptVo){
         serverScriptBo.updateScript(reqUpdateScriptVo);
         return new ResBody().buildSuccessResBody();
     }
 
 
+    /**
+     * 删除脚本
+     * @param reqDeleteScriptVo
+     * @return {@link ResBody<Void>}
+     * @author jgz
+     * @date 18:49 2020/7/24
+     * @Description
+     */
     @PostMapping(value = "/deleteScript")
     @ApiOperation(value = "删除脚本")
-    @ApiImplicitParam(name = "scriptKey", value = "脚本key")
-    public ResBody<Void> deleteScript(String scriptKey){
-        serverScriptBo.deleteScriptByScriptKey(scriptKey);
+    @ValidHandler(key = "reqDeleteScriptVo", value = ReqDeleteScriptVo.class,isReqBody = false)
+    public ResBody<Void> deleteScript(@RequestBody ReqDeleteScriptVo reqDeleteScriptVo){
+        serverScriptBo.deleteScriptByScriptKey(reqDeleteScriptVo.getScriptKey());
         return new ResBody().buildSuccessResBody();
     }
+
+
 
 }

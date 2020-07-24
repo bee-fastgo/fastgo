@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 
 /**
  * @author liko.wang
@@ -20,11 +16,9 @@ import java.io.IOException;
 @Api(tags = "帮助")
 @RestController
 public class IndexController {
-
-
     @NoLogin
     @ApiParam(value = "获取帮助")
-    @RequestMapping(value = "/help",method = RequestMethod.GET)
+    @RequestMapping(value = "/help", method = RequestMethod.GET)
     public String help() {
         return "Only oneself can help oneself";
     }

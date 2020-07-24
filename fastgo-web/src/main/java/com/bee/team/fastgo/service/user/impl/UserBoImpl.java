@@ -1,6 +1,7 @@
 package com.bee.team.fastgo.service.user.impl;
 
 import com.alibaba.lava.base.AbstractLavaBoImpl;
+import com.bee.team.fastgo.common.CommonLoginValue;
 import com.bee.team.fastgo.mapper.UserDoMapperExt;
 import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.model.UserDoExample;
@@ -12,7 +13,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 import static com.spring.simple.development.support.exception.ResponseCode.*;
@@ -27,7 +31,7 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
     }
 
     @Override
-    public void login(String userName, String password) {
+    public void login(HttpServletRequest request, String userName, String password) {
         UserDoExample example = new UserDoExample();
         example.createCriteria().andUserNameEqualTo(userName).andIsDeletedEqualTo("n");
         List<UserDo> list = selectByExample(example);
@@ -38,6 +42,12 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
 
         if (!StringUtils.equals(userDo.getUserPassword(), Md5Utils.getTwoMD5Str(password))) {
             throw new GlobalException(RES_PWD_OR_CODE_INVALID, "用户名或密码错误");
+        }
+        // 将信息保存到session
+        HttpSession session = request.getSession();
+        // 如果不存在session就新增session
+        if (ObjectUtils.isEmpty(session.getAttribute(userName))) {
+            session.setAttribute(CommonLoginValue.SESSION_LOGIN_KEY, userDo);
         }
     }
 

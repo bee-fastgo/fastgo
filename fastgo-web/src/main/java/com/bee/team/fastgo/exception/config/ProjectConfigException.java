@@ -10,6 +10,6 @@ import com.spring.simple.development.support.exception.GlobalResponseCode;
  * @Version 1.0
  **/
 public class ProjectConfigException {
-    public static final GlobalResponseCode UPDATE_PROJECT_FAILED = new GlobalResponseCode(1000, "修改项目失败", "%s");
-    public static final GlobalResponseCode REMOVE_PROJECT_FAILED = new GlobalResponseCode(1001, "删除项目失败", "%s");
+    public static final GlobalResponseCode UPDATE_PROJECT_FAILED = new GlobalResponseCode(1000, "修改项目失败", "修改项目失败");
+    public static final GlobalResponseCode REMOVE_PROJECT_FAILED = new GlobalResponseCode(1001, "删除项目失败", "删除项目失败");
 }
