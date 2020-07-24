@@ -28,6 +28,14 @@ public class ServerScriptController {
     @Autowired
     private ServerScriptBo serverScriptBo;
 
+    /**
+     * 添加脚本
+     * @param reqAddScriptVo 请求体
+     * @return {@link com.spring.simple.development.core.component.mvc.res.ResBody<java.lang.Void>}
+     * @author jgz
+     * @date 10:03 2020/7/24
+     * @Description
+     */
     @PostMapping(value = "/addScript")
     @ApiOperation(value = "添加脚本")
     @ValidHandler(key = "reqAddScriptVo", value = ReqAddScriptVo.class,isReqBody = false)
@@ -37,6 +45,15 @@ public class ServerScriptController {
         return new ResBody().buildSuccessResBody();
     }
 
+
+    /**
+     * 查询脚本分页
+     * @param queryScriptVo 请求体
+     * @return {@link com.spring.simple.development.core.component.mvc.res.ResBody<com.bee.team.fastgo.vo.server.ResScriptVo>}
+     * @author jgz
+     * @date 10:04 2020/7/24
+     * @Description
+     */
     @PostMapping(value = "/getScriptListPage")
     @ApiOperation(value = "获取脚本列表分页(分页)")
     @ValidHandler(key = "queryScriptVo", value = QueryScriptVo.class,isReqBody = false)
@@ -45,6 +62,8 @@ public class ServerScriptController {
         ResPageDTO<ResScriptVo> resPageDTO = serverScriptBo.getScriptByPage(queryScriptVo);
         return new ResBody<ResScriptVo>().buildSuccessResBody(resPageDTO);
     }
+
+
 
 
 }
