@@ -35,7 +35,7 @@ public class ServerController {
      * @Date 9:26 2020/7/21 0021
      * @Param [addServerVo]
      **/
-    @RequestMapping(value = "/addServer", method = RequestMethod.POST)
+    @RequestMapping(value = "/addServer", method = RequestMethod.POST,consumes = "application/json")
     @ValidHandler(key = "addServerVo", value = AddServerVo.class)
     @ApiOperation(value = "添加服务器")
     @ApiImplicitParam(name = "addServerVo", value = "添加服务器Vo对象", dataTypeClass = AddServerVo.class)
@@ -51,7 +51,7 @@ public class ServerController {
      * @Date 9:26 2020/7/21 0021
      * @Param [modifyServerVo]
      **/
-    @RequestMapping(value = "/modifyServer", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyServer", method = RequestMethod.POST,consumes = "application/json")
     @ValidHandler(key = "modifyServer", value = ModifyServerVo.class)
     @ApiOperation(value = "修改服务器")
     @ApiImplicitParam(name = "modifyServerVo", value = "修改服务器Vo对象", dataTypeClass = ModifyServerVo.class)
@@ -60,7 +60,7 @@ public class ServerController {
         return new ResBody().buildSuccessResBody();
     }
 
-    @RequestMapping(value = "/getServerList", method = RequestMethod.POST)
+    @RequestMapping(value = "/getServerList", method = RequestMethod.POST,consumes = "application/json")
     @ValidHandler(key = "queryServerVo", value = QueryServerVo.class)
     @ApiOperation(value = "查询服务器(分页)")
     @ApiImplicitParam(name = "queryServerVo", value = "服务器查询对象", dataTypeClass = QueryServerVo.class)
