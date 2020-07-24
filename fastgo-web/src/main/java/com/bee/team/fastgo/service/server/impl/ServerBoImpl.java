@@ -49,6 +49,7 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
         ServerDo.setServerStatus(CommonConstant.CODE1);
         ServerDo.setType(CommonConstant.CODE1);
         insert(ServerDo);
+
     }
 
     @Override
