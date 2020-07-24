@@ -14,6 +14,7 @@
         <module>fastgo-web</module>
         <module>fastgo-job</module>
         <module>fastgo-common</module>
+        <module>fastgo-tools</module>
     </modules>
 
     <dependencies>
