@@ -2,6 +2,7 @@ package com.bee.team.fastgo.service.server.impl;
 
 import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.common.SoftwareEnum;
+import com.bee.team.fastgo.exception.sever.ScriptException;
 import com.bee.team.fastgo.mapper.ServerScriptDoMapperExt;
 import com.bee.team.fastgo.model.ServerScriptDo;
 import com.bee.team.fastgo.model.ServerScriptDoExample;
@@ -49,7 +50,7 @@ public class ServerScriptBoImpl extends AbstractLavaBoImpl<ServerScriptDo, Serve
                 return;
             }
         }
-        throw new GlobalException(ResponseCode.RES_PARAM_IS_EMPTY, "不支持的软件类型");
+        throw new GlobalException(ScriptException.SCRIPT_ABNORMAL, "不支持的软件类型");
     }
 
 
@@ -60,7 +61,7 @@ public class ServerScriptBoImpl extends AbstractLavaBoImpl<ServerScriptDo, Serve
             if(Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).anyMatch(s -> s.equals(queryScriptVo.getSoftwareName()))){
                 serverScriptDoExample.createCriteria().andSoftwareNameEqualTo(queryScriptVo.getSoftwareName());
             } else {
-                throw new GlobalException(ResponseCode.RES_PARAM_IS_EMPTY, "不支持的软件类型");
+                throw new GlobalException(ScriptException.SCRIPT_ABNORMAL, "不支持的软件类型");
             }
         }
 
