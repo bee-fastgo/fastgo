@@ -1,11 +1,9 @@
 package com.bee.team.fastgo.config.common;
 
 /**
- * @ClassName MongoCollectionValue
- * @Description mongo的集合常量
- * @Author xqx
- * @Date 2020/7/20 15:52
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/20
+ * @desc mongo的集合常量
  **/
 public class MongoCollectionValue {
     /*

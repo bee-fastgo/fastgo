@@ -21,11 +21,9 @@ import static com.bee.team.fastgo.exception.config.TemplateException.*;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 
 /**
- * @ClassName ConfigTemplateBoImpl
- * @Description 模板管理
- * @Author xqx
- * @Date 2020/7/22 14:56
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/22
+ * @desc 模板管理
  **/
 @Service
 public class TemplateBoImpl implements TemplateBo {
@@ -95,6 +93,7 @@ public class TemplateBoImpl implements TemplateBo {
         }
     }
 
+
     @Override
     public void updateTemplate(UpdateTemplateReqVo updateTemplateReqVo) {
         // 条件，相当于mysql语句中的where子句里面的键值对
@@ -102,7 +101,7 @@ public class TemplateBoImpl implements TemplateBo {
         conditionMap.put(MongoCommonValue.TEMPLATE_CODE, updateTemplateReqVo.getCode());
         // 修改的值，相当于set子句里面键值对
         Map<String, Object> setMap = new HashMap<>();
-        updateTemplateReqVo.getMapReqVos().stream().forEach(e -> setMap.put(e.getKey(), e.getValue()));
+        updateTemplateReqVo.getMapReqVos().stream().forEach(e -> setMap.put(e.getKey().replace(".", "-"), e.getValue()));
         UpdateResult result = configTemplateBo.updateTemplate(conditionMap, setMap);
 
         if (result.getMatchedCount() < 1) {

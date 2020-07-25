@@ -8,115 +8,133 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ClassName ConfigTemplateBo
- * @Description 模板类
- * @Author xqx
- * @Date 2020/7/20 15:05
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/20
+ * @desc 模板类
  **/
 public interface ConfigTemplateBo<T> {
     /**
-     * @return map
-     * @Author xqx
-     * @Description 添加模板信息
-     * @Date 15:18 2020/7/20
-     * @Param map 添加的键值对
-     **/
+     * 添加模板信息
+     *
+     * @param map
+     * @return {@link Map< String, Object>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 添加模板信息
+     */
     Map<String, Object> insertTemplate(Map<String, Object> map);
 
     /**
-     * @return
-     * @Author xqx
-     * @Description 批量添加模板信息
-     * @Date 17:01 2020/7/20
-     * @Param
-     **/
+     * 批量添加模板信息
+     *
+     * @param list
+     * @return {@link Collection< Map< String, Object>>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 批量添加模板信息
+     */
     Collection<Map<String, Object>> insertManyTemplateList(List<Map<String, Object>> list);
 
     /**
-     * @return UpdateRequest
-     * @Author xqx
-     * @Description 修改模板信息
-     * @Date 15:26 2020/7/20
-     * @Param setMap 要修改的键值对
-     * @Param conditionMap 条件判断
-     **/
+     * 修改模板信息
+     *
+     * @param conditionMap
+     * @param setMap
+     * @return {@link UpdateResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 修改模板信息
+     */
     UpdateResult updateTemplate(Map<String, Object> conditionMap, Map<String, Object> setMap);
 
     /**
-     * @return UpdateResult
-     * @Author xqx
-     * @Description 删除模板里面的一条数据(一个键值对)
-     * @Date 13:42 2020/7/23
-     * @Param code 唯一标识
-     * @Param key 要移除的key
-     **/
+     * 删除模板里面的一条数据(一个键值对)
+     *
+     * @param code
+     * @param key
+     * @return {@link UpdateResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除模板里面的一条数据(一个键值对)
+     */
     UpdateResult removeOneDataByCondition(String code, String key);
 
     /**
-     * @return DeleteResult
-     * @Author xqx
-     * @Description 删除模板信息
-     * @Date 15:32 2020/7/20
-     * @Param map 删除的模板信息
-     **/
+     * 删除模板信息
+     *
+     * @param map
+     * @return {@link DeleteResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除模板信息
+     */
     DeleteResult removeTemplateByCondition(Map<String, Object> map);
 
     /**
-     * @return
-     * @Author xqx
-     * @Description 删除所有的模板数据
-     * @Date 17:36 2020/7/20
-     * @Param
-     **/
+     * 删除所有的模板数据
+     *
+     * @param
+     * @return {@link DeleteResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除所有的模板数据
+     */
     DeleteResult removeAllTemplates();
 
-
     /**
-     * @return
-     * @Author xqx
-     * @Description 获取所有模板对象
-     * @Date 15:33 2020/7/20
-     * @Param t 返回类
-     **/
+     * 获取所有模板对象
+     *
+     * @param t
+     * @return {@link List<T>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 获取所有模板对象
+     */
     List<T> findAllTemplateList(Class<T> t);
 
     /**
-     * @return List
-     * @Author xqx
-     * @Description 根据条件获取模板信息集合(模糊查询)
-     * @Date 15:38 2020/7/20
-     * @Param map 查询条件
-     * @Param t 返回类型
-     **/
+     * 根据条件获取模板信息集合(模糊查询)
+     *
+     * @param map
+     * @param t
+     * @return {@link List<T>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 根据条件获取模板信息集合(模糊查询)
+     */
     List<T> findTemplateListByCondition(Map<String, Object> map, Class<T> t);
 
     /**
-     * @return
-     * @Author xqx
-     * @Description 根据条件获取一条模板信息
-     * @Date 15:41 2020/7/20
-     * @Param map 查询条件
-     * @Param t 返回类型
-     **/
+     * 根据条件获取一条模板信息
+     *
+     * @param map
+     * @param t
+     * @return {@link T}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 根据条件获取一条模板信息
+     */
     T findTemplateByCondition(Map<String, Object> map, Class<T> t);
 
     /**
-     * @return
-     * @Author xqx
-     * @Description 获取所有的模板的数量
-     * @Date 15:43 2020/7/20
-     * @Param
-     **/
+     * 获取所有的模板的数量
+     *
+     * @param
+     * @return {@link Long}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 获取所有的模板的数量
+     */
     Long countAllTemplates();
 
     /**
-     * @return
-     * @Author xqx
-     * @Description 获取指定条件的模板的数量(模糊查询)
-     * @Date 15:44 2020/7/20
-     * @Param map 查询条件参数
-     **/
+     * 获取指定条件的模板的数量(模糊查询)
+     *
+     * @param map
+     * @return {@link Long}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 获取指定条件的模板的数量(模糊查询)
+     */
     Long countTemplateByCondition(Map<String, Object> map);
-
 }
