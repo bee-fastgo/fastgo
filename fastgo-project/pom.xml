@@ -25,5 +25,12 @@
             <artifactId>fastgo-common</artifactId>
             <version>1.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
+        <!--git管理-->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.6.0.201912101111-r</version>
+        </dependency>
     </dependencies>
 </project>

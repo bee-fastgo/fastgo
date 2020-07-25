@@ -136,9 +136,9 @@ public class GitlabAPI {
      * @return
      * @throws IOException
      */
-    public GitlabProjectDo createNewProject(String projectName) throws IOException {
+    public GitlabProjectDo createNewProject(String projectName,String projectDesc) throws IOException {
         String tailUrl = "projects";
-        return postRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).addData("name",projectName).execute(tailUrl,GitlabProjectDo.class);
+        return postRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).addData("name",projectName).addData("description",projectDesc).execute(tailUrl,GitlabProjectDo.class);
     }
 
     /**
@@ -170,8 +170,9 @@ public class GitlabAPI {
 
     public static void main(String[] args) throws IOException {
         GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
-        List<GitlabProjectDo> list = gitlabAPI.getAllProject();
-        System.out.println(list);
+        //List<GitlabProjectDo> list = gitlabAPI.getAllProject();
+        GitlabProjectDo gitlabProjectDo = gitlabAPI.createNewProject("hsFirst","hs the first project");
+        System.out.println(gitlabProjectDo);
     }
 
 }
