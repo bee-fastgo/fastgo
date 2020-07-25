@@ -6,11 +6,12 @@ import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.project.model.GitlabProjectHook;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-
+@Component
 public class GitlabAPI {
 
     public static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
