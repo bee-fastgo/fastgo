@@ -28,51 +28,86 @@ public class ProjectController {
     @Autowired
     private ProjectBo projectBo;
 
-    //1.后台项目列表
+    /**
+     * @param queryProjectListVo
+     * @return {@link ResBody< ProjectListVo>}
+     * @author hs
+     * @date 2020/7/25
+     * @desc 后台项目列表
+     */
+
     @RequestMapping(value = "/backEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目展示")
     @ApiImplicitParam(resultDataType = ProjectListVo.class)
-    @ValidHandler(key = "queryProjectListVo",value = QueryProjectListVo.class,isReqBody = false)
+    @ValidHandler(key = "queryProjectListVo", value = QueryProjectListVo.class, isReqBody = false)
     public ResBody<ProjectListVo> backPorjectList(@RequestBody QueryProjectListVo queryProjectListVo) {
         ResPageDTO resPageDTO = projectBo.queryBackProjectInfo(queryProjectListVo);
         return new ResBody().buildSuccessResBody(resPageDTO);
     }
 
-    //2.后台项目新增
+    /**
+     * @param insertBackProjectVo
+     * @return {@link ResBody< Void>}
+     * @author hs
+     * @date 2020/7/25
+     * @desc 后台项目新增
+     */
+
     @RequestMapping(value = "/backEnd/addProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目新增")
-    @ApiImplicitParam(name = "新增后台项目vo",required = true)
-    @ValidHandler(key = "insertBackProjectVo",value = InsertBackProjectVo.class,isReqBody = false)
+    @ApiImplicitParam(name = "新增后台项目vo", required = true)
+    @ValidHandler(key = "insertBackProjectVo", value = InsertBackProjectVo.class, isReqBody = false)
     public ResBody<Void> addBackProject(@RequestBody InsertBackProjectVo insertBackProjectVo) {
         projectBo.addBackProjectInfo(insertBackProjectVo);
         return new ResBody().buildSuccessResBody();
     }
 
-    //3.后台项目新增环境
+    /**
+     * @param insertBackProjectProfileVo
+     * @return {@link ResBody< Void>}
+     * @author hs
+     * @date 2020/7/25
+     * @desc 后台项目新增环境
+     */
+
     @RequestMapping(value = "/backEnd/addProjectProfile", method = RequestMethod.POST)
     @ApiOperation(value = "新增项目环境")
-    @ApiImplicitParam(name = "新增项目环境vo",required = true)
-    @ValidHandler(key = "insertBackProjectProfileVo",value = InsertBackProjectProfileVo.class,isReqBody = false)
+    @ApiImplicitParam(name = "新增项目环境vo", required = true)
+    @ValidHandler(key = "insertBackProjectProfileVo", value = InsertBackProjectProfileVo.class, isReqBody = false)
     public ResBody<Void> addBackProjectProfile(@RequestBody InsertBackProjectProfileVo insertBackProjectProfileVo) {
         projectBo.addBackProjectProfile(insertBackProjectProfileVo);
         return new ResBody().buildSuccessResBody();
     }
 
-    //4.后台项目部署
+    /**
+     * @param deployBackPorjectVo
+     * @return {@link ResBody< String>}
+     * @author hs
+     * @date 2020/7/25
+     * @desc 后台项目部署
+     */
+
     @RequestMapping(value = "/backEnd/deployBackProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目部署")
     @ApiImplicitParam(resultDataType = String.class)
-    @ValidHandler(key = "deployBackPorjectVo",value = DeployBackPorjectVo.class,isReqBody = false)
+    @ValidHandler(key = "deployBackPorjectVo", value = DeployBackPorjectVo.class, isReqBody = false)
     public ResBody<String> deployBackProject(@RequestBody DeployBackPorjectVo deployBackPorjectVo) {
         String result = projectBo.execDeployBackProject(deployBackPorjectVo);
         return new ResBody().buildSuccessResBody(result);
     }
 
-    //5.后台项目日志
+    /**
+     * @param queryProjectLogVo
+     * @return {@link ResBody< String>}
+     * @author hs
+     * @date 2020/7/25
+     * @desc 后台项目日志
+     */
+
     @RequestMapping(value = "/backEnd/queryProjectLog", method = RequestMethod.POST)
     @ApiOperation(value = "查询项目日志")
-    @ApiImplicitParam(name = "查询项目日志vo",required = true)
-    @ValidHandler(key = "queryProjectLogVo",value = QueryProjectLogVo.class,isReqBody = false)
+    @ApiImplicitParam(name = "查询项目日志vo", required = true)
+    @ValidHandler(key = "queryProjectLogVo", value = QueryProjectLogVo.class, isReqBody = false)
     public ResBody<String> queryProjectLog(@RequestBody QueryProjectLogVo queryProjectLogVo) {
         String log = projectBo.findProjectLog(queryProjectLogVo);
         return new ResBody().buildSuccessResBody(log);
@@ -80,22 +115,38 @@ public class ProjectController {
 
     //6.后台项目服务监控信息
 
-    //1.前台项目列表
+
+    /**
+     * @param queryProjectListVo
+     * @return {@link ResBody< ProjectListVo>}
+     * @author hs
+     * @date 2020/7/25
+     * @desc 前台项目列表
+     */
+
     @RequestMapping(value = "/frontEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目展示")
     @ApiImplicitParam(resultDataType = ProjectListVo.class)
-    @ValidHandler(key = "queryProjectListVo",value = QueryProjectListVo.class,isReqBody = false)
+    @ValidHandler(key = "queryProjectListVo", value = QueryProjectListVo.class, isReqBody = false)
     public ResBody<ProjectListVo> frontPorjectList(@RequestBody QueryProjectListVo queryProjectListVo) {
         ResPageDTO resPageDTO = projectBo.queryFrontProjectInfo(queryProjectListVo);
         return new ResBody().buildSuccessResBody(resPageDTO);
     }
-    //2.前台项目新增
+
+    /**
+     * @param insertFrontProjectVo
+     * @return {@link ResBody< Void>}
+     * @author hs
+     * @date 2020/7/25
+     * @desc 前台项目新增
+     */
+
     @RequestMapping(value = "/frontEnd/addFrontproject", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目新增")
-    @ApiImplicitParam(name = "insertBackProjectVo")
-    @ValidHandler(key = "insertBackProjectVo",value = InsertBackProjectVo.class,isReqBody = false)
-    public ResBody<Void> addfrontPorject(@RequestBody InsertBackProjectVo insertBackProjectVo) {
-        projectBo.addFrontProjectInfo(insertBackProjectVo);
+    @ApiImplicitParam(name = "insertFrontProjectVo")
+    @ValidHandler(key = "insertFrontProjectVo", value = InsertFrontProjectVo.class, isReqBody = false)
+    public ResBody<Void> addfrontPorject(@RequestBody InsertFrontProjectVo insertFrontProjectVo) {
+        projectBo.addFrontProjectInfo(insertFrontProjectVo);
         return new ResBody().buildSuccessResBody();
     }
 

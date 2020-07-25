@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +23,9 @@ import static com.bee.team.fastgo.exception.config.ProjectConfigException.UPDATE
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 
 /**
- * @ClassName ConfigBoImpl
- * @Description 项目配置的实现类
- * @Author xqx
- * @Date 2020/7/17 15:56
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/17
+ * @desc 项目配置的实现类
  **/
 @Service
 public class ProjectConfigBoImpl implements ProjectConfigBo {
@@ -81,18 +80,46 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
     public void updateProjectConfig(UpdateProjectConfigReqVo updateProjectConfigReqVo) {
         // 条件参数
         Map<String, Object> queryMap = new HashMap<>();
-        queryMap.put(MongoCommonValue.PROJECT_CODE, updateProjectConfigReqVo.getProjectCode());
+        queryMap.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, updateProjectConfigReqVo.getProjectCode());
         // 要修改的参数
         Map<String, Object> updateMap = new HashMap<>();
         List<SoftReqVo> list = updateProjectConfigReqVo.getSoftReqVoList();
-        // 提出软件名和key值，作为要修改的新参数，并且把key值的.换成-，例如mysql.spring-datasource****
-        list.stream().forEach(e -> updateMap.put((e.getSoftName() + e.getMapReqVo().getKey().replace(".", "-")), e.getMapReqVo().getValue()));
-        UpdateResult result = configProjectBo.updateOneProject(queryMap, updateMap);
-        if (result.getMatchedCount() < 1) {
-            throw new GlobalException(RES_DATA_NOT_EXIST, "要修改的项目不存在");
+
+        // 查到该项目的所有key值，如果不存在要修改的key就不让修改，项目配置修改只支持修改已有的配置项的值，不能新增配置项和修改key
+        Map<String, Object> objectConfig = (Map<String, Object>) configProjectBo.getOneProjectConfigInfo(queryMap, Map.class);
+        objectConfig.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
+
+        if (objectConfig.isEmpty()) {
+            throw new GlobalException(RES_DATA_NOT_EXIST, "项目不存在");
         }
 
-        if (result.getModifiedCount() < 1) {
+        // 提取所有的软件名
+        List<Object> softs = Arrays.asList(objectConfig.keySet().toArray());
+
+        // 判断是要修改的软件是否存在
+        list.stream().forEach(e -> {
+            if (!softs.contains(e.getSoftName())) {
+                throw new GlobalException(RES_DATA_NOT_EXIST, "软件不存在");
+            }
+        });
+
+        // 判断软件下面的key是否存在
+        list.stream().forEach(e -> {
+            softs.stream().forEach(soft -> {
+                Map<String, Object> map = (Map<String, Object>) objectConfig.get(soft);
+                if (!map.containsKey(e.getMapReqVo().getKey())) {
+                    throw new GlobalException(RES_DATA_NOT_EXIST, "配置项不存在");
+                }
+            });
+        });
+
+
+        // 提出软件名和key值，作为要修改的新参数，并且把key值的.换成-，例如mysql.spring-datasource****
+        list.stream().forEach(e -> updateMap.put((e.getSoftName() + "." + e.getMapReqVo().getKey().replace(".", "-")), e.getMapReqVo().getValue()));
+        UpdateResult result = configProjectBo.updateOneProject(queryMap, updateMap);
+
+        // 修改失败
+        if (result.getMatchedCount() < 1 || result.getModifiedCount() < 1) {
             throw new GlobalException(UPDATE_PROJECT_FAILED);
         }
     }

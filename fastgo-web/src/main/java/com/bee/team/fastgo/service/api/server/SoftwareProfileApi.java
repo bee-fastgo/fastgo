@@ -1,14 +1,26 @@
 package com.bee.team.fastgo.service.api.server;
 
+import com.bee.team.fastgo.service.api.dto.server.req.ReqCreateSoftwareDTO;
+import com.bee.team.fastgo.service.api.dto.server.res.ResCreateSoftwareDTO;
+
 /**
  * @author jgz
  * @version 1.0
  * @date 2020/7/25 14:27
- * @ClassName SoftwareProfileApi
- * @Description 软件环境api
+ * @desc 软件环境api
  **/
 public interface SoftwareProfileApi {
 
+
+    /**
+     * 创建软件环境
+      * @param reqCreateSoftwareDTO 请求体
+     * @return {@link ResCreateSoftwareDTO}
+     * @author jgz
+     * @date 2020/7/25
+     * @desc
+     */
+    ResCreateSoftwareDTO createSoftwareEnvironment(ReqCreateSoftwareDTO reqCreateSoftwareDTO);
 
 
 }

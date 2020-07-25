@@ -1,11 +1,9 @@
 package com.bee.team.fastgo.config.common;
 
 /**
- * @ClassName MongoCommonValue
- * @Description mongodb常用的键值（本模块通用）
- * @Author xqx
- * @Date 2020/7/23 14:08
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/23
+ * @desc mongodb常用的键值（本模块通用）
  **/
 public class MongoCommonValue {
     /*

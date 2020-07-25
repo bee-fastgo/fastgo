@@ -23,11 +23,9 @@ import java.util.Map;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
- * @ClassName ConfigTemplateBoImpl
- * @Description 模板操作
- * @Author xqx
- * @Date 2020/7/20 15:48
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/20
+ * @desc 模板操作
  **/
 @Service
 public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
@@ -37,6 +35,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
     @Override
     public Map<String, Object> insertTemplate(Map map) {
         if (map.isEmpty()) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "参数不能为空");
             // 抛出异常
         }
         map.put(MongoCommonValue.TEMPLATE_CODE, RandomUtils.getRandomStr(16));
@@ -67,7 +66,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
 
     @Override
     public UpdateResult removeOneDataByCondition(String code, String key) {
-        Query query = new Query(Criteria.where(MongoCommonValue.TEMPLATE_CODE).is(code));
+        Query query = new Query(Criteria.where(MongoCommonValue.TEMPLATE_CODE.replace(".", "-")).is(code));
         Update update = new Update().unset(key);
         return template.updateFirst(query, update, MongoCollectionValue.CONFIG_TEMPLATE);
     }

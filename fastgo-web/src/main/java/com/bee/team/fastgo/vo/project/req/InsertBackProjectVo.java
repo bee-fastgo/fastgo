@@ -16,10 +16,6 @@ public class InsertBackProjectVo implements Serializable {
     @NotBlank(message = "项目名称不能为空")
     private String projectName;
 
-    @ApiModelProperty(value = "项目类型:1-backendTemplate,2-h5Template", example = "1")
-    @NotBlank(message = "项目类型不能为空")
-    private Integer projectType;
-
     @ApiModelProperty(value = "项目描述", example = "测试项目")
     @NotBlank(message = "项目描述不能为空")
     private String projectDesc;

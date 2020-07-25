@@ -1,44 +1,47 @@
 package com.bee.team.fastgo.service.config;
 
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
-import com.bee.team.fastgo.vo.config.req.RemoveProjectDataReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
 import java.util.Map;
 
 /**
- * @description:
- * @author: luke
- * @time: 2020/7/17 0017 10:32
- */
+ * @author xqx
+ * @date 2020/7/22
+ * @desc 项目管理
+ **/
 public interface ProjectConfigBo {
     /**
-     * @return ResPageDTO
-     * @Author xqx
-     * @Description 分页模糊查询项目列表信息
-     * @Date 10:22 2020/7/22
-     * @Param listProjectConfigsReqVo
-     **/
+     * 分页获取项目列表
+     *
+     * @param listProjectConfigsReqVo
+     * @return {@link ResPageDTO}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 分页获取项目列表
+     */
     ResPageDTO getProjectConfigList(ListProjectConfigsReqVo listProjectConfigsReqVo);
 
-
     /**
-     * @return Map
-     * @Author xqx
-     * @Description 获取配置信息
-     * @Date 15:18 2020/7/22
-     * @Param projectCode
-     **/
+     * 获取项目配置信息
+     *
+     * @param projectCode
+     * @return {@link Map< String, Object>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 获取项目配置信息
+     */
+
     Map<String, Object> getProjectConfigByCode(String projectCode);
 
     /**
+     * @param updateProjectConfigReqVo
      * @return
-     * @Author xqx
-     * @Description 修改项目配置信息
-     * @Date 15:41 2020/7/22
-     * @Param updateProjectConfigReqVo
-     **/
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 修改项目配置信息
+     */
     void updateProjectConfig(UpdateProjectConfigReqVo updateProjectConfigReqVo);
 
 }

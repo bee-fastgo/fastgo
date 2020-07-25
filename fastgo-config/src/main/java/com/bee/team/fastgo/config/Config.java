@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @description:
- * @author: luke
- * @time: 2020/7/15 0015 10:02
- */
+ * @author xqx
+ * @date 2020/7/20
+ * @desc 配置类
+ **/
 @Configuration
 public class Config {
     @Value("${spring.data.mongodb.authentication-database}")

@@ -17,4 +17,5 @@ public class ScriptException {
     public static final GlobalResponseCode SCRIPT_ABNORMAL = new GlobalResponseCode(1301,"script abnormal","%s");
 
 
+
 }
