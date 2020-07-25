@@ -8,6 +8,8 @@ import com.bee.team.fastgo.context.ProjectPublisher;
 import com.bee.team.fastgo.dao.ProjectDao;
 import com.bee.team.fastgo.mapper.*;
 import com.bee.team.fastgo.model.*;
+import com.bee.team.fastgo.project.Gitlab.GitlabAPI;
+import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.utils.StringUtil;
 import com.bee.team.fastgo.vo.project.*;
@@ -17,9 +19,12 @@ import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.utils.Pager;
 import com.spring.simple.development.support.exception.GlobalException;
 import org.apache.commons.lang.StringUtils;
+import org.checkerframework.checker.units.qual.A;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bee.team.fastgo.constant.ProjectConstant.*;
-import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
-import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
+import static com.spring.simple.development.support.exception.ResponseCode.*;
+
 
 @Service
 public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapperExt, ProjectDoExample> implements ProjectBo {
@@ -58,6 +63,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Autowired
     private ProfileRunprofileRelationDoMapperExt profileRunprofileRelationDoMapperExt;
+
+    @Autowired
+    private GitlabAPI gitlabAPI;
 
     @Autowired
     private ConfigProjectBo configProjectBo;
@@ -99,8 +107,21 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
            }else {
                throw new GlobalException(RES_DATA_NOT_EXIST,"自动生成代码框架失败");
            }
+           //创建新的gitlab后台项目
+            GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
+            try {
+                gitlabProjectDo = gitlabAPI.createNewProject(insertBackProjectVo.getProjectName(),insertBackProjectVo.getProjectDesc());
+                if (ObjectUtils.isEmpty(gitlabProjectDo)){
+                    throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
+                }
+            }catch (Exception e){
+                throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
+            }
+            //上传后台模板代码到gitlab项目中
+            projectDao.uploadCodeIntoGitlab(gitlabProjectDo,filePath);
+            projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
-
+        mapper.insertSelective(projectDo);
         //事件添加webhook
         ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com");
         projectPublisher.publish(projectEvent);
@@ -219,7 +240,19 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
         //生成前台项目模板
         if (StringUtils.isEmpty(insertBackProjectVo.getGitUrl())){
-
+            //创建新的gitlab后台项目
+            GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
+            try {
+                gitlabProjectDo = gitlabAPI.createNewProject(insertBackProjectVo.getProjectName(),insertBackProjectVo.getProjectDesc());
+                if (ObjectUtils.isEmpty(gitlabProjectDo)){
+                    throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
+                }
+            }catch (Exception e){
+                throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
+            }
+            //上传后台模板代码到gitlab项目中
+            projectDao.uploadCodeIntoGitlab(gitlabProjectDo,"");
+            projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
     }
 
@@ -229,15 +262,22 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         return "";
     }
 
+    /**
+     * @param updateProjectStatusVo
+     * @return
+     * @author hs
+     * @date 2020/7/25
+     * @desc TODO
+     */
     @Override
     public void updateProjectStatus(UpdateProjectStatusVo updateProjectStatusVo) {
-        ProjectDoExample projectDoExample = new ProjectDoExample();
-        projectDoExample.createCriteria().andProjectCodeEqualTo(updateProjectStatusVo.getProjectCode());
-        List<ProjectDo> projectDoList = mapper.selectByExample(projectDoExample);
-        if (!CollectionUtils.isEmpty(projectDoList)){
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",updateProjectStatusVo.getCode());
+        map.put("type",updateProjectStatusVo.getType());
+        ProjectDo projectDo = mapper.queryProjectInfo(map);
+        if (!ObjectUtils.isEmpty(projectDo)){
             throw new GlobalException(RES_DATA_NOT_EXIST,"未找到对应的项目信息");
         }
-        ProjectDo projectDo = projectDoList.get(0);
         if (OBJECT_TYPE1.equals(updateProjectStatusVo.getType())){
             //运行环境
             if (PROJECT_STATUS1.equals(updateProjectStatusVo.getType())){

@@ -12,9 +12,9 @@ import java.io.Serializable;
 @ApiModel(value = "updateProjectStatusVo",description = "修改项目状态vo")
 public class UpdateProjectStatusVo implements Serializable {
 
-    @ApiModelProperty(value = "项目code", example = "TEST")
-    @NotBlank(message = "项目code不能为空")
-    private String projectCode;
+    @ApiModelProperty(value = "code", example = "TEST")
+    @NotBlank(message = "code不能为空")
+    private String code;
 
     @ApiModelProperty(value = "请求类型", example = "1-运行环境，2-软件环境")
     @NotNull(message = "请求类型不能为空")

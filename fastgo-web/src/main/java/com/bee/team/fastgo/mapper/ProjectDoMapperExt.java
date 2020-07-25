@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.mapper;
 
+import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.vo.project.ProjectListVo;
 import org.mybatis.spring.annotation.MapperScan;
 
@@ -21,4 +22,10 @@ public interface ProjectDoMapperExt extends com.alibaba.lava.base.LavaMapper<com
      */
     List<ProjectListVo> findFrontPorjectList(Map<String,Object> map);
 
+    /**
+     * 查询项目信息
+     * @param map
+     * @return
+     */
+    ProjectDo queryProjectInfo(Map<String, Object> map);
 }
