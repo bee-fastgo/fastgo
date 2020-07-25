@@ -1,6 +1,6 @@
-package com.bee.team.fastgo.api.server.impl;
+package com.bee.team.fastgo.service.api.server.impl;
 
-import com.bee.team.fastgo.api.server.ScriptApi;
+import com.bee.team.fastgo.service.api.server.ScriptApi;
 import com.bee.team.fastgo.hander.SimpleExecutorCmd;
 import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;
 import com.bee.team.fastgo.model.ServerScriptDo;
