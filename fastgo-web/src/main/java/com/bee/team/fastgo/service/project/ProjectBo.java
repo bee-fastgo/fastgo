@@ -29,7 +29,7 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * 新增项目环境
      * @param insertBackProjectProfileVo
      */
-    Integer addBackProjectProfile(InsertBackProjectProfileVo insertBackProjectProfileVo);
+    void addBackProjectProfile(InsertBackProjectProfileVo insertBackProjectProfileVo);
 
     /**
      * 查询项目日志

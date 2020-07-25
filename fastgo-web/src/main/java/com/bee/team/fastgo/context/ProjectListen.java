@@ -3,7 +3,7 @@ package com.bee.team.fastgo.context;
 import com.bee.team.fastgo.mapper.ProjectDoMapperExt;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.model.ProjectDoExample;
-import com.bee.team.fastgo.project.Gitlab.GitlabAPI;
+import com.bee.team.fastgo.project.gitlab.GitlabAPI;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.project.model.GitlabProjectHook;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +33,7 @@ public class ProjectListen {
     public void listener(ProjectEvent projectEvent){
         String projectCode = projectEvent.getProjectCode();
         String url = projectEvent.getUrl();
+        System.out.println(">>>>>>>>>>>>>>>>>>"+projectCode+">>>>>>>>>>"+url);
         GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
         try{
             ProjectDoExample example = new ProjectDoExample();
