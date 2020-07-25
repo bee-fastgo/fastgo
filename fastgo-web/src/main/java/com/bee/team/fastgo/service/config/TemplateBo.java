@@ -9,64 +9,74 @@ import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import java.util.Map;
 
 /**
- * @ClassName ConfigTemplateBo
- * @Description 模板管理
- * @Author xqx
- * @Date 2020/7/22 14:56
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/22
+ * @desc 模板管理
  **/
 public interface TemplateBo {
     /**
-     * @return ResPageDTO
-     * @Author xqx
-     * @Description 分页模糊查询模板列表信息
-     * @Date 13:49 2020/7/22
-     * @Param listTemplatesReqVO
-     **/
+     * 分页模糊查询模板列表信息
+     *
+     * @param listTemplatesReqVO
+     * @return {@link ResPageDTO}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 分页模糊查询模板列表信息
+     */
     ResPageDTO getTemplateConfigsList(ListTemplatesReqVO listTemplatesReqVO);
 
     /**
+     * 添加模板信息
+     *
+     * @param insertTemplateReqVo
      * @return
-     * @Author xqx
-     * @Description 添加模板信息
-     * @Date 13:50 2020/7/22
-     * @Param insertTemplateReqVo
-     **/
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 添加模板信息
+     */
     void insetTemplate(InsertTemplateReqVo insertTemplateReqVo);
 
     /**
-     * @return Map
-     * @Author xqx
-     * @Description 根据code查询模板的详细信息
-     * @Date 14:23 2020/7/22
-     * @Param code
-     **/
+     * 根据code查询模板的详细信息
+     *
+     * @param code
+     * @return {@link Map< String, Object>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 根据code查询模板的详细信息
+     */
     Map<String, Object> getTemplateByCode(String code);
 
     /**
+     * 删除模板信息
+     *
+     * @param code
      * @return
-     * @Author xqx
-     * @Description 删除模板信息
-     * @Date 14:36 2020/7/22
-     * @Param code
-     **/
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除模板信息
+     */
     void removeTemplate(String code);
 
     /**
+     * 修改模板
+     *
+     * @param updateTemplateReqVo
      * @return
-     * @Author xqx
-     * @Description 修改模板
-     * @Date 14:51 2020/7/22
-     * @Param updateTemplateReqVo
-     **/
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 修改模板
+     */
     void updateTemplate(UpdateTemplateReqVo updateTemplateReqVo);
 
     /**
+     * 删除模板的某一个配置项
+     *
+     * @param removeTemplateDataReqVo
      * @return
-     * @Author xqx
-     * @Description 删除模板的某一个配置项
-     * @Date 16:32 2020/7/23
-     * @Param removeTemplateDataReqVo
-     **/
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除模板的某一个配置项
+     */
     void removeTemplateOneData(RemoveTemplateDataReqVo removeTemplateDataReqVo);
 }
