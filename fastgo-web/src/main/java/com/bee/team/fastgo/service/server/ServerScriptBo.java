@@ -59,4 +59,16 @@ public interface ServerScriptBo extends LavaBo<ServerScriptDo, ServerScriptDoExa
      * @Description
      */
     void deleteScriptByScriptKey(String scriptKey);
+
+    /**
+     * 通过脚本名,版本,脚本类型获取脚本信息
+     * @param softwareName
+     * @param version
+     * @param type
+     * @return {@link ServerScriptDo}
+     * @author jgz
+     * @date 13:46 2020/7/25
+     * @Description
+     */
+    ServerScriptDo getScriptBySoftwareNameAndVersionAndType(String softwareName, String version, String type);
 }

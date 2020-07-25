@@ -3,6 +3,8 @@ package com.bee.team.fastgo.service.server.impl;
 import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.exception.sever.ScriptException;
+import com.bee.team.fastgo.hander.SimpleExecutorCmd;
+import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;
 import com.bee.team.fastgo.mapper.ServerScriptDoMapperExt;
 import com.bee.team.fastgo.model.ServerScriptDo;
 import com.bee.team.fastgo.model.ServerScriptDoExample;
@@ -20,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -111,6 +114,23 @@ public class ServerScriptBoImpl extends AbstractLavaBoImpl<ServerScriptDo, Serve
         serverScriptDoExample.createCriteria().andScriptKeyEqualTo(scriptKey);
         deleteByExample(serverScriptDoExample);
     }
+
+    @Override
+    public ServerScriptDo getScriptBySoftwareNameAndVersionAndType(String softwareName, String version, String type) {
+        //是否支持该软件
+        if(Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).noneMatch(s -> s.equals(softwareName))) {
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL, "不支持的软件类型");
+        }
+        //脚本是否存在
+        if(!scriptExistBySoftwareNameAndVersionAndType(softwareName,version,type)){
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL, "脚本不存在");
+        }
+        ServerScriptDoExample serverScriptDoExample = new ServerScriptDoExample();
+        serverScriptDoExample.createCriteria().andSoftwareNameEqualTo(softwareName).andVersionEqualTo(version).andTypeEqualTo(type);
+        List<ServerScriptDo> serverScriptDoList = selectByExample(serverScriptDoExample);
+        return serverScriptDoList.get(0);
+    }
+
 
     /**
      * 通过脚本key查询脚本是否存在
