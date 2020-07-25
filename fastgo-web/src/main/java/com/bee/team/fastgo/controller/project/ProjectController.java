@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @time: 2020/7/17 0017 10:32
  */
 @Api(tags = "项目相关")
+@RestController
 @RequestMapping("/project")
-@RestController("/project")
 public class ProjectController {
 
     @Autowired

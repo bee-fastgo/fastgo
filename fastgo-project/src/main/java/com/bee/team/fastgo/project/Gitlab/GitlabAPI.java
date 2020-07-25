@@ -7,22 +7,25 @@ import com.bee.team.fastgo.project.model.GitlabProjectHook;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-@Component
+@Service
 public class GitlabAPI {
 
     public static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final String API_NAMESPACE = "/api/v4";
     private static final String PARAM_SUDO = "sudo";
-    private final String hostUrl;
+    private  String hostUrl;
 
-    private final String apiToken;
-    private final TokenType tokenType;
+    private  String apiToken;
+    private  TokenType tokenType;
     private AuthMethod authMethod;
     private String userAgent = GitlabAPI.class.getCanonicalName() + "/" + System.getProperty("java.version");
+
+    public GitlabAPI(){};
 
     public GitlabAPI(String hostUrl, String apiToken, TokenType tokenType, AuthMethod method) {
         this.hostUrl = hostUrl.endsWith("/") ? hostUrl.replaceAll("/$", "") : hostUrl;
