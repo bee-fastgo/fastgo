@@ -18,17 +18,15 @@ import java.nio.file.Paths;
  * @auth luke
  * @date 2020-07-25
  **/
-public class GitUtils {
+public class GitUtil {
 
-    @Value("${gitlab.url}")
-    private String gitlabUrl;
     @Value("${gitlab.username}")
-    private static String gitUser;
+    private String gitUser = "xiaohushuang";
     @Value("${gitlab.password}")
-    private static String gitPassword;
+    private String gitPassword = "hs19971125";
 
     @Value("${fastgo.project.path}")
-    private static String projectPath;
+    private String projectPath = "/data/fastgo/deploy/";
 
     /**
      * @param userName
@@ -38,11 +36,11 @@ public class GitUtils {
      * @date 2020-07-25 16:02
      * @desc 获取凭证
      **/
-    public static CredentialsProvider createCredential(String userName, String password) {
+    public CredentialsProvider createCredential(String userName, String password) {
         return new UsernamePasswordCredentialsProvider(userName, password);
     }
 
-    public static Git fromCloneRepository(String repoUrl, String cloneDir, String branchName) throws GitAPIException {
+    public Git fromCloneRepository(String repoUrl, String cloneDir, String branchName) throws GitAPIException {
 
         CredentialsProvider credential = createCredential(gitUser, gitPassword);
         Git git = Git.cloneRepository()
@@ -53,13 +51,18 @@ public class GitUtils {
         return git;
     }
 
-    public static String gitPull(String projectName, String projectUrl, String branchName) throws GitAPIException {
+    public String gitPull(String projectName, String projectUrl, String branchName) throws GitAPIException, IOException {
 
-        fromCloneRepository(projectUrl, projectPath + projectName + "/" + branchName, branchName);
+        File file = new File(projectPath + projectName + "/" + branchName);
+        if (file.exists()) {
+            getRepositoryFromDir(projectPath + projectName + "/" + branchName);
+        } else {
+            fromCloneRepository(projectUrl, projectPath + projectName + "/" + branchName, branchName);
+        }
         return projectPath + projectName + "/" + branchName;
     }
 
-    public static Repository getRepositoryFromDir(String dir) throws IOException {
+    public Repository getRepositoryFromDir(String dir) throws IOException {
         return new FileRepositoryBuilder()
                 .setGitDir(Paths.get(dir, ".git").toFile())
                 .build();
