@@ -46,9 +46,9 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
 
     /**
      * 添加前台项目
-     * @param insertBackProjectVo
+     * @param insertFrontProjectVo
      */
-    void addFrontProjectInfo(InsertBackProjectVo insertBackProjectVo);
+    void addFrontProjectInfo(InsertFrontProjectVo insertFrontProjectVo);
 
     /**
      * 部署后台项目

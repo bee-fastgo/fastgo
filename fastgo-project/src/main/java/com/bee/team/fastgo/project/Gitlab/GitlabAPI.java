@@ -6,7 +6,6 @@ import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.project.model.GitlabProjectHook;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

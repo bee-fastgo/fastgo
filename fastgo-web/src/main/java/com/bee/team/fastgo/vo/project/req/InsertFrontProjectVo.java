@@ -8,13 +8,22 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author hs
+ * @date 2020/7/25 17:12
+ * @desc 新增前台项目vo
+ **/
 @Data
-@ApiModel(value = "insertBackProjectVo",description = "新增后台项目vo")
-public class InsertBackProjectVo implements Serializable {
+@ApiModel(value = "insertFrontProjectVo",description = "新增前台项目vo")
+public class InsertFrontProjectVo implements Serializable {
 
     @ApiModelProperty(value = "项目名称", example = "testProject")
     @NotBlank(message = "项目名称不能为空")
     private String projectName;
+
+    @ApiModelProperty(value = "项目类型:1-backendTemplate,2-h5Template", example = "1")
+    @NotBlank(message = "项目类型不能为空")
+    private Integer projectType;
 
     @ApiModelProperty(value = "项目描述", example = "测试项目")
     @NotBlank(message = "项目描述不能为空")

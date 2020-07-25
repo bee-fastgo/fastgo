@@ -29,4 +29,11 @@ public class ProjectConstant {
     public static final Integer OBJECT_TYPE1 = 1;
     public static final Integer OBJECT_TYPE2 = 2;
 
+    /**
+     * 前台项目模板
+     */
+    public static final String FRONT_PROJECT_TYPE1 = "backend-template";
+    public static final String FRONT_PROJECT_TYPE2 = "h5-template";
+
+
 }
