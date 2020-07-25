@@ -17,6 +17,13 @@ public interface ProjectDao {
      * @param filePath
      * @return
      */
-    void uploadCodeIntoGitlab(GitlabProjectDo gitlabProjectDo,String filePath);
+    void uploadBackCodeIntoGitlab(GitlabProjectDo gitlabProjectDo,String filePath);
+
+    /**
+     * 上传前台模板代码到gitlab项目中
+     * @param gitlabProjectDo
+     * @return
+     */
+    void uploadFrontCodeIntoGitlab(GitlabProjectDo gitlabProjectDo,String filePath);
 
 }

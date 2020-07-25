@@ -118,7 +118,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
                 throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
             }
             //上传后台模板代码到gitlab项目中
-            projectDao.uploadCodeIntoGitlab(gitlabProjectDo,filePath);
+            projectDao.uploadBackCodeIntoGitlab(gitlabProjectDo,filePath);
             projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
         mapper.insertSelective(projectDo);
@@ -225,25 +225,25 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     }
 
     @Override
-    public void addFrontProjectInfo(InsertBackProjectVo insertBackProjectVo) {
+    public void addFrontProjectInfo(InsertFrontProjectVo insertFrontProjectVo) {
         //项目基本信息
-        ProjectDo projectDo = baseSupport.objectCopy(insertBackProjectVo,ProjectDo.class);
+        ProjectDo projectDo = baseSupport.objectCopy(insertFrontProjectVo,ProjectDo.class);
         //定义项目code(项目名大写)
-        String projectCode = insertBackProjectVo.getProjectName().toUpperCase();
+        String projectCode = insertFrontProjectVo.getProjectName().toUpperCase();
         projectDo.setProjectCode(projectCode);
         projectDo.setProjectType(ProjectConstant.PROJECT_TYPE2.toString());
         projectDo.setProjectStatus(PROJECT_STATUS1.toString());
 
         //配置环境
-        InsertBackProjectProfileVo insertBackProjectProfileVo = baseSupport.objectCopy(insertBackProjectVo,InsertBackProjectProfileVo.class);
+        InsertBackProjectProfileVo insertBackProjectProfileVo = baseSupport.objectCopy(insertFrontProjectVo,InsertBackProjectProfileVo.class);
         addBackProjectProfile(insertBackProjectProfileVo);
 
         //生成前台项目模板
-        if (StringUtils.isEmpty(insertBackProjectVo.getGitUrl())){
+        if (StringUtils.isEmpty(insertFrontProjectVo.getGitUrl())){
             //创建新的gitlab后台项目
             GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
             try {
-                gitlabProjectDo = gitlabAPI.createNewProject(insertBackProjectVo.getProjectName(),insertBackProjectVo.getProjectDesc());
+                gitlabProjectDo = gitlabAPI.createNewProject(insertFrontProjectVo.getProjectName(),insertFrontProjectVo.getProjectDesc());
                 if (ObjectUtils.isEmpty(gitlabProjectDo)){
                     throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
                 }
@@ -251,9 +251,15 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
                 throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
             }
             //上传后台模板代码到gitlab项目中
-            projectDao.uploadCodeIntoGitlab(gitlabProjectDo,"");
+            if (1 == insertFrontProjectVo.getProjectType()){
+                projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, FRONT_PROJECT_TYPE1);
+            }else if ( 2 == insertFrontProjectVo.getProjectType() ){
+                projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, FRONT_PROJECT_TYPE2);
+            }
+
             projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
+        mapper.insertSelective(projectDo);
     }
 
     @Override
