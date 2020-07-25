@@ -28,5 +28,19 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
             <version>2.3.1.RELEASE</version>
         </dependency>
+
+        <!-- java git api       -->
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.6.0.201912101111-r</version>
+        </dependency>
+        <!-- java maven api       -->
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 </project>
