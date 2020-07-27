@@ -10,11 +10,9 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 /**
- * @ClassName MongoConfig
- * @Description mongo自定义配置修改
- * @Author xqx
- * @Date 2020/7/20 13:57
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/20
+ * @desc mongo自定义配置修改
  **/
 @Configuration
 public class MongoConfig {

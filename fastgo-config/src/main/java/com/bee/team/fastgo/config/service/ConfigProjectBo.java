@@ -7,112 +7,133 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ClassName ConfigProjectBo
- * @Description 项目配置
- * @Author xqx
- * @Date 2020/7/20 18:36
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/25
+ * @desc 项目配置
  **/
 public interface ConfigProjectBo<T> {
     /**
-     * @return String配置code码
-     * @Author xqx
-     * @Description 添加项目配置信息
-     * @Date 18:38 2020/7/20
-     * @Param map 添加的参数
-     **/
+     * 添加项目配置信息
+     *
+     * @param map
+     * @return {@link String}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 添加项目配置信息
+     */
     String insertProject(Map<String, Map<String, Object>> map);
 
     /**
-     * @return DeleteResult
-     * @Author xqx
-     * @Description 删除一个项目
-     * @Date 18:40 2020/7/20
-     * @Param map 条件 不能为空
-     **/
+     * 删除一个项目
+     *
+     * @param map
+     * @return {@link DeleteResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除一个项目
+     */
     DeleteResult removeOneProject(Map<String, Object> map);
 
     /**
-     * @return DeleteResult
-     * @Author xqx
-     * @Description 删除所有的项目
-     * @Date 18:42 2020/7/20
-     * @Param
-     **/
+     * 删除所有的项目
+     *
+     * @param
+     * @return {@link DeleteResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除所有的项目
+     */
     DeleteResult removeAllProjects();
 
     /**
-     * @return UpdateResult
-     * @Author xqx
-     * @Description 删除项目里面的一条数据(一个键值对)
-     * @Date 13:42 2020/7/23
-     * @Param code 唯一标识
-     * @Param key 要移除的key
-     **/
+     * 删除项目里面的一条数据(一个键值对)
+     *
+     * @param code
+     * @param key
+     * @return {@link UpdateResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 删除项目里面的一条数据(一个键值对)
+     */
     UpdateResult removeOneDataByCondition(String code, String key);
 
     /**
-     * @return UpdateResult
-     * @Author xqx
-     * @Description 修改配置
-     * @Date 18:43 2020/7/20
-     * @Param queryMap 条件
-     * @Param updateMap 修改键值对
-     **/
+     * 修改配置
+     *
+     * @param queryMap
+     * @param updateMap
+     * @return {@link UpdateResult}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 修改配置
+     */
     UpdateResult updateOneProject(Map<String, Object> queryMap, Map<String, Object> updateMap);
 
     /**
-     * @return map
-     * @Author xqx
-     * @Description 根据条件获取一个项目的配置信息
-     * @Date 18:48 2020/7/20
-     * @Param map 查询条件参数
-     * @Param t 返回的数据类型
-     **/
+     * 根据条件获取一个项目的配置信息
+     *
+     * @param map
+     * @param t
+     * @return {@link T}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 根据条件获取一个项目的配置信息
+     */
     T getOneProjectConfigInfo(Map<String, Object> map, Class<T> t);
 
     /**
-     * @return JSON格式的配置信息
-     * @Author xqx
-     * @Description
-     * @Date 15:22 2020/7/21
-     * @Param map 查询条件
-     **/
+     * JSON格式的配置信息
+     *
+     * @param map
+     * @return {@link String}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc JSON格式的配置信息
+     */
     String getOneProjectConfigToJSON(Map<String, Object> map);
 
     /**
-     * @return list
-     * @Author xqx
-     * @Description 根据条件获取配置信息列表(模糊查询)
-     * @Date 9:15 2020/7/21
-     * @Param map 参数信息
-     * @Param t 返回的数据类型
-     **/
+     * 根据条件获取配置信息列表(模糊查询)
+     *
+     * @param map
+     * @param t
+     * @return {@link List<T>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 根据条件获取配置信息列表(模糊查询)
+     */
     List<T> getProjectConfigList(Map<String, Object> map, Class<T> t);
 
     /**
-     * @return list
-     * @Author xqx
-     * @Description 获取所有的配置信息
-     * @Date 9:16 2020/7/21
-     * @Param t 返回的数据类型
-     **/
+     * 获取所有的配置信息
+     *
+     * @param t
+     * @return {@link List<T>}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 获取所有的配置信息
+     */
     List<T> getAllProjectConfigList(Class<T> t);
 
     /**
-     * @return Long
-     * @Author xqx
-     * @Description 获取所有项目的数量
-     * @Date 9:17 2020/7/21
-     **/
+     * 获取所有项目的数量
+     *
+     * @param
+     * @return {@link Long}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 获取所有项目的数量
+     */
     Long countAllProjectConfig();
 
     /**
-     * @return long
-     * @Author xqx
-     * @Description 模糊查询项目数量
-     * @Date 9:18 2020/7/21
-     * @Param map 参数类
-     **/
+     * 模糊查询项目数量
+     *
+     * @param map
+     * @return {@link Long}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 模糊查询项目数量
+     */
     Long countProjectByCondition(Map<String, Object> map);
 }

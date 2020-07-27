@@ -24,11 +24,9 @@ import java.util.Map;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
- * @ClassName ConfigProjectBoImpl
- * @Description 项目配置
- * @Author xqx
- * @Date 2020/7/21 9:19
- * @Version 1.0
+ * @author xqx
+ * @date 2020/7/21
+ * @desc 项目配置
  **/
 @Service
 public class ConfigProjectBoImpl implements ConfigProjectBo {
@@ -74,7 +72,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     @Override
     public DeleteResult removeOneProject(Map map) {
         if (map.isEmpty()) {
-            // 抛出异常
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数为空");
         }
         List<Object> list = Arrays.asList(map.keySet().toArray());
         Criteria criteria = new Criteria();
@@ -93,7 +91,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     public UpdateResult removeOneDataByCondition(String code, String key) {
         // MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE = base.configCode
         Query query = new Query(Criteria.where(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE).is(code));
-        Update update = new Update().unset(key);
+        Update update = new Update().unset(key.replace(".", "-"));
         return template.updateFirst(query, update, MongoCollectionValue.CONFIG_PROJECT);
     }
 
@@ -105,7 +103,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         // 过滤id
         configMap.remove(MongoCommonValue.CONFIG_PROJECT_ID);
 
-        Map<String, Object> baseMap = (Map<String, Object>) configMap.get("base");
+        Map<String, Object> baseMap = (Map<String, Object>) configMap.get(MongoCommonValue.PROJECT_BASE_KEY);
         baseMap.remove(MongoCommonValue.PROJECT_NAME);
         baseMap.remove(MongoCommonValue.PROJECT_DESCRIPTION);
         baseMap.remove(MongoCommonValue.PROJECT_CODE);
@@ -158,7 +156,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     @Override
     public Object getOneProjectConfigInfo(Map map, Class t) {
         if (map.isEmpty()) {
-            // 抛出异常
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数不能为空");
         }
         List<Object> list = Arrays.asList(map.keySet().toArray());
         Criteria criteria = new Criteria();

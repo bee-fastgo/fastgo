@@ -1,4 +1,4 @@
-package com.bee.team.fastgo.project.Gitlab;
+package com.bee.team.fastgo.project.gitlab;
 
 import com.bee.team.fastgo.project.constant.AuthMethod;
 import com.bee.team.fastgo.project.constant.TokenType;
@@ -6,7 +6,6 @@ import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.project.model.GitlabProjectHook;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

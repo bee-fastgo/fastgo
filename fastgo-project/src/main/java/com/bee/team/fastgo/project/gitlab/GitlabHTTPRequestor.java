@@ -1,4 +1,4 @@
-package com.bee.team.fastgo.project.Gitlab;
+package com.bee.team.fastgo.project.gitlab;
 
 import com.bee.team.fastgo.project.constant.AuthMethod;
 import com.bee.team.fastgo.project.constant.RequestMethod;
