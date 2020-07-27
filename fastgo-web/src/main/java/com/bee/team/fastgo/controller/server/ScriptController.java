@@ -87,7 +87,7 @@ public class ScriptController {
      * @date 13:18 2020/7/24
      * @Description
      */
-    @GetMapping(value = "/getScriptInfo",consumes = "application/json")
+    @PostMapping(value = "/getScriptInfo",consumes = "application/json")
     @ApiOperation(value = "获取脚本信息")
     @ValidHandler(key = "reqGetScriptInfoVo", value = ReqGetScriptInfoVo.class,isReqBody = false)
     public ResBody<ResScriptInfoVo> getScriptInfo(@RequestBody ReqGetScriptInfoVo reqGetScriptInfoVo){

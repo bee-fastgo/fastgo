@@ -10,9 +10,9 @@ import java.io.Serializable;
 public class ReqCreateSoftwareDTO implements Serializable {
 
     /**
-     * 项目code
+     * 软件code
      */
-    private String projectCode;
+    private String softwareCode;
 
     /**
      * 服务器ip
@@ -29,12 +29,12 @@ public class ReqCreateSoftwareDTO implements Serializable {
      */
     private String version;
 
-    public String getProjectCode() {
-        return projectCode;
+    public String getSoftwareCode() {
+        return softwareCode;
     }
 
-    public void setProjectCode(String projectCode) {
-        this.projectCode = projectCode;
+    public void setSoftwareCode(String softwareCode) {
+        this.softwareCode = softwareCode;
     }
 
     public String getIp() {

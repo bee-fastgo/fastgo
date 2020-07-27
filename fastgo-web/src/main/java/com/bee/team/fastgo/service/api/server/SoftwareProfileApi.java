@@ -24,14 +24,4 @@ public interface SoftwareProfileApi {
     ResCreateSoftwareDTO createSoftwareEnvironment(ReqCreateSoftwareDTO reqCreateSoftwareDTO);
 
 
-    /**
-     * 软件安装脚本执行完成后的接口回调
-      * @param reqSoftwareInstallScriptExecResultDTO
-     * @return
-     * @author jgz
-     * @date 2020/7/27
-     * @desc
-     */
-    void softwareInstallScriptExecResult(ReqSoftwareInstallScriptExecResultDTO reqSoftwareInstallScriptExecResultDTO);
-
 }
