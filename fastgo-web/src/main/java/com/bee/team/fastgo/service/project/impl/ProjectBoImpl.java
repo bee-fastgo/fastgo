@@ -140,6 +140,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
         //配置环境
         InsertBackProjectProfileVo insertBackProjectProfileVo = baseSupport.objectCopy(insertFrontProjectVo,InsertBackProjectProfileVo.class);
+        insertBackProjectProfileVo.setProjectCode(projectCode);
         Integer flag = projectDao.addProjectProfile(insertBackProjectProfileVo);
         projectDo.setProjectStatus(flag.toString());
 
