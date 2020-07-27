@@ -4,6 +4,7 @@ import com.bee.team.fastgo.service.monitor.*;
 import com.bee.team.fastgo.vo.monitor.req.ServerMonitorLogReqVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerMonitorVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerSystemInfoVo;
+import com.spring.simple.development.core.annotation.base.ValidHandler;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -50,6 +51,7 @@ public class ServerMonitorController {
     @ApiOperation(value = "获取监控服务器各项指标状态")
     @ApiImplicitParam(name = "serverMonitorLogReqVo", value = "获取监控服务器各项指标状态请求参数类", dataTypeClass = ServerMonitorLogReqVo.class)
     @RequestMapping(value = "/getServerMonitorLog", method = RequestMethod.POST, consumes = "application/json")
+    @ValidHandler(key = "serverMonitorLogReqVo", value = ServerMonitorLogReqVo.class, isReqBody = false)
     public ResBody<ServerMonitorVo> getServerMonitorLog(ServerMonitorLogReqVo reqVo) {
         ServerMonitorVo serverMonitorVo = new ServerMonitorVo();
         serverMonitorVo.setServerCpuLogVoList(serverCpuLogBo.getServerCpuLogList(reqVo));

@@ -1,14 +1,12 @@
 package com.bee.team.fastgo.service.monitor.impl;
 
 import com.alibaba.lava.base.AbstractLavaBoImpl;
-import com.bee.team.fastgo.mapper.ServerNetIoLogDoMapperExt;
+import com.bee.team.fastgo.mapper.ServerNetIOLogDoMapperExt;
 import com.bee.team.fastgo.model.ServerNetIOLogDo;
 import com.bee.team.fastgo.model.ServerNetIOLogDoExample;
 import com.bee.team.fastgo.service.monitor.ServerNetIOLogBo;
 import com.bee.team.fastgo.vo.monitor.req.ServerMonitorLogReqVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerNetIOLogVo;
-import com.spring.simple.development.core.annotation.base.IsApiService;
-import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@IsApiService
-public class ServerNetIOLogBoImpl extends AbstractLavaBoImpl<ServerNetIOLogDo, ServerNetIoLogDoMapperExt, ServerNetIOLogDoExample> implements ServerNetIOLogBo {
+public class ServerNetIOLogBoImpl extends AbstractLavaBoImpl<ServerNetIOLogDo, ServerNetIOLogDoMapperExt, ServerNetIOLogDoExample> implements ServerNetIOLogBo {
 
     @Autowired
     private BaseSupport baseSupport;
 
     @Autowired
-    @NoApiMethod
-    public void setBaseMapper(ServerNetIoLogDoMapperExt mapper) {
+    public void setBaseMapper(ServerNetIOLogDoMapperExt mapper) {
         setMapper(mapper);
     }
 
