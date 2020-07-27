@@ -7,6 +7,7 @@ import com.bee.team.fastgo.model.ServerDo;
 import com.bee.team.fastgo.model.ServerSoftwareProfileDo;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqExecScriptDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqSoftwareInstallScriptExecResultDTO;
 import com.bee.team.fastgo.service.api.server.dto.res.ResCreateSoftwareDTO;
 import com.bee.team.fastgo.service.api.server.ScriptApi;
 import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
@@ -15,6 +16,7 @@ import com.bee.team.fastgo.service.server.ServerSoftwareProfileBo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.support.constant.CommonConstant;
 import com.spring.simple.development.support.exception.GlobalException;
+import com.spring.simple.development.support.utils.LocalCacheUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,8 +68,10 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi {
         ReqExecScriptDTO reqExecScriptDTO = baseSupport.objectCopy(reqCreateSoftwareDTO, ReqExecScriptDTO.class);
         // TODO 调用软件资源库获取下载地址
         reqExecScriptDTO.setType(ScriptTypeConstant.INSTALL);
-        // TODO 将查询id与项目code放置阻塞队列中,当构建完成后,去调用项目,修改其环境配置状态
         String selectId = scriptApi.execScript(reqExecScriptDTO);
+        // 保存至本地缓存
+        LocalCacheUtil.set(reqCreateSoftwareDTO.getProjectCode() + "-" + selectId,"",Integer.MAX_VALUE);
+
 
         // 4.将该软件的信息保存到数据库
         ServerSoftwareProfileDo serverSoftwareProfileDo = new ServerSoftwareProfileDo();
@@ -83,6 +87,14 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi {
         //resCreateSoftwareDTO.setSoftwareConfig();
         return resCreateSoftwareDTO;
     }
+
+    @Override
+    public void softwareInstallScriptExecResult(ReqSoftwareInstallScriptExecResultDTO reqSoftwareInstallScriptExecResultDTO) {
+
+
+    }
+
+
 
 
     private void checkParam(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
