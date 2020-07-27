@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 /**
  * @author luke
  */
-@SimpleInterceptor
+//@SimpleInterceptor
 public class FastGoInterceptor implements HandlerInterceptor {
 
     @Override

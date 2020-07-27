@@ -140,6 +140,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
         //配置环境
         InsertBackProjectProfileVo insertBackProjectProfileVo = baseSupport.objectCopy(insertFrontProjectVo,InsertBackProjectProfileVo.class);
+        insertBackProjectProfileVo.setProjectCode(projectCode);
         Integer flag = projectDao.addProjectProfile(insertBackProjectProfileVo);
         projectDo.setProjectStatus(flag.toString());
 
@@ -157,9 +158,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
                 throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
             }
             //上传后台模板代码到gitlab项目中
-            if (1 == insertFrontProjectVo.getProjectType()){
+            if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE1)){
                 projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, FRONT_PROJECT_TYPE1);
-            }else if ( 2 == insertFrontProjectVo.getProjectType() ){
+            }else if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE2)){
                 projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, FRONT_PROJECT_TYPE2);
             }
 

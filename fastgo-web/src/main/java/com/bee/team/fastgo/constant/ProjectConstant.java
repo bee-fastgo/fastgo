@@ -35,5 +35,8 @@ public class ProjectConstant {
     public static final String FRONT_PROJECT_TYPE1 = "backend-template";
     public static final String FRONT_PROJECT_TYPE2 = "h5-template";
 
+    public static final Integer FRONT_PROJECT_TEMPLATE1 = 1;
+    public static final Integer FRONT_PROJECT_TEMPLATE2 = 2;
+
 
 }

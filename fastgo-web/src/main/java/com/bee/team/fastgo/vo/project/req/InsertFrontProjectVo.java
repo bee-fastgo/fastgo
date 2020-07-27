@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class InsertFrontProjectVo implements Serializable {
     private String projectName;
 
     @ApiModelProperty(value = "项目类型:1-backendTemplate,2-h5Template", example = "1")
-    @NotBlank(message = "项目类型不能为空")
+    @NotNull(message = "项目类型不能为空")
     private Integer projectType;
 
     @ApiModelProperty(value = "项目描述", example = "测试项目")

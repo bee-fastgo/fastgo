@@ -35,7 +35,6 @@ public class ProjectController {
      * @date 2020/7/25
      * @desc 后台项目列表
      */
-
     @RequestMapping(value = "/backEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目展示")
     @ApiImplicitParam(resultDataType = ProjectListVo.class)
@@ -52,7 +51,6 @@ public class ProjectController {
      * @date 2020/7/25
      * @desc 后台项目新增
      */
-
     @RequestMapping(value = "/backEnd/addProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目新增")
     @ApiImplicitParam(name = "新增后台项目vo", required = true)
@@ -69,7 +67,6 @@ public class ProjectController {
      * @date 2020/7/25
      * @desc 后台项目新增环境
      */
-
     @RequestMapping(value = "/backEnd/addProjectProfile", method = RequestMethod.POST)
     @ApiOperation(value = "新增项目环境")
     @ApiImplicitParam(name = "新增项目环境vo", required = true)
@@ -86,7 +83,6 @@ public class ProjectController {
      * @date 2020/7/25
      * @desc 后台项目部署
      */
-
     @RequestMapping(value = "/backEnd/deployBackProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目部署")
     @ApiImplicitParam(resultDataType = String.class)
@@ -103,7 +99,6 @@ public class ProjectController {
      * @date 2020/7/25
      * @desc 后台项目日志
      */
-
     @RequestMapping(value = "/backEnd/queryProjectLog", method = RequestMethod.POST)
     @ApiOperation(value = "查询项目日志")
     @ApiImplicitParam(name = "查询项目日志vo", required = true)
@@ -123,7 +118,6 @@ public class ProjectController {
      * @date 2020/7/25
      * @desc 前台项目列表
      */
-
     @RequestMapping(value = "/frontEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目展示")
     @ApiImplicitParam(resultDataType = ProjectListVo.class)
@@ -140,7 +134,6 @@ public class ProjectController {
      * @date 2020/7/25
      * @desc 前台项目新增
      */
-
     @RequestMapping(value = "/frontEnd/addFrontproject", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目新增")
     @ApiImplicitParam(name = "insertFrontProjectVo")

@@ -42,7 +42,7 @@ public class ProjectListen {
             if (!CollectionUtils.isEmpty(projectList)){
                 ProjectDo projectDo = projectList.get(0);
                 List<GitlabProjectDo> gitlibProjects = gitlabAPI.getAllProject();
-                List<GitlabProjectDo> gitlibProjectList= gitlibProjects.stream().filter(r -> r.getName() == projectDo.getProjectName()).collect(Collectors.toList());
+                List<GitlabProjectDo> gitlibProjectList= gitlibProjects.stream().filter(r -> r.getName().equals(projectDo.getProjectName())).collect(Collectors.toList());
                 GitlabProjectDo gitlabProjectDo = gitlibProjectList.get(0);
                 GitlabProjectHook gitlabProjectHook = gitlabAPI.addWebhook(gitlabProjectDo.getId(),url);
                 if (ObjectUtils.isEmpty(gitlabProjectHook)){

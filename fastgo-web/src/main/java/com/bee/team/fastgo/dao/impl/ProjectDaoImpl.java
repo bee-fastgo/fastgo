@@ -107,9 +107,9 @@ public class ProjectDaoImpl implements ProjectDao {
         CredentialsProvider provider = GitUtil.createCredential(username,password);
         try {
             //克隆远程分支到本地
-            Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempbackdir",provider);
+            Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempbackdir/"+gitlabProjectDo.getName(),provider);
             //添加代码到本地库
-            String mv = "mv " + filePath + "/* " + projectUrl+"/tempbackdir";
+            String mv = "cp -r " + filePath + "/* " + projectUrl+"/tempbackdir/"+gitlabProjectDo.getName()+"/";
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(mv).waitFor();
             //commit提交代码
@@ -129,9 +129,9 @@ public class ProjectDaoImpl implements ProjectDao {
         CredentialsProvider provider = GitUtil.createCredential(username,password);
         try {
             //克隆远程分支到本地
-            Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempfrontdir",provider);
+            Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName(),provider);
             //添加代码到本地库
-            String mv = "cp -r " + frontTemplate + filePath + "/* " + projectUrl+"/tempfrontdir/";
+            String mv = "cp -r " + frontTemplate + filePath + "/* " + projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName()+"/";
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(mv).waitFor();
             //commit提交代码
