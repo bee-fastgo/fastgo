@@ -8,11 +8,13 @@ import com.bee.team.fastgo.service.monitor.ServerCpuLogBo;
 import com.bee.team.fastgo.vo.monitor.req.ServerMonitorLogReqVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerCpuLogVo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
+import com.spring.simple.development.support.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,7 +37,7 @@ public class ServerCpuLogBoImpl extends AbstractLavaBoImpl<ServerCpuLogDo, Serve
     public List<ServerCpuLogVo> getServerCpuLogList(ServerMonitorLogReqVo reqVo) {
         List<ServerCpuLogVo> resultList = new ArrayList<>();
         ServerCpuLogDoExample example = new ServerCpuLogDoExample();
-        example.createCriteria().andServerIpEqualTo(reqVo.getServerIp());
+        example.createCriteria().andServerIpEqualTo(reqVo.getServerIp()).andGmtCreateBetween(DateUtils.parseDate(reqVo.getStartTime()), DateUtils.parseDate(reqVo.getEndTime()));
         List<ServerCpuLogDo> serverCpuLogDoList = selectByExample(example);
         if (!CollectionUtils.isEmpty(serverCpuLogDoList)) {
             resultList = baseSupport.listCopy(serverCpuLogDoList, ServerCpuLogVo.class);

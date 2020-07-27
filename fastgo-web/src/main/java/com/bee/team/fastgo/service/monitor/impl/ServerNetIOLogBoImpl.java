@@ -8,6 +8,7 @@ import com.bee.team.fastgo.service.monitor.ServerNetIOLogBo;
 import com.bee.team.fastgo.vo.monitor.req.ServerMonitorLogReqVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerNetIOLogVo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
+import com.spring.simple.development.support.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -35,7 +36,7 @@ public class ServerNetIOLogBoImpl extends AbstractLavaBoImpl<ServerNetIOLogDo, S
     public List<ServerNetIOLogVo> getServerNetIOLogList(ServerMonitorLogReqVo reqVo) {
         List<ServerNetIOLogVo> resultList = new ArrayList<>();
         ServerNetIOLogDoExample example = new ServerNetIOLogDoExample();
-        example.createCriteria().andServerIpEqualTo(reqVo.getServerIp());
+        example.createCriteria().andServerIpEqualTo(reqVo.getServerIp()).andGmtCreateBetween(DateUtils.parseDate(reqVo.getStartTime()), DateUtils.parseDate(reqVo.getEndTime()));
         List<ServerNetIOLogDo> serverNetIOLogDoList = selectByExample(example);
         if (!CollectionUtils.isEmpty(serverNetIOLogDoList)) {
             resultList = baseSupport.listCopy(serverNetIOLogDoList, ServerNetIOLogVo.class);

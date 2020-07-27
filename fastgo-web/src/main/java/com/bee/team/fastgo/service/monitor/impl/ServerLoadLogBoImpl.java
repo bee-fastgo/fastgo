@@ -8,6 +8,7 @@ import com.bee.team.fastgo.service.monitor.ServerLoadLogBo;
 import com.bee.team.fastgo.vo.monitor.req.ServerMonitorLogReqVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerLoadLogVo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
+import com.spring.simple.development.support.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -35,7 +36,7 @@ public class ServerLoadLogBoImpl extends AbstractLavaBoImpl<ServerLoadLogDo, Ser
     public List<ServerLoadLogVo> getServerLoadLogList(ServerMonitorLogReqVo reqVo) {
         List<ServerLoadLogVo> resultList = new ArrayList<>();
         ServerLoadLogDoExample example = new ServerLoadLogDoExample();
-        example.createCriteria().andServerIpEqualTo(reqVo.getServerIp());
+        example.createCriteria().andServerIpEqualTo(reqVo.getServerIp()).andGmtCreateBetween(DateUtils.parseDate(reqVo.getStartTime()), DateUtils.parseDate(reqVo.getEndTime()));;
         List<ServerLoadLogDo> serverLoadLogDoList = selectByExample(example);
         if (!CollectionUtils.isEmpty(serverLoadLogDoList)) {
             resultList = baseSupport.listCopy(serverLoadLogDoList, ServerLoadLogVo.class);

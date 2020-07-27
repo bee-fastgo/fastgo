@@ -4,10 +4,10 @@ import com.alibaba.lava.base.LavaDo;
 import lombok.Data;
 
 /**
- * @description MyBatis Generator 自动创建,对应数据表为：t_server_netio_log
+ * @description MyBatis Generator 自动创建,对应数据表为：t_server_net_io_log
  *
  * @author hjs
- * @date   2020/07/24
+ * @date   2020/07/27
  */
 @Data
 public class ServerNetIOLogDo extends LavaDo {
@@ -24,12 +24,12 @@ public class ServerNetIOLogDo extends LavaDo {
     /**
      * 每秒钟发送的数据包,txpck/s
      */
-    private Double txpck;
+    private String txpck;
 
     /**
      * 每秒钟接收的KB数,rxkB/s
      */
-    private Double rxbyt;
+    private String rxbyt;
 
     /**
      * 每秒钟发送的KB数,txkB/s

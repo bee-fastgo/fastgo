@@ -7,7 +7,7 @@ import lombok.Data;
  * @description MyBatis Generator 自动创建,对应数据表为：t_server_system_info
  *
  * @author hjs
- * @date   2020/07/25
+ * @date   2020/07/27
  */
 @Data
 public class ServerSystemInfoDo extends LavaDo {
@@ -22,9 +22,9 @@ public class ServerSystemInfoDo extends LavaDo {
     private String version;
 
     /**
-     * 系统详细信息
+     * 系统名称
      */
-    private String versionDetail;
+    private String systemName;
 
     /**
      * 总计内存，G

@@ -3,6 +3,7 @@ package com.bee.team.fastgo.vo.monitor.req;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
@@ -19,10 +20,12 @@ public class ServerMonitorLogReqVo implements Serializable {
     @NotEmpty(message = "服务器IP不能为空")
     private String serverIp;
 
-    @ApiModelProperty(value = "查询开始时间", example = "2020-05-02 11:11:11")
+    @ApiModelProperty(value = "查询开始时间", example = "2020-05-02 11:11:11", required = true)
+    @NotEmpty(message = "查询开始时间不能为空")
     private String startTime;
 
-    @ApiModelProperty(value = "查询结束时间", example = "2020-05-02 11:11:11")
+    @ApiModelProperty(value = "查询结束时间", example = "2020-05-02 11:11:11", required = true)
+    @NotEmpty(message = "查询结束时间不能为空")
     private String endTime;
 
 }

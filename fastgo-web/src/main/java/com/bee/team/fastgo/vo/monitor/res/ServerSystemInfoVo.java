@@ -18,8 +18,8 @@ public class ServerSystemInfoVo implements Serializable {
     @ApiModelProperty(value = "系统版本信息", example = "8.1.1911")
     private String version;
 
-    @ApiModelProperty(value = "系统详细信息", example = "centOS")
-    private String versionDetail;
+    @ApiModelProperty(value = "系统名称", example = "centOS")
+    private String systemName;
 
     @ApiModelProperty(value = "总计内存，G", example = "16")
     private String totalMem;
