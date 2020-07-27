@@ -208,12 +208,13 @@ public class ProjectDaoImpl implements ProjectDao {
             }
             ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
             //获取软件元配置信息
-            dto.setIp(psDo.getRunServerIp());
+            /*dto.setIp(psDo.getRunServerIp());
             dto.setSoftwareCode(psDo.getSoftwareCode());
             dto.setSoftwareName(softwareInfoVo.getSoftwareName());
             dto.setVersion(softwareInfoVo.getVersion());
-            ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);
-            psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
+            ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);*/
+            String softwareConfig = "{'ip':'123.112.111.111','port':3306}";
+            psDo.setSoftwareConfig(softwareConfig);
             dos.add(psDo);
             //添加元配置到项目信息中
             map.put(softwareInfoVo.getSoftwareName(),StringUtil.strToMap(psDo.getSoftwareConfig()));
