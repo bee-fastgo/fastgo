@@ -1,6 +1,8 @@
 package com.bee.team.fastgo.service.server.impl;
 
 import com.alibaba.lava.base.AbstractLavaBoImpl;
+import com.bee.team.fastgo.hander.event.EventPublisher;
+import com.bee.team.fastgo.hander.event.JobLogPushEvent;
 import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
 import com.bee.team.fastgo.job.core.handler.IJobHandler;
@@ -8,8 +10,6 @@ import com.bee.team.fastgo.mapper.ServerExecutorLogDoMapperExt;
 import com.bee.team.fastgo.model.ServerExecutorLogDo;
 import com.bee.team.fastgo.model.ServerExecutorLogDoExample;
 import com.bee.team.fastgo.service.server.ServerExecutorLogBo;
-import com.spring.simple.development.core.annotation.base.IsApiService;
-import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.support.constant.CommonConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,9 @@ import java.util.List;
 
 @Service
 public class ServerExecutorLogBoImpl extends AbstractLavaBoImpl<ServerExecutorLogDo, ServerExecutorLogDoMapperExt, ServerExecutorLogDoExample> implements ServerExecutorLogBo {
+
+    @Autowired
+    private EventPublisher eventPublisher;
 
     @Autowired
     public void setBaseMapper(ServerExecutorLogDoMapperExt mapper) {
@@ -67,7 +70,7 @@ public class ServerExecutorLogBoImpl extends AbstractLavaBoImpl<ServerExecutorLo
         // handle msg
         StringBuffer handleMsg = new StringBuffer();
         if (handleCallbackParam.getExecuteResult().getMsg() != null) {
-            handleMsg.append("<br>"+handleCallbackParam.getExecuteResult().getMsg()+"</br>");
+            handleMsg.append("<br>" + handleCallbackParam.getExecuteResult().getMsg() + "</br>");
         }
 
         if (handleMsg.length() > 15000) {
@@ -82,6 +85,8 @@ public class ServerExecutorLogBoImpl extends AbstractLavaBoImpl<ServerExecutorLo
         serverExecutorLogDo.setHandleMsg(handleCallbackParam.getExecuteResult().getMsg());
         serverExecutorLogDo.setStatus(CommonConstant.CODE1);
         this.modifyServerExecutorLogDo(serverExecutorLogDo);
+        // 异步推送
+        eventPublisher.publishEvent(new JobLogPushEvent(handleCallbackParam));
         return ReturnT.SUCCESS;
     }
 }
