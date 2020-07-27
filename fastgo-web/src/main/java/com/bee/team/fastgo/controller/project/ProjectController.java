@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @description:
  * @author: luke
@@ -142,5 +145,17 @@ public class ProjectController {
         projectBo.addFrontProjectInfo(insertFrontProjectVo);
         return new ResBody().buildSuccessResBody();
     }
+
+
+    @RequestMapping(value = "/frontEnd/queryProfile", method = RequestMethod.POST)
+    @ApiOperation(value = "软件环境、运行环境展示")
+    public ResBody<ProfileListVo> queryProfile() {
+        List<String> ips = new ArrayList<>();
+        ips.add("1.1.1.1");
+        ProfileListVo profileListVo = new ProfileListVo();
+        profileListVo.setIps(ips);
+        return new ResBody().buildSuccessResBody(profileListVo);
+    }
+
 
 }

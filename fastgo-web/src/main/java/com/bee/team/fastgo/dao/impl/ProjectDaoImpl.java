@@ -110,8 +110,9 @@ public class ProjectDaoImpl implements ProjectDao {
             Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempbackdir/"+gitlabProjectDo.getName(),provider);
             //添加代码到本地库
             String mv = "cp -r " + filePath + "/* " + projectUrl+"/tempbackdir/"+gitlabProjectDo.getName()+"/";
+            String[] cmd = new String[]{"sh","-c",mv};
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec(mv).waitFor();
+            runtime.exec(cmd).waitFor();
             //commit提交代码
             GitUtil.commit(git,"第一次提交",provider);
             //默认push到master分支
@@ -132,8 +133,9 @@ public class ProjectDaoImpl implements ProjectDao {
             Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName(),provider);
             //添加代码到本地库
             String mv = "cp -r " + frontTemplate + filePath + "/* " + projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName()+"/";
+            String[] cmd = new String[]{"sh","-c",mv};
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec(mv).waitFor();
+            runtime.exec(cmd).waitFor();
             //commit提交代码
             GitUtil.commit(git,"第一次提交",provider);
             //默认push到master分支
