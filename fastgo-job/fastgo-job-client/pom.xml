@@ -18,6 +18,11 @@
             <artifactId>fastgo-job-core</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.hyperic</groupId>
+            <artifactId>sigar</artifactId>
+            <version>1.6.4</version>
+        </dependency>
     </dependencies>
 
     <build>
