@@ -26,6 +26,11 @@ public class ReqExecScriptDTO implements Serializable {
 
     /**
      * 脚本类型
+     * 1.安装
+     * 2.修改
+     * 3.重启
+     * 4.停止
+     * 5.卸载
      */
     private String type;
 
