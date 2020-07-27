@@ -28,15 +28,15 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
 
         /*
         ServerIp:服务器的ip (例192.168.1.100)
-        SoftwareCode:软件名,来源于字典 (例mysql)
-        SoftwareName:SoftwareCode+version,中间用-分隔 (列mysql-5.7)
+        SoftwareName:软件名,来源于字典 (例mysql)
+        version:版本 (例5.7)
          */
         ServerSoftwareProfileDoExample serverSoftwareProfileDoExample = new ServerSoftwareProfileDoExample();
         serverSoftwareProfileDoExample.createCriteria().andServerIpEqualTo(ip)
-                .andSoftwareCodeEqualTo(softwareName)
-                .andSoftwareNameEqualTo(softwareName + "-" + version);
-        List<ServerSoftwareProfileDo> serverSoftwareProfileDos = selectByExample(serverSoftwareProfileDoExample);
-        return CollectionUtils.isNotEmpty(serverSoftwareProfileDos)?serverSoftwareProfileDos.get(0):null;
+                .andSoftwareNameEqualTo(softwareName)
+                .andVersionEqualTo(version);
+        List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = selectByExample(serverSoftwareProfileDoExample);
+        return CollectionUtils.isNotEmpty(serverSoftwareProfileDoList) ? serverSoftwareProfileDoList.get(0) : null;
     }
 
 

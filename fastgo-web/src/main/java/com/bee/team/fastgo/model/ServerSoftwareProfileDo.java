@@ -18,12 +18,12 @@ public class ServerSoftwareProfileDo extends LavaDo {
     private String serverIp;
 
     /**
-     * 软件唯一标识(参考字典)
+     * 软件唯一标识
      */
     private String softwareCode;
 
     /**
-     * 软件名
+     * 字典名
      */
     private String softwareName;
 
@@ -31,6 +31,11 @@ public class ServerSoftwareProfileDo extends LavaDo {
      * 软件环境元配置
      */
     private String softwareConfig;
+
+    /**
+     * 版本
+     */
+    private String version;
 
     @Override
     public String getBoQualifiedIntfName() {
