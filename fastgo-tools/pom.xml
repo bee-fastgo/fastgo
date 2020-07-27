@@ -42,5 +42,11 @@
             <artifactId>maven-invoker</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <!--   scp     -->
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210</version>
+        </dependency>
     </dependencies>
 </project>

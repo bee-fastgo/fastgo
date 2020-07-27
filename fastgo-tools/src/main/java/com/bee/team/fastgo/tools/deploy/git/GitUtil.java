@@ -21,12 +21,12 @@ import java.nio.file.Paths;
 public class GitUtil {
 
     @Value("${gitlab.username}")
-    private String gitUser;
+    private String gitUser="xiaohushuang";
     @Value("${gitlab.password}")
-    private String gitPassword;
+    private String gitPassword="hs19971125";
 
     @Value("${fastgo.project.path}")
-    private String projectPath;
+    private String projectPath="/data/fastgo/deploy/";
 
     /**
      * @param userName
