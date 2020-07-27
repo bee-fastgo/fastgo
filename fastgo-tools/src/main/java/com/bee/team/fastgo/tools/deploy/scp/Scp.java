@@ -39,7 +39,7 @@ public class Scp {
             //执行删除命令
             SCPClient client = new SCPClient(conn);
             //本地文件scp到远程目录
-            //client.put(localPath, remotePath);
+            client.put(localPath, remotePath);
 
             String step1 = "rm -rf " + remotePath + "/*";
             String step2 = "mkdir -p " + remotePath;
