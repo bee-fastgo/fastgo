@@ -135,7 +135,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         //定义项目code(项目名大写)
         String projectCode = insertFrontProjectVo.getProjectName().toUpperCase();
         projectDo.setProjectCode(projectCode);
-        projectDo.setProjectType(ProjectConstant.PROJECT_TYPE2.toString());
+        projectDo.setProjectType(ProjectConstant.PROJECT_TYPE1.toString());
         projectDo.setProjectStatus(PROJECT_STATUS1.toString());
 
         //配置环境
