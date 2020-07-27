@@ -62,13 +62,15 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         checkParam(reqCreateSoftwareDTO);
 
         // 1.查询是否存在该配置?
-        ServerSoftwareProfileDo ssp = serverSoftwareProfileBo.getServerSoftwareProfileByServerIpAndSoftwareNameAndVersion(reqCreateSoftwareDTO.getIp(),
-                reqCreateSoftwareDTO.getSoftwareName(),
-                reqCreateSoftwareDTO.getVersion());
+        ServerSoftwareProfileDo ssp = serverSoftwareProfileBo.getServerSoftwareProfileBySoftwareCode(reqCreateSoftwareDTO.getSoftwareCode());
         if(ssp != null){
             ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
             resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE1);
-            resCreateSoftwareDTO.setSoftwareConfig(ssp.getSoftwareConfig());
+            // TODO 设置元配置
+            resCreateSoftwareDTO.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
+//            ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
+//            resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE1);
+//            resCreateSoftwareDTO.setSoftwareConfig(ssp.getSoftwareConfig());
             return resCreateSoftwareDTO;
         }
 
