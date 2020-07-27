@@ -2,6 +2,7 @@ package com.bee.team.fastgo.project.gitlab;
 
 import com.bee.team.fastgo.project.constant.AuthMethod;
 import com.bee.team.fastgo.project.constant.TokenType;
+import com.bee.team.fastgo.project.model.GitlabBranch;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.project.model.GitlabProjectHook;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 @Service
 public class GitlabAPI {
@@ -168,14 +170,28 @@ public class GitlabAPI {
         return postRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).addData("url",url).execute(tailUrl,GitlabProjectHook.class);
     }
 
+    /**
+     * @param id 项目id
+     * @return {@link List< GitlabBranch>}
+     * @author hs
+     * @date 2020/7/27
+     * @desc 查询项目所有分支信息
+     */
+
+    public List<GitlabBranch> queryAllBranchInfo(Integer id) throws IOException {
+        String tailUrl = "projects/"+ id + "/repository/branches";
+        GitlabBranch[] branches = getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabBranch[].class);
+        return Arrays.asList(branches);
+    }
 
 
 
     public static void main(String[] args) throws IOException {
         GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
         //List<GitlabProjectDo> list = gitlabAPI.getAllProject();
-        GitlabProjectDo gitlabProjectDo = gitlabAPI.createNewProject("hsFirst","hs the first project");
-        System.out.println(gitlabProjectDo);
+        //GitlabProjectDo gitlabProjectDo = gitlabAPI.createNewProject("hsFirst","hs the first project");
+        List<GitlabBranch> gitlabBranches = gitlabAPI.queryAllBranchInfo(2);
+        System.out.println(gitlabBranches);
     }
 
 }

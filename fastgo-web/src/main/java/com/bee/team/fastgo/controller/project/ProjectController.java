@@ -40,7 +40,6 @@ public class ProjectController {
      */
     @RequestMapping(value = "/backEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目展示")
-    @ApiImplicitParam(resultDataType = ProjectListVo.class)
     @ValidHandler(key = "queryProjectListVo", value = QueryProjectListVo.class, isReqBody = false)
     public ResBody<ProjectListVo> backPorjectList(@RequestBody QueryProjectListVo queryProjectListVo) {
         ResPageDTO resPageDTO = projectBo.queryBackProjectInfo(queryProjectListVo);
@@ -56,7 +55,6 @@ public class ProjectController {
      */
     @RequestMapping(value = "/backEnd/addProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目新增")
-    @ApiImplicitParam(name = "新增后台项目vo", required = true)
     @ValidHandler(key = "insertBackProjectVo", value = InsertBackProjectVo.class, isReqBody = false)
     public ResBody<Void> addBackProject(@RequestBody InsertBackProjectVo insertBackProjectVo) {
         projectBo.addBackProjectInfo(insertBackProjectVo);
@@ -72,7 +70,6 @@ public class ProjectController {
      */
     @RequestMapping(value = "/backEnd/addProjectProfile", method = RequestMethod.POST)
     @ApiOperation(value = "新增项目环境")
-    @ApiImplicitParam(name = "新增项目环境vo", required = true)
     @ValidHandler(key = "insertBackProjectProfileVo", value = InsertBackProjectProfileVo.class, isReqBody = false)
     public ResBody<Void> addBackProjectProfile(@RequestBody InsertBackProjectProfileVo insertBackProjectProfileVo) {
         projectBo.addBackProjectProfile(insertBackProjectProfileVo);
@@ -88,7 +85,6 @@ public class ProjectController {
      */
     @RequestMapping(value = "/backEnd/deployBackProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目部署")
-    @ApiImplicitParam(resultDataType = String.class)
     @ValidHandler(key = "deployBackPorjectVo", value = DeployBackPorjectVo.class, isReqBody = false)
     public ResBody<String> deployBackProject(@RequestBody DeployBackPorjectVo deployBackPorjectVo) {
         String result = projectBo.execDeployBackProject(deployBackPorjectVo);
@@ -104,7 +100,6 @@ public class ProjectController {
      */
     @RequestMapping(value = "/backEnd/queryProjectLog", method = RequestMethod.POST)
     @ApiOperation(value = "查询项目日志")
-    @ApiImplicitParam(name = "查询项目日志vo", required = true)
     @ValidHandler(key = "queryProjectLogVo", value = QueryProjectLogVo.class, isReqBody = false)
     public ResBody<String> queryProjectLog(@RequestBody QueryProjectLogVo queryProjectLogVo) {
         String log = projectBo.findProjectLog(queryProjectLogVo);
@@ -123,7 +118,6 @@ public class ProjectController {
      */
     @RequestMapping(value = "/frontEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目展示")
-    @ApiImplicitParam(resultDataType = ProjectListVo.class)
     @ValidHandler(key = "queryProjectListVo", value = QueryProjectListVo.class, isReqBody = false)
     public ResBody<ProjectListVo> frontPorjectList(@RequestBody QueryProjectListVo queryProjectListVo) {
         ResPageDTO resPageDTO = projectBo.queryFrontProjectInfo(queryProjectListVo);
@@ -139,7 +133,6 @@ public class ProjectController {
      */
     @RequestMapping(value = "/frontEnd/addFrontproject", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目新增")
-    @ApiImplicitParam(name = "insertFrontProjectVo")
     @ValidHandler(key = "insertFrontProjectVo", value = InsertFrontProjectVo.class, isReqBody = false)
     public ResBody<Void> addfrontPorject(@RequestBody InsertFrontProjectVo insertFrontProjectVo) {
         projectBo.addFrontProjectInfo(insertFrontProjectVo);
@@ -147,6 +140,13 @@ public class ProjectController {
     }
 
 
+    /**
+     * @param
+     * @return {@link ResBody< ProfileListVo>}
+     * @author hs
+     * @date 2020/7/27
+     * @desc 软件环境展示
+     */
     @RequestMapping(value = "/frontEnd/queryProfile", method = RequestMethod.POST)
     @ApiOperation(value = "软件环境、运行环境展示")
     public ResBody<ProfileListVo> queryProfile() {
@@ -156,6 +156,14 @@ public class ProjectController {
         profileListVo.setIps(ips);
         return new ResBody().buildSuccessResBody(profileListVo);
     }
+
+    @RequestMapping(value = "/frontEnd/queryBranchName", method = RequestMethod.POST)
+    @ApiOperation(value = "查询项目分支名称")
+    public ResBody<String> queryProjectBranch(@RequestBody String projectCode) {
+        List<String> branchNames = projectBo.findProjectBranch(projectCode);
+        return new ResBody().buildSuccessResBody(branchNames);
+    }
+
 
 
 }

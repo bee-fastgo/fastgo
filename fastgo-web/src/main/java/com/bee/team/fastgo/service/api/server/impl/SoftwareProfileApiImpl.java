@@ -62,13 +62,15 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         checkParam(reqCreateSoftwareDTO);
 
         // 1.查询是否存在该配置?
-        ServerSoftwareProfileDo ssp = serverSoftwareProfileBo.getServerSoftwareProfileByServerIpAndSoftwareNameAndVersion(reqCreateSoftwareDTO.getIp(),
-                reqCreateSoftwareDTO.getSoftwareName(),
-                reqCreateSoftwareDTO.getVersion());
+        ServerSoftwareProfileDo ssp = serverSoftwareProfileBo.getServerSoftwareProfileBySoftwareCode(reqCreateSoftwareDTO.getSoftwareCode());
         if(ssp != null){
             ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
             resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE1);
-            resCreateSoftwareDTO.setSoftwareConfig(ssp.getSoftwareConfig());
+            // TODO 设置元配置
+            resCreateSoftwareDTO.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
+//            ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
+//            resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE1);
+//            resCreateSoftwareDTO.setSoftwareConfig(ssp.getSoftwareConfig());
             return resCreateSoftwareDTO;
         }
 
@@ -81,6 +83,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         // 3.为该服务器安装软件,并拿到脚本执行的key
         ReqExecScriptDTO reqExecScriptDTO = baseSupport.objectCopy(reqCreateSoftwareDTO, ReqExecScriptDTO.class);
         // TODO 调用软件资源库获取下载地址
+        reqExecScriptDTO.setSoftwareDownloadUrl("http://172.22.5.73/software");
         reqExecScriptDTO.setType(ScriptTypeConstant.INSTALL);
         String selectId = scriptApi.execScript(reqExecScriptDTO);
         JobHandler.jobMap.put(selectId, this);
@@ -94,15 +97,18 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         // 4.将该软件的信息保存到数据库
         ServerSoftwareProfileDo serverSoftwareProfileDo = new ServerSoftwareProfileDo();
         serverSoftwareProfileDo.setServerIp(reqCreateSoftwareDTO.getIp());
-        serverSoftwareProfileDo.setSoftwareCode(reqCreateSoftwareDTO.getSoftwareName());
-        serverSoftwareProfileDo.setSoftwareName(reqCreateSoftwareDTO.getSoftwareName() + "-" + reqCreateSoftwareDTO.getVersion());
+        serverSoftwareProfileDo.setSoftwareCode(reqCreateSoftwareDTO.getSoftwareCode());
+        serverSoftwareProfileDo.setSoftwareName(reqCreateSoftwareDTO.getSoftwareName());
+        serverSoftwareProfileDo.setVersion(reqCreateSoftwareDTO.getVersion());
         // TODO 软件环境元配置从软件资源库获取
+        serverSoftwareProfileDo.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
         serverSoftwareProfileBo.saveServerSoftwareProfile(serverSoftwareProfileDo);
-        // TODO 5.返回配置
+
+        // 5.返回配置
         ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
         resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE0);
         // TODO 设置元配置
-        //resCreateSoftwareDTO.setSoftwareConfig();
+        resCreateSoftwareDTO.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
         return resCreateSoftwareDTO;
     }
 

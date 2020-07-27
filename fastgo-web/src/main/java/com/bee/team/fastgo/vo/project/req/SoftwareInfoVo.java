@@ -10,17 +10,17 @@ import java.io.Serializable;
 @ApiModel(value = "softwareInfoVo",description = "软件环境信息vo")
 public class SoftwareInfoVo implements Serializable {
 
-    @ApiModelProperty(value = "软件环境ip", example = "测试项目")
+    @ApiModelProperty(value = "软件环境ip", example = "11.10.9.8")
     private String softwareServerIp;
 
-    @ApiModelProperty(value = "软件环境code", example = "测试项目")
+    @ApiModelProperty(value = "软件环境code", example = "TEST")
     private String softwareCode;
-
-    @ApiModelProperty(value = "软件环境元配置", required = true, example = "测试项目")
-    private String softwareConfig;
 
     @ApiModelProperty(value = "软件名称", example = "测试项目")
     private String softwareName;
+
+    @ApiModelProperty(value = "软件版本号", example = "5.0")
+    private String version;
 
 
 

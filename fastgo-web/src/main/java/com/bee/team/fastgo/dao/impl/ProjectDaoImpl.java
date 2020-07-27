@@ -10,6 +10,9 @@ import com.bee.team.fastgo.mapper.ProjectProfileDoMapperExt;
 import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.project.utils.GitUtil;
+import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
+import com.bee.team.fastgo.service.api.server.dto.res.ResCreateSoftwareDTO;
 import com.bee.team.fastgo.utils.StringUtil;
 import com.bee.team.fastgo.vo.project.req.InsertBackProjectProfileVo;
 import com.bee.team.fastgo.vo.project.req.SoftwareInfoVo;
@@ -45,11 +48,11 @@ public class ProjectDaoImpl implements ProjectDao {
     @Value("${projectUrl}")
     private String projectUrl;
 
-    @Value("${frontTemplate}")
-    private String frontTemplate;
-
     @Autowired
     private BaseSupport baseSupport;
+
+    @Autowired
+    private SoftwareProfileApi softwareProfileApi;
 
     @Autowired
     private ProjectProfileDoMapperExt projectProfileDoMapperExt;
@@ -132,7 +135,7 @@ public class ProjectDaoImpl implements ProjectDao {
             //克隆远程分支到本地
             Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName(),provider);
             //添加代码到本地库
-            String mv = "cp -r " + frontTemplate + filePath + "/* " + projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName()+"/";
+            String mv = "cp -r " + filePath + "/* " + projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName()+"/";
             String[] cmd = new String[]{"sh","-c",mv};
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(cmd).waitFor();
@@ -172,10 +175,10 @@ public class ProjectDaoImpl implements ProjectDao {
             //定义运行环境code
             String runProfileCode = profileName.toUpperCase() + "_" + "runprofile".toUpperCase();
             pDo.setRunProfileCode(runProfileCode);
-            // TODO: 2020/7/22 调取服务器接口，创建新的运行环境,获取运行环境元配置,修改flag
-            Map<String,Object> runProfileConfig = new HashMap<>();
-            pDo.setRunProfileConfig(runProfileConfig.toString());
         }
+        // TODO: 2020/7/22 调取服务器接口，创建新的运行环境,获取运行环境元配置,修改flag
+        Map<String,Object> runProfileConfig = new HashMap<>();
+        pDo.setRunProfileConfig(runProfileConfig.toString());
         profileRunprofileRelationDoMapperExt.insertSelective(pDo);
         //添加元配置到项目信息中
         Map<String,Object> base = StringUtil.strToMap(pDo.getRunProfileConfig());
@@ -202,10 +205,16 @@ public class ProjectDaoImpl implements ProjectDao {
                 //自定义软件环境code
                 String softwareCode = profileName.toUpperCase() + "_" + softwareName.toUpperCase();
                 psDo.setSoftwareCode(softwareCode);
-                // TODO: 2020/7/22 调取服务器接口，创建新的软件环境，获取软件环境元配置,修改flag
-                Map<String,Object> softwareConfig = new HashMap<>();
-                psDo.setSoftwareConfig(softwareConfig.toString());
             }
+            ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
+            //获取软件元配置信息
+            /*dto.setIp(psDo.getRunServerIp());
+            dto.setSoftwareCode(psDo.getSoftwareCode());
+            dto.setSoftwareName(softwareInfoVo.getSoftwareName());
+            dto.setVersion(softwareInfoVo.getVersion());
+            ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);*/
+            String softwareConfig = "{'ip':'123.112.111.111','port':3306}";
+            psDo.setSoftwareConfig(softwareConfig);
             dos.add(psDo);
             //添加元配置到项目信息中
             map.put(softwareInfoVo.getSoftwareName(),StringUtil.strToMap(psDo.getSoftwareConfig()));
@@ -214,7 +223,6 @@ public class ProjectDaoImpl implements ProjectDao {
         profileSoftwareRelationDoMapperExt.batchInsertProfileSoftware(dos);
 
         //4.项目环境，配置中心关联信息
-        // TODO: 2020/7/22 获取配置中心信息
         String configCode = configProjectBo.insertProject(map);
         ProfileConfigRelationDo pcDo = new ProfileConfigRelationDo();
         pcDo.setConfigCode(configCode);

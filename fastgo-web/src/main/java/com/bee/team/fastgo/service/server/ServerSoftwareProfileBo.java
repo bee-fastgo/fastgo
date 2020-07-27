@@ -3,6 +3,7 @@ package com.bee.team.fastgo.service.server;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ServerSoftwareProfileDo;
 import com.bee.team.fastgo.model.ServerSoftwareProfileDoExample;
+import com.bee.team.fastgo.vo.server.AddEnvironmentVo;
 
 public interface ServerSoftwareProfileBo extends LavaBo<ServerSoftwareProfileDo, ServerSoftwareProfileDoExample> {
 
@@ -27,4 +28,24 @@ public interface ServerSoftwareProfileBo extends LavaBo<ServerSoftwareProfileDo,
      * @desc
      */
     void saveServerSoftwareProfile(ServerSoftwareProfileDo serverSoftwareProfileDo);
+
+    /**
+     * 通过code查询配置
+      * @param softwareCode
+     * @return {@link ServerSoftwareProfileDo}
+     * @author jgz
+     * @date 2020/7/27
+     * @desc
+     */
+    ServerSoftwareProfileDo getServerSoftwareProfileBySoftwareCode(String softwareCode);
+
+    /**
+     * 创建环境
+      * @param addEnvironmentVo
+     * @return
+     * @author jgz
+     * @date 2020/7/27
+     * @desc
+     */
+    void createEnvironment(AddEnvironmentVo addEnvironmentVo);
 }
