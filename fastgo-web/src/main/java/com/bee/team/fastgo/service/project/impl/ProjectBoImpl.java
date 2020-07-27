@@ -8,7 +8,9 @@ import com.bee.team.fastgo.dao.ProjectDao;
 import com.bee.team.fastgo.mapper.*;
 import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.project.gitlab.GitlabAPI;
+import com.bee.team.fastgo.project.model.GitlabBranch;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
+import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
 import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
@@ -18,12 +20,15 @@ import com.spring.simple.development.core.component.mvc.utils.Pager;
 import com.spring.simple.development.support.exception.GlobalException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.bee.team.fastgo.constant.ProjectConstant.*;
 import static com.spring.simple.development.support.exception.ResponseCode.*;
@@ -31,6 +36,12 @@ import static com.spring.simple.development.support.exception.ResponseCode.*;
 
 @Service
 public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapperExt, ProjectDoExample> implements ProjectBo {
+
+    @Value("${project.publicTemplate}")
+    private String publicTemplate;
+
+    @Value("${frontTemplate}")
+    private String frontTemplate;
 
     @Autowired
     public void setBaseMapper(ProjectDoMapperExt mapper) {
@@ -77,11 +88,15 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
         //生成后台项目模板
         if (StringUtils.isEmpty(insertBackProjectVo.getGitUrl())){
-           String filePath = projectDao.generateSimpleTemplate(projectDo);
-           if (!StringUtils.isEmpty(filePath)){
-               System.out.println(filePath);
-           }else {
-               throw new GlobalException(RES_DATA_NOT_EXIST,"自动生成代码框架失败");
+           String filePath = publicTemplate;
+           //是否生成simple框架
+           if (insertBackProjectVo.getIsConfirm().equals(IS_CONFIRM1)){
+               filePath = projectDao.generateSimpleTemplate(projectDo);
+               if (!StringUtils.isEmpty(filePath)){
+                   System.out.println(filePath);
+               }else {
+                   throw new GlobalException(RES_DATA_NOT_EXIST,"自动生成代码框架失败");
+               }
            }
            //创建新的gitlab后台项目
             GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
@@ -157,13 +172,17 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             }catch (Exception e){
                 throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
             }
-            //上传后台模板代码到gitlab项目中
-            if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE1)){
-                projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, FRONT_PROJECT_TYPE1);
-            }else if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE2)){
-                projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, FRONT_PROJECT_TYPE2);
+            //是否生成vue框架
+            if (IS_CONFIRM0.equals(insertFrontProjectVo.getIsConfirm())){
+                projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, publicTemplate);
+            }else if (IS_CONFIRM1.equals(insertFrontProjectVo.getIsConfirm())){
+                //上传后台模板代码到gitlab项目中
+                if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE1)){
+                    projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, frontTemplate+FRONT_PROJECT_TYPE1);
+                }else if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE2)){
+                    projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, frontTemplate+FRONT_PROJECT_TYPE2);
+                }
             }
-
             projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
         mapper.insertSelective(projectDo);
@@ -207,6 +226,35 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             }
         }
         mapper.updateByPrimaryKeySelective(projectDo);
+    }
+
+    @Override
+    public List<String> findProjectBranch(String projectCode) {
+        //查询当前项目信息
+        ProjectDoExample example = new ProjectDoExample();
+        example.createCriteria().andProjectCodeEqualTo(projectCode);
+        List<ProjectDo> projectDoList = mapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(projectDoList)){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
+        }
+        ProjectDo projectDo = projectDoList.get(0);
+        GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
+        //获取项目gtilab id
+        try{
+            List<GitlabProjectDo> gitlibProjects = gitlabAPI.getAllProject();
+            List<GitlabProjectDo> gitlibProjectList= gitlibProjects.stream().filter(r -> r.getName().equals(projectDo.getProjectName())).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(gitlibProjectList)){
+                throw new GlobalException(RES_DATA_NOT_EXIST,"gitlab项目信息不存在");
+            }
+            GitlabProjectDo gitlabProjectDo = gitlibProjectList.get(0);
+            //获取项目的所有分支信息
+            List<GitlabBranch> gitlabBranchList = gitlabAPI.queryAllBranchInfo(gitlabProjectDo.getId());
+            List<String> branchNames = gitlabBranchList.stream().map(r -> r.getName()).collect(Collectors.toList());
+            return branchNames;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

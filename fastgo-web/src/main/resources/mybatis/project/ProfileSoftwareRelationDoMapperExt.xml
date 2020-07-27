@@ -4,12 +4,17 @@
 
     <!--批量新增项目环境，软件环境关联表-->
     <insert id="batchInsertProfileSoftware">
-        insert into t_profile_software_relation (prifileCode,runServerIp,softwareCode,softwareConfig) values
-        <foreach collection="psDos" item="ProfileSoftwareRelationDo" separator=",">
-            (#{ProfileSoftwareRelationDo.prifileCode},
-            #{ProfileSoftwareRelationDo.runServerIp},
-            #{ProfileSoftwareRelationDo.softwareCode},
-            #{ProfileSoftwareRelationDo.softwareConfig})
+        insert into t_profile_software_relation (`gmt_create`, `creator`, `gmt_modified`, `modifier`, `is_deleted`, `prifileCode`, `runServerIp`, `softwareCode`, `softwareConfig`) values
+        <foreach collection="psDos" item="PDo" separator=",">
+            (now(),
+            'system',
+            now(),
+            'system',
+            'n',
+            #{PDo.prifileCode},
+            #{PDo.runServerIp},
+            #{PDo.softwareCode},
+            #{PDo.softwareConfig})
         </foreach>
     </insert>
 

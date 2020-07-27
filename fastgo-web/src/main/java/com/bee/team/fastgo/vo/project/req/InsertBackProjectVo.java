@@ -17,10 +17,10 @@ public class InsertBackProjectVo implements Serializable {
     private String projectName;
 
     @ApiModelProperty(value = "项目描述", example = "测试项目")
-    @NotBlank(message = "项目描述不能为空")
     private String projectDesc;
 
     @ApiModelProperty(value = "项目包名", example = "com.xx.xx")
+    @NotBlank(message = "项目包名不能为空")
     private String packageName;
 
     @ApiModelProperty(value = "项目git地址", example = "172.22.5.222/gitlab")
@@ -41,5 +41,8 @@ public class InsertBackProjectVo implements Serializable {
 
     @ApiModelProperty(value = "软件环境list", example = "xxx")
     private List<SoftwareInfoVo> softwareInfoVos;
+
+    @ApiModelProperty(value = "是否生成simple框架：0-不生成，1-生成", example = "0")
+    private Integer isConfirm;
 
 }

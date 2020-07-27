@@ -6,6 +6,8 @@ import com.bee.team.fastgo.model.ProjectDoExample;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
+import java.util.List;
+
 /**
  * @description:
  * @author: hs
@@ -62,4 +64,13 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @param updateProjectStatusVo
      */
     void updateProjectStatus(UpdateProjectStatusVo updateProjectStatusVo);
+
+    /**
+     * @param
+     * @return {@link List< String>}
+     * @author hs
+     * @date 2020/7/27
+     * @desc 查询项目分支信息
+     */
+    List<String> findProjectBranch(String projectCode);
 }

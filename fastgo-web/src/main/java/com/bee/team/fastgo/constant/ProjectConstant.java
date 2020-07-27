@@ -38,5 +38,11 @@ public class ProjectConstant {
     public static final Integer FRONT_PROJECT_TEMPLATE1 = 1;
     public static final Integer FRONT_PROJECT_TEMPLATE2 = 2;
 
+    /**
+     * 是否生成项目框架
+     */
+    public static final Integer IS_CONFIRM0 = 0;
+    public static final Integer IS_CONFIRM1 = 1;
+
 
 }
