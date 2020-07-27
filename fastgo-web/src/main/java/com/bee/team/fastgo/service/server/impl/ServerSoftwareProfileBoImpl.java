@@ -38,4 +38,10 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
         List<ServerSoftwareProfileDo> serverSoftwareProfileDos = selectByExample(serverSoftwareProfileDoExample);
         return CollectionUtils.isNotEmpty(serverSoftwareProfileDos)?serverSoftwareProfileDos.get(0):null;
     }
+
+
+    @Override
+    public void saveServerSoftwareProfile(ServerSoftwareProfileDo serverSoftwareProfileDo) {
+        insert(serverSoftwareProfileDo);
+    }
 }

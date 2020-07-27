@@ -1,4 +1,4 @@
-package com.bee.team.fastgo.service.api.dto.server.req;
+package com.bee.team.fastgo.service.api.server.dto.req;
 
 import java.io.Serializable;
 

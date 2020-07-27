@@ -1,7 +1,7 @@
 package com.bee.team.fastgo.service.api.server.impl;
 
 import com.bee.team.fastgo.exception.sever.ScriptException;
-import com.bee.team.fastgo.service.api.dto.server.req.ReqExecScriptDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqExecScriptDTO;
 import com.bee.team.fastgo.service.api.server.ScriptApi;
 import com.bee.team.fastgo.hander.SimpleExecutorCmd;
 import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;

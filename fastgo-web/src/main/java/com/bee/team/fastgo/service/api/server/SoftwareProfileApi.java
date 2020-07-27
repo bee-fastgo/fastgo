@@ -1,7 +1,7 @@
 package com.bee.team.fastgo.service.api.server;
 
-import com.bee.team.fastgo.service.api.dto.server.req.ReqCreateSoftwareDTO;
-import com.bee.team.fastgo.service.api.dto.server.res.ResCreateSoftwareDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
+import com.bee.team.fastgo.service.api.server.dto.res.ResCreateSoftwareDTO;
 
 /**
  * @author jgz

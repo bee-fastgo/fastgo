@@ -17,4 +17,14 @@ public interface ServerSoftwareProfileBo extends LavaBo<ServerSoftwareProfileDo,
      * @desc
      */
     ServerSoftwareProfileDo getServerSoftwareProfileByServerIpAndSoftwareNameAndVersion(String ip, String softwareName, String version);
+
+    /**
+     * 保存软件环境配置
+      * @param serverSoftwareProfileDo
+     * @return
+     * @author jgz
+     * @date 2020/7/27
+     * @desc
+     */
+    void saveServerSoftwareProfile(ServerSoftwareProfileDo serverSoftwareProfileDo);
 }

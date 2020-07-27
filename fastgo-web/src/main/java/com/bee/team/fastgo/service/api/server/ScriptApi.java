@@ -1,6 +1,6 @@
 package com.bee.team.fastgo.service.api.server;
 
-import com.bee.team.fastgo.service.api.dto.server.req.ReqExecScriptDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqExecScriptDTO;
 
 /**
  * 脚本相关api
