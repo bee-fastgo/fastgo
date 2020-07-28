@@ -11,6 +11,8 @@ import com.bee.team.fastgo.vo.server.QueryServerVo;
 import com.bee.team.fastgo.vo.server.ServerVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
+import java.util.List;
+
 public interface ServerBo extends LavaBo<ServerDo, ServerDoExample> {
     /**
      * @return void
@@ -38,6 +40,16 @@ public interface ServerBo extends LavaBo<ServerDo, ServerDoExample> {
      * @Param [queryServerVo]
      **/
     ResPageDTO queryPageServer(QueryServerVo queryServerVo);
+
+
+    /**
+     * @return com.spring.simple.development.core.component.mvc.page.ResPageDTO
+     * @Author luke
+     * @Description 查询服务器列表
+     * @Date 9:29 2020/7/21 0021
+     * @Param [queryServerVo]
+     **/
+    List<ServerVo> queryListServer();
 
     /**
      * @return com.bee.team.fastgo.model.ServiceDo

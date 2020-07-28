@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @description:
  * @author: luke
@@ -61,11 +63,18 @@ public class ServerController {
         return new ResBody().buildSuccessResBody();
     }
 
-    @RequestMapping(value = "/getServerList", method = RequestMethod.POST)
+    @RequestMapping(value = "/getServerPage", method = RequestMethod.POST)
     @ValidHandler(key = "queryServerVo", value = QueryServerVo.class)
     @ApiOperation(value = "查询服务器(分页)")
-    public ResBody<ServerVo> getServerList(@ApiParam(name = "queryServerVo", value = "服务器查询对象") @RequestBody QueryServerVo queryServerVo) {
+    public ResBody<ServerVo> getServerPage(@ApiParam(name = "queryServerVo", value = "服务器查询对象") @RequestBody QueryServerVo queryServerVo) {
         ResPageDTO resPageDTO = serverBo.queryPageServer(queryServerVo);
         return new ResBody().buildSuccessResBody(resPageDTO);
+    }
+
+    @RequestMapping(value = "/getServerList", method = RequestMethod.POST)
+    @ApiOperation(value = "查询服务器(列表)")
+    public ResBody<ServerVo> getServerList() {
+        List<ServerVo> serverVos = serverBo.queryListServer();
+        return new ResBody().buildSuccessResBody(serverVos);
     }
 }

@@ -78,6 +78,13 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
     }
 
     @Override
+    public List<ServerVo> queryListServer() {
+        ServerDoExample serverDoExample = new ServerDoExample();
+        List<ServerDo> serverDoList = this.mapper.selectByExample(serverDoExample);
+        return baseSupport.listCopy(serverDoList,ServerVo.class);
+    }
+
+    @Override
     public ServerDo getServerDoByIp(String ip) {
         ServerDoExample ServerDoExample = new ServerDoExample();
         ServerDoExample.createCriteria().andServerIpEqualTo(ip);
