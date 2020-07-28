@@ -61,26 +61,26 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
         ServerDo.setType(CommonConstant.CODE1);
         insert(ServerDo);
 
-        Connection conn = null;
-        try {
-            conn = new Connection(addServerVo.getServerIp(), addServerVo.getSshPort());
-            System.out.println(DateUtils.getCurrentTime() + "开始远程传输文件");
-            conn.connect();
-
-            boolean isAuthenticated = conn.authenticateWithPassword(addServerVo.getSshUser(), addServerVo.getSshPassword());
-            if (!isAuthenticated) {
-                throw new IOException("Authentication failed.文件scp到数据服务器时发生异常");
-            }
-            String cmd = "yum -y install wget && wget http://172.22.5.73/software/init.tar.gz && tar -zxf init.tar.gz && bash ./init/install_jdk.sh";
-            Scp.invokeCmd(conn.openSession(), cmd);
-        }
-        catch (IOException e) {
-            throw new GlobalException(SERVICE_FAILED);
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
+//        Connection conn = null;
+//        try {
+//            conn = new Connection(addServerVo.getServerIp(), addServerVo.getSshPort());
+//            System.out.println(DateUtils.getCurrentTime() + "开始远程传输文件");
+//            conn.connect();
+//
+//            boolean isAuthenticated = conn.authenticateWithPassword(addServerVo.getSshUser(), addServerVo.getSshPassword());
+//            if (!isAuthenticated) {
+//                throw new IOException("Authentication failed.文件scp到数据服务器时发生异常");
+//            }
+//            String cmd = "yum -y install wget && wget http://172.22.5.73/software/init.tar.gz && tar -zxf init.tar.gz && bash ./init/install_jdk.sh ";
+//            Scp.invokeCmd(conn.openSession(), cmd);
+//        }
+//        catch (IOException e) {
+//            throw new GlobalException(SERVICE_FAILED);
+//        } finally {
+//            if (conn != null) {
+//                conn.close();
+//            }
+//        }
 
 //        try {
 //            initServer(ServerDo.getServerIp(),
