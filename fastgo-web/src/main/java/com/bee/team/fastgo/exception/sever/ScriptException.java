@@ -18,7 +18,7 @@ public class ScriptException {
 
 
     /**
-     * 脚本异常
+     * 环境异常
      */
-    public static final GlobalResponseCode ENV_ABNORMAL = new GlobalResponseCode(1301,"env abnormal","%s");
+    public static final GlobalResponseCode ENV_ABNORMAL = new GlobalResponseCode(1302,"env abnormal","%s");
 }

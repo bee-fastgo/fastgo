@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
  * @desc 添加环境配置
  **/
 @Data
-@ApiModel(value = "AddEnvironmentVo", description = "添加环境配置")
-public class AddEnvironmentVo {
+@ApiModel(value = "ReqAddEnvironmentVo", description = "添加环境配置")
+public class ReqAddEnvironmentVo {
 
     @ApiModelProperty(value = "serverIp", example = "172.22.5.100", required = true)
     @NotNull(message = "服务器ip不能为空")
