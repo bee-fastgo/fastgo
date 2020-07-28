@@ -52,6 +52,7 @@ public class Scp {
             fis.close();
             os.close();
             System.out.println(DateUtils.getCurrentTime() + "远程传输文件完成");
+            localFile.delete();
         } catch (IOException e) {
             throw new GlobalException(SERVICE_FAILED);
         } finally {
@@ -62,7 +63,7 @@ public class Scp {
     }
 
     /**
-     * 远程copy并部署
+     * 部署
      *
      * @param projectName
      * @param port
@@ -104,6 +105,54 @@ public class Scp {
         }
     }
 
+    /**
+     * vue部署
+     *
+     * @param projectName
+     * @param port
+     * @param dataServerIp
+     * @param user
+     * @param password
+     * @param remotePath
+     * @throws IOException
+     */
+    public static void vueDeploy(String projectName, String projectPort, int port, String dataServerIp, String user, String password, String remotePath, String serviceUrl) throws IOException {
+        Connection conn = null;
+        try {
+            conn = new Connection(dataServerIp, port);
+            System.out.println(DateUtils.getCurrentTime() + "开始部署");
+            conn.connect();
+
+            boolean isAuthenticated = conn.authenticateWithPassword(user, password);
+            if (isAuthenticated == false) {
+                throw new IOException("Authentication failed.文件scp到数据服务器时发生异常");
+            }
+            // 解压
+            String step1 = "cd  " + remotePath + "\n" + "tar -zxvf  dist.tar.gz";
+            invokeCmd(conn.openSession(), step1);
+            // 构建Nginx.conf
+            String step2 = "cd  " + remotePath + "\n" + "echo " + getNginxConfig(dataServerIp, projectPort, remotePath, serviceUrl) + " >> " + remotePath + "/default.conf";
+            invokeCmd(conn.openSession(), step2);
+            // 构建Docker
+            String step3 = "cd  " + remotePath + "\n" + "echo " + getVueDockerFile(projectPort) + " >> " + remotePath + "/Dockerfile";
+            invokeCmd(conn.openSession(), step3);
+            // 部署
+            String step5 = "docker build -t " + projectName + " .";
+            String step6 = "docker stop " + projectName + "Docker";
+            String step7 = "docker rm " + projectName + "Docker";
+            //-v /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+            //-v /data/nginx/log:/var/log/nginx
+            //-v /data/nginx/html:/usr/share/nginx/html
+            String step8 = "docker   run --name=" + projectName + "Docker -d -p " + projectPort + ":" + projectPort + " -v "+ remotePath + "/default.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -v "+remotePath+"/dist:/usr/share/nginx/html " + projectName;
+            invokeCmd(conn.openSession(), step5 + "\n" + step6 + "\n" + step7 + "\n" + step8);
+            System.out.println(DateUtils.getCurrentTime() + "部署完成");
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+        }
+    }
+
     public static String getDockerFile(String projectName) {
         String dockerFile = "'FROM openjdk:8-jre-slim\n" +
                 "MAINTAINER fastgo\n" +
@@ -116,6 +165,55 @@ public class Scp {
                 "ADD " + projectName + " /" + projectName + "\n" +
                 "\n" +
                 "ENTRYPOINT [\"sh\",\"-c\",\"java -jar $JAVA_OPTS /" + projectName + "/" + projectName + ".jar $PARAMS\"]'";
+        return dockerFile;
+    }
+
+    public static String getVueDockerFile(String projectPort) {
+        String dockerFile = "'# Base Image设置基础镜像\n" +
+                "FROM nginx\n" +
+                "\n" +
+                "MAINTAINER fastgo\n" +
+                "\n" +
+                "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n" +
+                "COPY ./dist  /usr/share/nginx/html/\n" +
+                "COPY default.conf /etc/nginx/conf.d/default.conf\n" +
+                "EXPOSE " + projectPort + "\n'";
+        return dockerFile;
+    }
+
+    public static String getNginxConfig(String nginxIp, String nginxPort, String projectPath, String serviceUrl) {
+        String dockerFile = "'\n" +
+                "user  root;\n" +
+                "worker_processes  1;\n" +
+                "events {\n" +
+                "    worker_connections  1024;\n" +
+                "}\n" +
+                "http {\n" +
+                "    include       mime.types;\n" +
+                "    default_type  application/octet-stream;\n" +
+                "    sendfile        on;\n" +
+                "    keepalive_timeout  65;\n" +
+                "    root /usr/share/nginx/html/;\n" +
+                "    server {\n" +
+                "        listen       " + nginxPort + ";\n" +
+                "        server_name  " + nginxIp + ";\n" +
+                "        location / {\n" +
+                "            index  index.html index.htm;\n" +
+                "            try_files $uri $uri/ /index.html;\n" +
+                "            proxy_set_header   Host             $host;\n" +
+                "            proxy_set_header   X-Real-IP        $remote_addr;\n" +
+                "            proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;\n" +
+                "            proxy_cookie_path / /; # 关键配置\n" +
+                "        }\n" +
+                "        error_page   500 502 503 504  /50x.html;\n" +
+                "        location = /50x.html {\n" +
+                "            root   html;\n" +
+                "        }\n" +
+                "        location /api {\n" +
+                "            proxy_pass " + serviceUrl + ";\n" +
+                "        }\n" +
+                "    }\n" +
+                "}\n'";
         return dockerFile;
     }
 

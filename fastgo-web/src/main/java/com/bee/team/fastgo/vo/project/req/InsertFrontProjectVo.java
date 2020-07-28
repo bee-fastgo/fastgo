@@ -34,19 +34,18 @@ public class InsertFrontProjectVo implements Serializable {
     private String gitUrl;
 
     @ApiModelProperty(value = "运行服务器ip", example = "127.0.0.1")
+    @NotNull(message = "运行服务器ip不能为空")
     private String runServerIp;
+
+    @ApiModelProperty(value = "运行服务器端口", example = "65535")
+    @NotNull(message = "运行服务器端口不能为空")
+    private String runServerPort;
 
     @ApiModelProperty(value = "项目环境名称", example = "测试环境")
     @NotBlank(message = "项目环境名称不能为空")
     private String profileName;
 
-    @ApiModelProperty(value = "运行环境元配置",example = "{'ip':'123.123.121.111','port':1234}")
-    private String runProfileConfig;
-
-    @ApiModelProperty(value = "运行环境code", example = "TESTPROFILE")
-    private String runProfileCode;
-
-    @ApiModelProperty(value = "软件环境list", example = "[{'softwareServerIp':'127.11.11.13','softwareCode':'SOFTWARE_PROFILE', 'softwareConfig':'','softwareName':'mysql'}]")
+    @ApiModelProperty(value = "软件环境list", example = "[{'softwareServerIp':'127.11.11.13','softwareName':'nginx','version':'5.0.0'}]")
     private List<SoftwareInfoVo> softwareInfoVos;
 
     @ApiModelProperty(value = "是否生成vue框架：0-不生成，1-生成", example = "1")

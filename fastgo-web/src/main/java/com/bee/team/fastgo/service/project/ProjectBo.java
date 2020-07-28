@@ -57,7 +57,7 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @param deployBackPorjectVo
      * @return
      */
-    String execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo);
+    void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo);
 
     /**
      * 修改项目状态接口
@@ -73,4 +73,13 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @desc 查询项目分支信息
      */
     List<String> findProjectBranch(String projectCode);
+
+    /**
+     * @param deployFrontPorjectVo
+     * @return
+     * @author hs
+     * @date 2020/7/28
+     * @desc 部署前台项目
+     */
+    void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo);
 }

@@ -1,22 +1,16 @@
 package com.bee.team.fastgo.model;
 
 import com.alibaba.lava.base.LavaDo;
-import java.util.Date;
 import lombok.Data;
 
 /**
  * @description MyBatis Generator 自动创建,对应数据表为：t_project_profile
  *
- * @author liko
- * @date   2020/07/22
+ * @author hs
+ * @date   2020/07/28
  */
 @Data
 public class ProjectProfileDo extends LavaDo {
-    /**
-     * 修改时间
-     */
-    private Date gmt_codified;
-
     /**
      * 项目名
      */
@@ -40,7 +34,7 @@ public class ProjectProfileDo extends LavaDo {
     /**
      * 项目环境Code
      */
-    private String prifileCode;
+    private String profileCode;
 
     @Override
     public String getBoQualifiedIntfName() {

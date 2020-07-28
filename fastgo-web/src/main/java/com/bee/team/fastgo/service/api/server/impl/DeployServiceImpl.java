@@ -4,6 +4,7 @@ import com.bee.team.fastgo.job.core.log.SimpleJobFileAppender;
 import com.bee.team.fastgo.model.ServerDo;
 import com.bee.team.fastgo.service.api.server.DeployService;
 import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
 import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.tools.deploy.DeployDTO;
 import com.bee.team.fastgo.tools.deploy.DeployHandler;
@@ -40,7 +41,23 @@ public class DeployServiceImpl implements DeployService {
             deployDTO.setServiceUserPassword(serverDo.getSshPassword());
             DeployHandler.deploy(deployDTO);
         } catch (Exception e) {
-            logger.error("部署失败", e);
+            logger.error("simple部署失败", e);
+            throw new GlobalException(SERVICE_FAILED);
+        }
+    }
+
+    @Override
+    public void deploySimple(VueDeployDTO vueDeployDTO) throws GlobalException {
+        try {
+            ServerDo serverDo = serverBo.getServerDoByIp(vueDeployDTO.getServiceIp());
+            DeployDTO deployDTO = baseSupport.objectCopy(vueDeployDTO, DeployDTO.class);
+            deployDTO.setServicePort(serverDo.getSshPort());
+            deployDTO.setServiceUserName(serverDo.getServerName());
+            deployDTO.setServiceUserPassword(serverDo.getSshPassword());
+            deployDTO.setSimpleServiceUrl(vueDeployDTO.getServiceUrl());
+            DeployHandler.deployVue(deployDTO);
+        } catch (Exception e) {
+            logger.error("vue部署失败", e);
             throw new GlobalException(SERVICE_FAILED);
         }
     }

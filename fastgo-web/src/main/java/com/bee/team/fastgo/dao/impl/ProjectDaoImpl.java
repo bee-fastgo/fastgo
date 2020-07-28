@@ -120,6 +120,10 @@ public class ProjectDaoImpl implements ProjectDao {
             GitUtil.commit(git,"第一次提交",provider);
             //默认push到master分支
             GitUtil.push(git,"master",provider);
+            //删除本地的临时项目
+            String rm = "rm -rf " + projectUrl+"/tempbackdir/*";
+            String[] rmd = new String[]{"sh","-c",rm};
+            runtime.exec(rmd).waitFor();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -143,6 +147,10 @@ public class ProjectDaoImpl implements ProjectDao {
             GitUtil.commit(git,"第一次提交",provider);
             //默认push到master分支
             GitUtil.push(git,"master",provider);
+            //删除本地的临时项目
+            String rm = "rm -rf " + projectUrl+"/tempfrontdir/*";
+            String[] rmd = new String[]{"sh","-c",rm};
+            runtime.exec(rmd).waitFor();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -160,7 +168,7 @@ public class ProjectDaoImpl implements ProjectDao {
         String profileName = insertBackProjectProfileVo.getProfileName();
         String projectProfileCode = profileName.toUpperCase() + "_" + "profile".toUpperCase();
         projectProfileDo.setProjectCode(insertBackProjectProfileVo.getProjectCode());
-        projectProfileDo.setPrifileCode(projectProfileCode);
+        projectProfileDo.setProfileCode(projectProfileCode);
         projectProfileDo.setBranchName(insertBackProjectProfileVo.getBranchName());
         if (StringUtils.isEmpty(insertBackProjectProfileVo.getBranchName())){
             projectProfileDo.setBranchName(ProjectConstant.PROJECT_BRANCH);
@@ -169,14 +177,9 @@ public class ProjectDaoImpl implements ProjectDao {
 
         //2.项目环境，运行环境关联信息
         ProfileRunprofileRelationDo pDo = baseSupport.objectCopy(insertBackProjectProfileVo,ProfileRunprofileRelationDo.class);
-        pDo.setPrifileCode(projectProfileCode);
-        //运行环境已存在时
-        if (StringUtils.isEmpty(insertBackProjectProfileVo.getRunProfileCode())){
-            //定义运行环境code
-            String runProfileCode = profileName.toUpperCase() + "_" + "runprofile".toUpperCase();
-            pDo.setRunProfileCode(runProfileCode);
-        }
+        pDo.setProfileCode(projectProfileCode);
         // TODO: 2020/7/22 调取服务器接口，创建新的运行环境,获取运行环境元配置,修改flag
+        pDo.setRunProfileCode("RUN_TEST_CODE");
         Map<String,Object> runProfileConfig = new HashMap<>();
         pDo.setRunProfileConfig(runProfileConfig.toString());
         profileRunprofileRelationDoMapperExt.insertSelective(pDo);
@@ -199,21 +202,17 @@ public class ProjectDaoImpl implements ProjectDao {
             ProfileSoftwareRelationDo psDo = baseSupport.objectCopy(softwareInfoVo,ProfileSoftwareRelationDo.class);
             psDo.setPrifileCode(projectProfileCode);
             psDo.setRunServerIp(softwareInfoVo.getSoftwareServerIp());
-            //如果软件环境不存在
-            if (StringUtils.isEmpty(softwareInfoVo.getSoftwareCode())){
-                String softwareName = softwareInfoVo.getSoftwareName();
-                //自定义软件环境code
-                String softwareCode = profileName.toUpperCase() + "_" + softwareName.toUpperCase();
-                psDo.setSoftwareCode(softwareCode);
-            }
-            ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
+
             //获取软件元配置信息
+            ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
             /*dto.setIp(psDo.getRunServerIp());
             dto.setSoftwareCode(psDo.getSoftwareCode());
             dto.setSoftwareName(softwareInfoVo.getSoftwareName());
             dto.setVersion(softwareInfoVo.getVersion());
             ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);*/
+            String softwareCode = "SOFTCODE";
             String softwareConfig = "{'ip':'123.112.111.111','port':3306}";
+            psDo.setSoftwareCode(softwareCode);
             psDo.setSoftwareConfig(softwareConfig);
             dos.add(psDo);
             //添加元配置到项目信息中
@@ -226,7 +225,7 @@ public class ProjectDaoImpl implements ProjectDao {
         String configCode = configProjectBo.insertProject(map);
         ProfileConfigRelationDo pcDo = new ProfileConfigRelationDo();
         pcDo.setConfigCode(configCode);
-        pcDo.setPrifileCode(projectProfileCode);
+        pcDo.setProfileCode(projectProfileCode);
         profileConfigRelationDoMapperExt.insertSelective(pcDo);
         return flag;
     }

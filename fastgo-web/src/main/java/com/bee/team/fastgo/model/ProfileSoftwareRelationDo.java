@@ -6,8 +6,8 @@ import lombok.Data;
 /**
  * @description MyBatis Generator 自动创建,对应数据表为：t_profile_software_relation
  *
- * @author liko
- * @date   2020/07/22
+ * @author hs
+ * @date   2020/07/28
  */
 @Data
 public class ProfileSoftwareRelationDo extends LavaDo {
