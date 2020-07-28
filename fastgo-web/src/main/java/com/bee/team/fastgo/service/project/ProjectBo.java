@@ -82,4 +82,13 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @desc 部署前台项目
      */
     void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo);
+
+    /**
+     * @param autoDeployVo
+     * @return
+     * @author hs
+     * @date 2020/7/28
+     * @desc 自动部署开关
+     */
+    void updateProjectDeploy(AutoDeployVo autoDeployVo);
 }

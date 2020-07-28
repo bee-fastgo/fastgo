@@ -123,7 +123,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com");
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -277,6 +277,22 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         deployDTO.setServiceUrl(deployFrontPorjectVo.getServiceUrl());
         //调取服务器部署项目脚本
         deployService.deploySimple(deployDTO);
+    }
+
+    @Override
+    public void updateProjectDeploy(AutoDeployVo autoDeployVo) {
+        String projectCode = autoDeployVo.getProjectCode();
+        if (AUTO_DEPLOY0.equals(autoDeployVo.getAutoDeploy())){
+            //开启自动部署
+            //事件添加webhook
+            ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+            projectPublisher.publish(projectEvent);
+        }else if (AUTO_DEPLOY1.equals(autoDeployVo.getAutoDeploy())){
+            //关闭自动部署
+            //事件删除webhook
+            ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"",AUTO_DEPLOY0);
+            projectPublisher.publish(projectEvent);
+        }
     }
 
 

@@ -5,7 +5,7 @@ package com.bee.team.fastgo.project.constant;
  */
 public enum RequestMethod {
 
-    GET, POST;
+    GET, POST,DELETE;
 
     public static String prettyValues() {
         RequestMethod[] methods = RequestMethod.values();

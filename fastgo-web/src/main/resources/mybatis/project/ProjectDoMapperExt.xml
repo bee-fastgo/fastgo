@@ -4,13 +4,13 @@
 
     <!--查询后台项目列表-->
     <select id="findBackPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
-        select projectName,projectDesc,gitUrl,projectStatus,packageName from t_project where projectType = '2'
+        select projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName from t_project where projectType = '2'
         limit #{start},#{limit}
     </select>
 
     <!--查询前台项目列表-->
     <select id="findFrontPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
-        select projectName,projectDesc,gitUrl,projectStatus,packageName from t_project where projectType = '1'
+        select projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName from t_project where projectType = '1'
         limit #{start},#{limit}
     </select>
 

@@ -6,8 +6,8 @@ import lombok.Data;
 /**
  * @description MyBatis Generator 自动创建,对应数据表为：t_project
  *
- * @author liko
- * @date   2020/07/21
+ * @author hs
+ * @date   2020/07/28
  */
 @Data
 public class ProjectDo extends LavaDo {
@@ -37,7 +37,7 @@ public class ProjectDo extends LavaDo {
     private String gitToken;
 
     /**
-     * 项目状态
+     * 项目状态：1.项目创建中，2.项目创建成功，3.项目部署中 4.项目部署完成，5-软件环境部署成功，6-运行环境部署成功
      */
     private String projectStatus;
 
@@ -52,6 +52,11 @@ public class ProjectDo extends LavaDo {
 2:后端项目
      */
     private String projectType;
+
+    /**
+     * 自动部署开关： 0-关 1-开
+     */
+    private Integer autoDeploy;
 
     @Override
     public String getBoQualifiedIntfName() {

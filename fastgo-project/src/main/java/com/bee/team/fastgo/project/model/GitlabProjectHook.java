@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 public class GitlabProjectHook {
 
-    private String id;
+    private Integer id;
     private String url;
 
     @JsonProperty("project_id")
