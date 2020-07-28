@@ -19,6 +19,19 @@ public class ResCreateSoftwareDTO implements Serializable {
      */
     private String softwareConfig;
 
+    /**
+     * 软件环境的code
+     */
+    private String softwareCode;
+
+    public String getSoftwareCode() {
+        return softwareCode;
+    }
+
+    public void setSoftwareCode(String softwareCode) {
+        this.softwareCode = softwareCode;
+    }
+
     public String getConfigFlag() {
         return configFlag;
     }

@@ -24,6 +24,7 @@ import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.support.constant.CommonConstant;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.LocalCacheUtil;
+import com.spring.simple.development.support.utils.RandomUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,15 +63,14 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         checkParam(reqCreateSoftwareDTO);
 
         // 1.查询是否存在该配置?
-        ServerSoftwareProfileDo ssp = serverSoftwareProfileBo.getServerSoftwareProfileBySoftwareCode(reqCreateSoftwareDTO.getSoftwareCode());
+        ServerSoftwareProfileDo ssp = serverSoftwareProfileBo.getServerSoftwareProfileByServerIpAndSoftwareNameAndVersion(reqCreateSoftwareDTO.getIp(),
+                reqCreateSoftwareDTO.getSoftwareName(),
+                reqCreateSoftwareDTO.getVersion());
         if(ssp != null){
             ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
+            resCreateSoftwareDTO.setSoftwareCode(ssp.getSoftwareCode());
             resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE1);
-            // TODO 设置元配置
-            resCreateSoftwareDTO.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
-//            ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
-//            resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE1);
-//            resCreateSoftwareDTO.setSoftwareConfig(ssp.getSoftwareConfig());
+            resCreateSoftwareDTO.setSoftwareConfig(ssp.getSoftwareConfig());
             return resCreateSoftwareDTO;
         }
 
@@ -90,14 +90,14 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         // 保存至缓存
         SoftwareInstallInfo softwareInstallInfo = new SoftwareInstallInfo();
         softwareInstallInfo.setSelectId(selectId);
-        softwareInstallInfo.setSoftwareCode(reqCreateSoftwareDTO.getSoftwareCode());
+        softwareInstallInfo.setProfileCode(reqCreateSoftwareDTO.getProfileCode());
         softwareInstallInfo.setSoftwareName(reqCreateSoftwareDTO.getSoftwareName());
         copyOnWriteArrayList.add(softwareInstallInfo);
 
         // 4.将该软件的信息保存到数据库
         ServerSoftwareProfileDo serverSoftwareProfileDo = new ServerSoftwareProfileDo();
         serverSoftwareProfileDo.setServerIp(reqCreateSoftwareDTO.getIp());
-        serverSoftwareProfileDo.setSoftwareCode(reqCreateSoftwareDTO.getSoftwareCode());
+        serverSoftwareProfileDo.setSoftwareCode(RandomUtil.randomAll(16));
         serverSoftwareProfileDo.setSoftwareName(reqCreateSoftwareDTO.getSoftwareName());
         serverSoftwareProfileDo.setVersion(reqCreateSoftwareDTO.getVersion());
         // TODO 软件环境元配置从软件资源库获取
@@ -107,7 +107,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         // 5.返回配置
         ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
         resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE0);
-        // TODO 设置元配置
+        resCreateSoftwareDTO.setSoftwareCode(serverSoftwareProfileDo.getSoftwareCode());
         resCreateSoftwareDTO.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
         return resCreateSoftwareDTO;
     }
@@ -131,10 +131,10 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
                 copyOnWriteArrayList.removeIf(softwareInstallInfo -> softwareInstallInfo.getSelectId().equals(String.valueOf(handleCallbackParam.getLogId())));
                 //如果移除后列表中没有任何一项的SoftwareCode等于被移除的项的SoftwareCode
                 //即被移除的是最后一个
-                if(copyOnWriteArrayList.stream().noneMatch(softwareInstallInfo -> softwareInstallInfo.getSoftwareCode().equals(first.get().getSoftwareCode()))){
+                if(copyOnWriteArrayList.stream().noneMatch(softwareInstallInfo -> softwareInstallInfo.getProfileCode().equals(first.get().getProfileCode()))){
                     //  通知项目模块环境创建完成
                     UpdateProjectStatusVo updateProjectStatusVo = new UpdateProjectStatusVo();
-                    updateProjectStatusVo.setCode(first.get().getSoftwareCode());
+                    updateProjectStatusVo.setCode(first.get().getProfileCode());
                     updateProjectStatusVo.setType(Integer.valueOf(CommonConstant.CODE2));
                     projectBo.updateProjectStatus(updateProjectStatusVo);
                 }
@@ -142,15 +142,15 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
             else {
                 // TODO 通知项目模块环境创建失败 保留项(暂不实现)
                 //移除列表中所有该项目相关的东西
-                copyOnWriteArrayList.removeIf(softwareInstallInfo -> softwareInstallInfo.getSoftwareCode().equals(String.valueOf(first.get().getSoftwareCode())));
+                copyOnWriteArrayList.removeIf(softwareInstallInfo -> softwareInstallInfo.getProfileCode().equals(String.valueOf(first.get().getProfileCode())));
             }
         }
     }
 
 
     private void checkParam(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
-        if(StringUtils.isEmpty(reqCreateSoftwareDTO.getSoftwareCode())){
-            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"传入的软件code为空");
+        if(StringUtils.isEmpty(reqCreateSoftwareDTO.getProfileCode())){
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"传入的profileCode为空");
         }
         if(StringUtils.isEmpty(reqCreateSoftwareDTO.getIp())) {
             throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"服务器IP为空");
@@ -172,7 +172,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
         private String softwareName;
 
-        private String softwareCode;
+        private String profileCode;
 
          public String getSelectId() {
              return selectId;
@@ -190,12 +190,12 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
              this.softwareName = softwareName;
          }
 
-         public String getSoftwareCode() {
-             return softwareCode;
+         public String getProfileCode() {
+             return profileCode;
          }
 
-         public void setSoftwareCode(String softwareCode) {
-             this.softwareCode = softwareCode;
+         public void setProfileCode(String profileCode) {
+             this.profileCode = profileCode;
          }
      }
 

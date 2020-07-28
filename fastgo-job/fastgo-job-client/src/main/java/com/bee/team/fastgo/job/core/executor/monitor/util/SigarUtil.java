@@ -2,6 +2,7 @@ package com.bee.team.fastgo.job.core.executor.monitor.util;
 
 
 import com.bee.team.fastgo.job.core.executor.monitor.entity.*;
+import com.bee.team.fastgo.job.core.util.IpUtil;
 import com.spring.simple.development.support.utils.DateUtils;
 import com.spring.simple.development.support.utils.FormatUtil;
 import org.hyperic.sigar.*;
@@ -29,24 +30,8 @@ public class SigarUtil {
 
     private static OperatingSystem OS = OperatingSystem.getInstance();
 
-    /**
-     * 获取本机IP地址
-     *
-     * @return
-     */
-    public static String getIpAddress() {
-        String ip = "";
-        try {
-            InetAddress addr = InetAddress.getLocalHost();
-            logger.info(DateUtils.getCurrentTime() + "Local ip:" + addr.getHostAddress() + "Local hostname:" + addr.getHostName());
-            ip = addr.getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } finally {
-            return ip;
-        }
-    }
-
+    private static Long ride = 1000L;
+    
 
     /**
      * 获取操作系统信息
@@ -59,7 +44,7 @@ public class SigarUtil {
         // 系统信息
         Sigar sigar = new Sigar();
         CpuInfo infos[] = sigar.getCpuInfoList();
-        systemInfo.setServerIp(getIpAddress());
+        systemInfo.setServerIp(IpUtil.getIp());
         systemInfo.setCpuCoreNum(infos.length);
         if (infos.length > 0) {
             systemInfo.setCpuModel(infos[0].getModel());
@@ -69,7 +54,7 @@ public class SigarUtil {
         systemInfo.setState(1);
         // 内存信息
         Mem mem = sigar.getMem();
-        long total = mem.getTotal() / 1024L / 1024L / 1024L;
+        long total = mem.getTotal() / ride / ride / ride;
         systemInfo.setTotalMem(total + "G");
         return systemInfo;
     }
@@ -84,15 +69,15 @@ public class SigarUtil {
     public static MemoryState memory() throws SigarException {
         MemoryState memState = new MemoryState();
         Mem mem = sigar.getMem();
-        long total = mem.getTotal() / 1024L / 1024L;
-        long used = mem.getUsed() / 1024L / 1024L;
-        long free = mem.getFree() / 1024L / 1024L;
+        long total = mem.getTotal() / ride / ride;
+        long used = mem.getUsed() / ride / ride;
+        long free = mem.getFree() / ride / ride;
         double usePer = (double) used / (double) total;
         memState.setMemUsePer(usePer + "%");
         memState.setMemFree(new Double(free));
         memState.setMemUsed(new Double(used));
         memState.setMemTotal(new Double(total));
-        memState.setServerIp(getIpAddress());
+        memState.setServerIp(IpUtil.getIp());
         return memState;
     }
 
@@ -118,7 +103,7 @@ public class SigarUtil {
         cpuState.setCpuUse(FormatUtil.toDouble(sys / infos.length, 1));
         cpuState.setCpuIdle(FormatUtil.toDouble(idle / infos.length, 1));
         cpuState.setCpuIoWait(FormatUtil.toDouble(wait / infos.length, 1));
-        cpuState.setServerIp(getIpAddress());
+        cpuState.setServerIp(IpUtil.getIp());
         return cpuState;
     }
 
@@ -139,7 +124,7 @@ public class SigarUtil {
                 DeskState deskState = new DeskState();
                 FileSystem fs = fslist[i];
                 deskState.setFileSystem(fs.getDevName());
-                deskState.setServerIp(getIpAddress());
+                deskState.setServerIp(IpUtil.getIp());
                 FileSystemUsage usage = sigar.getFileSystemUsage(fs.getDirName());
                 usedSum += (usage.getUsed() / 1024 / 1024);
                 deskState.setUsed((usage.getUsed() / 1024 / 1024) + "G");
@@ -155,7 +140,7 @@ public class SigarUtil {
                 logger.error(e.toString());
             }
             DeskState deskStateSum = new DeskState();
-            deskStateSum.setServerIp(getIpAddress());
+            deskStateSum.setServerIp(IpUtil.getIp());
             deskStateSum.setAvail(availSum + "G");
             deskStateSum.setFileSystem("总计");
             deskStateSum.setSize(sizeSum + "G");
@@ -178,7 +163,7 @@ public class SigarUtil {
         try {
             double[] load = sigar.getLoadAverage();
             sysLoadState.setOneLoad(load[0]);
-            sysLoadState.setServerIp(getIpAddress());
+            sysLoadState.setServerIp(IpUtil.getIp());
             sysLoadState.setFiveLoad(load[1]);
             sysLoadState.setFifteenLoad(load[2]);
             return sysLoadState;
@@ -237,7 +222,7 @@ public class SigarUtil {
         netIoState.setTxbyt(txBytesSum + "");
         netIoState.setRxpck(rxPackets + "");
         netIoState.setTxpck(txPackets + "");
-        netIoState.setServerIp(getIpAddress());
+        netIoState.setServerIp(IpUtil.getIp());
         return netIoState;
     }
 
