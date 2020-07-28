@@ -1,6 +1,7 @@
 package com.bee.team.fastgo.service.api.server;
 
 import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
 import com.bee.team.fastgo.tools.deploy.DeployDTO;
 import com.spring.simple.development.support.exception.GlobalException;
 
@@ -15,4 +16,11 @@ public interface DeployService {
      * @param simpleDeployDTO
      */
     void deploySimple(SimpleDeployDTO simpleDeployDTO) throws GlobalException;
+
+
+    /**
+     * 部署vue服务
+     * @param vueDeployDTO
+     */
+    void deploySimple(VueDeployDTO vueDeployDTO) throws GlobalException;
 }
