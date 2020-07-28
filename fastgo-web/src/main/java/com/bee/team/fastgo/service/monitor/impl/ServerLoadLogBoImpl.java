@@ -37,6 +37,7 @@ public class ServerLoadLogBoImpl extends AbstractLavaBoImpl<ServerLoadLogDo, Ser
         List<ServerLoadLogVo> resultList = new ArrayList<>();
         ServerLoadLogDoExample example = new ServerLoadLogDoExample();
         example.createCriteria().andServerIpEqualTo(reqVo.getServerIp()).andGmtCreateBetween(DateUtils.parseDate(reqVo.getStartTime()), DateUtils.parseDate(reqVo.getEndTime()));;
+        example.setOrderByClause("gmt_create asc");
         List<ServerLoadLogDo> serverLoadLogDoList = selectByExample(example);
         if (!CollectionUtils.isEmpty(serverLoadLogDoList)) {
             resultList = baseSupport.listCopy(serverLoadLogDoList, ServerLoadLogVo.class);

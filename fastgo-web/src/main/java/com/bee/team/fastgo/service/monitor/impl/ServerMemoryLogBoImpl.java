@@ -37,6 +37,7 @@ public class ServerMemoryLogBoImpl extends AbstractLavaBoImpl<ServerMemoryLogDo,
         List<ServerMemoryLogVo> resultList = new ArrayList<>();
         ServerMemoryLogDoExample example = new ServerMemoryLogDoExample();
         example.createCriteria().andServerIpEqualTo(reqVo.getServerIp()).andGmtCreateBetween(DateUtils.parseDate(reqVo.getStartTime()), DateUtils.parseDate(reqVo.getEndTime()));;
+        example.setOrderByClause("gmt_create asc");
         List<ServerMemoryLogDo> serverMemoryLogDoList = selectByExample(example);
         if (!CollectionUtils.isEmpty(serverMemoryLogDoList)) {
             resultList = baseSupport.listCopy(serverMemoryLogDoList, ServerMemoryLogVo.class);
