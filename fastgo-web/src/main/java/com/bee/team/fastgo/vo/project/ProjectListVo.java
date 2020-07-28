@@ -13,6 +13,9 @@ public class ProjectListVo implements Serializable {
     @ApiModelProperty(value = "项目名称", required = true, example = "testProject")
     private String projectName;
 
+    @ApiModelProperty(value = "项目code", required = true, example = "testProject")
+    private String projectCode;
+
     @ApiModelProperty(value = "项目描述", required = true, example = "测试项目")
     private String projectDesc;
 

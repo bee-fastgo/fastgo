@@ -44,5 +44,10 @@ public class ProjectConstant {
     public static final Integer IS_CONFIRM0 = 0;
     public static final Integer IS_CONFIRM1 = 1;
 
+    /**
+     * 自动部署开关： 0-关闭 1-开启
+     */
+    public static final Integer AUTO_DEPLOY0 = 0;
+    public static final Integer AUTO_DEPLOY1 = 1;
 
 }

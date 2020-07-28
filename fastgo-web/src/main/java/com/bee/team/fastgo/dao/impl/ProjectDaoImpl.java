@@ -169,8 +169,7 @@ public class ProjectDaoImpl implements ProjectDao {
         String projectProfileCode = profileName.toUpperCase() + "_" + "profile".toUpperCase();
         projectProfileDo.setProjectCode(insertBackProjectProfileVo.getProjectCode());
         projectProfileDo.setProfileCode(projectProfileCode);
-        projectProfileDo.setBranchName(insertBackProjectProfileVo.getBranchName());
-        if (StringUtils.isEmpty(insertBackProjectProfileVo.getBranchName())){
+        if (StringUtils.isEmpty(projectProfileDo.getBranchName())){
             projectProfileDo.setBranchName(ProjectConstant.PROJECT_BRANCH);
         }
         projectProfileDoMapperExt.insertSelective(projectProfileDo);

@@ -8,6 +8,17 @@ public class ProjectEvent extends ApplicationEvent {
 
     private String url;
 
+    //0-新增webhook，1-删除webhook
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public String getProjectCode() {
         return projectCode;
     }
@@ -24,9 +35,10 @@ public class ProjectEvent extends ApplicationEvent {
         this.url = url;
     }
 
-    public ProjectEvent(Object source,String projectCode,String url) {
+    public ProjectEvent(Object source,String projectCode,String url,Integer type) {
         super(source);
         this.projectCode = projectCode;
         this.url = url;
+        this.type = type;
     }
 }

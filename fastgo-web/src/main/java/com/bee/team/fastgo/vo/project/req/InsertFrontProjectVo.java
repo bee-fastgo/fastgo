@@ -33,6 +33,9 @@ public class InsertFrontProjectVo implements Serializable {
     @ApiModelProperty(value = "项目git地址", example = "172.22.5.222/gitlab")
     private String gitUrl;
 
+    @ApiModelProperty(value = "项目分支", example = "dev")
+    private String branchName;
+
     @ApiModelProperty(value = "运行服务器ip", example = "127.0.0.1")
     @NotNull(message = "运行服务器ip不能为空")
     private String runServerIp;
