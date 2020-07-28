@@ -99,17 +99,30 @@
 <!--            <ignoreColumn column="modifier"/>-->
 <!--            <ignoreColumn column="is_deleted"/>-->
 <!--        </table>-->
-                <table tableName="t_server_software_profile" domainObjectName="ServerSoftwareProfileDo">
-                    <property name="useActualColumnNames" value="true"/>
-                    <property name="stateAction" value="false"/>
-                    <property name="boPackage" value="com.bee.team.fastgo.service.server"/>
-                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-                    <ignoreColumn column="ID"/>
-                    <ignoreColumn column="gmt_create"/>
-                    <ignoreColumn column="creator"/>
-                    <ignoreColumn column="gmt_modified"/>
-                    <ignoreColumn column="modifier"/>
-                    <ignoreColumn column="is_deleted"/>
-                </table>
+<!--                <table tableName="t_server_software_profile" domainObjectName="ServerSoftwareProfileDo">-->
+<!--                    <property name="useActualColumnNames" value="true"/>-->
+<!--                    <property name="stateAction" value="false"/>-->
+<!--                    <property name="boPackage" value="com.bee.team.fastgo.service.server"/>-->
+<!--                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--                    <ignoreColumn column="ID"/>-->
+<!--                    <ignoreColumn column="gmt_create"/>-->
+<!--                    <ignoreColumn column="creator"/>-->
+<!--                    <ignoreColumn column="gmt_modified"/>-->
+<!--                    <ignoreColumn column="modifier"/>-->
+<!--                    <ignoreColumn column="is_deleted"/>-->
+<!--                </table>-->
+
+        <table tableName="t_server_source" domainObjectName="ServerSourceDo">
+            <property name="useActualColumnNames" value="true"/>
+            <property name="stateAction" value="false"/>
+            <property name="boPackage" value="com.bee.team.fastgo.service.server"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <ignoreColumn column="ID"/>
+            <ignoreColumn column="gmt_create"/>
+            <ignoreColumn column="creator"/>
+            <ignoreColumn column="gmt_modified"/>
+            <ignoreColumn column="modifier"/>
+            <ignoreColumn column="is_deleted"/>
+        </table>
     </context>
 </generatorConfiguration>
