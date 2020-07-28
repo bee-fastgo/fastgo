@@ -10,7 +10,9 @@ import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.project.gitlab.GitlabAPI;
 import com.bee.team.fastgo.project.model.GitlabBranch;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
-import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
+import com.bee.team.fastgo.service.api.server.DeployService;
+import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
 import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
@@ -55,7 +57,13 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     private ProjectDao projectDao;
 
     @Autowired
+    private DeployService deployService;
+
+    @Autowired
     private ProjectPublisher projectPublisher;
+
+    @Autowired
+    private ProjectProfileDoMapperExt projectProfileDoMapperExt;
 
     @Override
     public ResPageDTO<ProjectListVo> queryBackProjectInfo(QueryProjectListVo queryProjectListVo) {
@@ -189,9 +197,12 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     }
 
     @Override
-    public String execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo) {
-        // TODO: 2020/7/24 调取服务器部署项目脚本
-        return "";
+    public void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo) {
+        //获取项目运行环境信息
+        SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
+        dto.setBranchName(deployBackPorjectVo.getBranchName());
+        //调取服务器部署项目脚本
+        deployService.deploySimple(dto);
     }
 
     /**
@@ -199,7 +210,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
      * @return
      * @author hs
      * @date 2020/7/25
-     * @desc TODO
+     * @desc 服务方回调，修改项目状态
      */
     @Override
     public void updateProjectStatus(UpdateProjectStatusVo updateProjectStatusVo) {
@@ -255,6 +266,17 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo) {
+        //获取项目运行环境信息
+        SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());
+        VueDeployDTO deployDTO = baseSupport.objectCopy(dto,VueDeployDTO.class);
+        deployDTO.setBranchName(deployFrontPorjectVo.getBranchName());
+        deployDTO.setServiceUrl(deployFrontPorjectVo.getServiceUrl());
+        //调取服务器部署项目脚本
+        deployService.deploySimple(deployDTO);
     }
 
 

@@ -6,15 +6,15 @@ import lombok.Data;
 /**
  * @description MyBatis Generator 自动创建,对应数据表为：t_profile_config_relation
  *
- * @author liko
- * @date   2020/07/22
+ * @author hs
+ * @date   2020/07/28
  */
 @Data
 public class ProfileConfigRelationDo extends LavaDo {
     /**
      * 项目环境code
      */
-    private String prifileCode;
+    private String profileCode;
 
     /**
      * 配置中心code
