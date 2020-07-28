@@ -1,7 +1,9 @@
 package com.bee.team.fastgo.tools.deploy.git;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
@@ -21,12 +23,12 @@ import java.nio.file.Paths;
 public class GitUtil {
 
     @Value("${gitlab.username}")
-    private String gitUser="xiaohushuang";
+    private String gitUser = "xiaohushuang";
     @Value("${gitlab.password}")
-    private String gitPassword="hs19971125";
+    private String gitPassword = "hs19971125";
 
     @Value("${fastgo.project.path}")
-    private String projectPath="/data/fastgo/deploy/";
+    private String projectPath = "/data/fastgo/deploy/";
 
     /**
      * @param userName
@@ -55,16 +57,27 @@ public class GitUtil {
 
         File file = new File(projectPath + projectName + "/" + branchName);
         if (file.exists()) {
-            getRepositoryFromDir(projectPath + projectName + "/" + branchName);
+            gitPull(file);
         } else {
             fromCloneRepository(projectUrl, projectPath + projectName + "/" + branchName, branchName);
         }
         return projectPath + projectName + "/" + branchName;
     }
 
-    public Repository getRepositoryFromDir(String dir) throws IOException {
-        return new FileRepositoryBuilder()
-                .setGitDir(Paths.get(dir, ".git").toFile())
-                .build();
+    public void gitPull(File repoDir) throws GitAPIException, IOException {
+        File RepoGitDir = new File(repoDir.getAbsolutePath() + "/.git");
+        Repository repo = null;
+        try {
+            CredentialsProvider credential = createCredential(gitUser, gitPassword);
+            repo = new FileRepository(RepoGitDir.getAbsolutePath());
+            Git git = new Git(repo);
+            PullCommand pullCmd = git.pull();
+            pullCmd.setCredentialsProvider(credential);
+            pullCmd.call();
+        } finally {
+            if (repo != null) {
+                repo.close();
+            }
+        }
     }
 }
