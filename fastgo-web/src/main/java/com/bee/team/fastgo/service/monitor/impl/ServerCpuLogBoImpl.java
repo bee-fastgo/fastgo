@@ -38,6 +38,7 @@ public class ServerCpuLogBoImpl extends AbstractLavaBoImpl<ServerCpuLogDo, Serve
         List<ServerCpuLogVo> resultList = new ArrayList<>();
         ServerCpuLogDoExample example = new ServerCpuLogDoExample();
         example.createCriteria().andServerIpEqualTo(reqVo.getServerIp()).andGmtCreateBetween(DateUtils.parseDate(reqVo.getStartTime()), DateUtils.parseDate(reqVo.getEndTime()));
+        example.setOrderByClause("gmt_create asc");
         List<ServerCpuLogDo> serverCpuLogDoList = selectByExample(example);
         if (!CollectionUtils.isEmpty(serverCpuLogDoList)) {
             resultList = baseSupport.listCopy(serverCpuLogDoList, ServerCpuLogVo.class);

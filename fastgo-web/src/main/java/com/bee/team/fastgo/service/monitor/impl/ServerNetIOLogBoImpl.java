@@ -37,6 +37,7 @@ public class ServerNetIOLogBoImpl extends AbstractLavaBoImpl<ServerNetIOLogDo, S
         List<ServerNetIOLogVo> resultList = new ArrayList<>();
         ServerNetIOLogDoExample example = new ServerNetIOLogDoExample();
         example.createCriteria().andServerIpEqualTo(reqVo.getServerIp()).andGmtCreateBetween(DateUtils.parseDate(reqVo.getStartTime()), DateUtils.parseDate(reqVo.getEndTime()));
+        example.setOrderByClause("gmt_create asc");
         List<ServerNetIOLogDo> serverNetIOLogDoList = selectByExample(example);
         if (!CollectionUtils.isEmpty(serverNetIOLogDoList)) {
             resultList = baseSupport.listCopy(serverNetIOLogDoList, ServerNetIOLogVo.class);
