@@ -43,4 +43,9 @@ public class DeployDTO {
      */
     String serviceUserPassword;
 
+    /**
+     * 后端服务地址
+     */
+    String simpleServiceUrl;
+
 }
