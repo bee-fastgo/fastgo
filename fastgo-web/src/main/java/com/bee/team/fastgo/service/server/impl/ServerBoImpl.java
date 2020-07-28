@@ -13,6 +13,10 @@ import com.bee.team.fastgo.vo.server.QueryServerVo;
 import com.bee.team.fastgo.vo.server.ServerVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.constant.CommonConstant;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -50,6 +55,15 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
         ServerDo.setType(CommonConstant.CODE1);
         insert(ServerDo);
 
+        try {
+            initServer(ServerDo.getServerIp(),
+                    ServerDo.getSshPort(),
+                    ServerDo.getSshUser(),
+                    ServerDo.getSshPassword(),
+                    "yum -y install wget && wget http://172.22.5.73/software/init.tar.gz && tar -zxf init.tar.gz && bash ./init/install_jdk.sh");
+        } catch (JSchException e) {
+            throw new GlobalException(ResponseCode.RES_DATA_EXIST, "初始化服务器失败");
+        }
     }
 
     @Override
@@ -151,6 +165,23 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
             update(ServerDo);
         }
         return ReturnT.SUCCESS;
+    }
+
+
+    private void initServer(String host, int port, String user, String password, String command) throws JSchException {
+        JSch jsch = new JSch();
+        Session session = jsch.getSession(user, host, port);
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.setPassword(password);
+        session.connect();
+
+        ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
+        channelExec.setCommand(command);
+        channelExec.setErrStream(System.err);
+        channelExec.connect();
+
+        channelExec.disconnect();
+        session.disconnect();
     }
 
 }

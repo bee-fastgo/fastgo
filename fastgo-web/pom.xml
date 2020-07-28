@@ -54,6 +54,11 @@
             <artifactId>simple-development-code-generate</artifactId>
             <version>3.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.54</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
