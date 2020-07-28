@@ -8,6 +8,7 @@ import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.service.server.ServerSourceBo;
 import com.bee.team.fastgo.vo.server.ServerVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * @date 2020/7/28
  * @desc 软件源接口实现
  **/
+@Service
 public class SourceApiImpl implements SourceApi {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.vo.project;
 
+import com.bee.team.fastgo.service.api.server.dto.res.ResSourceListDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,10 +18,6 @@ import java.util.List;
 @ApiModel(value = "sofrwateProfileListVo",description = "软件环境展示vo")
 public class SofrwateProfileListVo implements Serializable {
 
-    @ApiModelProperty(value = "服务器ip",example = "['1.1.1.1']")
-    private List<String> ips;
-
-    @ApiModelProperty(value = "软件名称和版本对象vo",example = "['redis','mysql']")
-    private  List<SoftwareVersionVo> softwares;
+    private List<ResSourceListDTO> resSourceListDTOList;
 
 }

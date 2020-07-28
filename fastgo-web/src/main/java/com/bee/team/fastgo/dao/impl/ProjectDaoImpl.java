@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bee.team.fastgo.constant.ProjectConstant.*;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 @Component
@@ -204,15 +205,21 @@ public class ProjectDaoImpl implements ProjectDao {
 
             //获取软件元配置信息
             ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
-            /*dto.setIp(psDo.getRunServerIp());
-            dto.setSoftwareCode(psDo.getSoftwareCode());
+            dto.setIp(psDo.getRunServerIp());
             dto.setSoftwareName(softwareInfoVo.getSoftwareName());
             dto.setVersion(softwareInfoVo.getVersion());
-            ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);*/
-            String softwareCode = "SOFTCODE";
-            String softwareConfig = "{'ip':'123.112.111.111','port':3306}";
-            psDo.setSoftwareCode(softwareCode);
-            psDo.setSoftwareConfig(softwareConfig);
+            dto.setProfileCode(projectProfileCode);
+            ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);
+            psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
+            psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
+            //修改项目状态
+            if (HAS_PROFILE1.equals(softwareDTO.getConfigFlag())){
+                if (PROJECT_STATUS6.equals(flag)){
+                    flag = PROJECT_STATUS2;
+                }else if (PROJECT_STATUS1.equals(flag)){
+                    flag = PROJECT_STATUS5;
+                }
+            }
             dos.add(psDo);
             //添加元配置到项目信息中
             map.put(softwareInfoVo.getSoftwareName(),StringUtil.strToMap(psDo.getSoftwareConfig()));

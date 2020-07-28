@@ -17,7 +17,7 @@ public class AutoDeployVo {
     @ApiModelProperty(value = "项目code",example = "TEST")
     private String projectCode;
 
-    @ApiModelProperty(value = "项目自动部署：0-关，1-开",example = "TEST")
+    @ApiModelProperty(value = "项目自动部署：0-关，1-开",example = "0")
     private Integer autoDeploy;
 
 }

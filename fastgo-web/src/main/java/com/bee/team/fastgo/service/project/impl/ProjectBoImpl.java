@@ -11,8 +11,10 @@ import com.bee.team.fastgo.project.gitlab.GitlabAPI;
 import com.bee.team.fastgo.project.model.GitlabBranch;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.service.api.server.DeployService;
+import com.bee.team.fastgo.service.api.server.SourceApi;
 import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
+import com.bee.team.fastgo.service.api.server.dto.res.ResSourceListDTO;
 import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
@@ -54,6 +56,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     private BaseSupport baseSupport;
 
     @Autowired
+    private SourceApi sourceApi;
+
+    @Autowired
     private ProjectDao projectDao;
 
     @Autowired
@@ -62,8 +67,6 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Autowired
     private ProjectPublisher projectPublisher;
 
-    @Autowired
-    private ProjectProfileDoMapperExt projectProfileDoMapperExt;
 
     @Override
     public ResPageDTO<ProjectListVo> queryBackProjectInfo(QueryProjectListVo queryProjectListVo) {
@@ -293,6 +296,15 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"",AUTO_DEPLOY0);
             projectPublisher.publish(projectEvent);
         }
+    }
+
+    @Override
+    public SofrwateProfileListVo queryAllSoftware() {
+        //调取服务接口，查询所有服务信息
+        List<ResSourceListDTO> dtos = sourceApi.getSourceList();
+        SofrwateProfileListVo vo = new SofrwateProfileListVo();
+        vo.setResSourceListDTOList(dtos);
+        return vo;
     }
 
 

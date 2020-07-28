@@ -163,32 +163,21 @@ public class ProjectController {
      * @date 2020/7/27
      * @desc 软件环境展示
      */
-    @RequestMapping(value = "/frontEnd/querySoftwareProfile", method = RequestMethod.POST)
+    @RequestMapping(value = "/querySoftwareProfile", method = RequestMethod.POST)
     @ApiOperation(value = "软件环境展示")
     public ResBody<SofrwateProfileListVo> queryProfile() {
-        List<String> ips = new ArrayList<>();
-        ips.add("1.1.1.1");
-        ips.add("2.2.2.2");
-        List<SoftwareVersionVo> vos = new ArrayList<>();
-        SoftwareVersionVo softwareVersionVo = new SoftwareVersionVo();
-        softwareVersionVo.setSoftwareName("mysql");
-        softwareVersionVo.setVersion("5.0.0");
-        vos.add(softwareVersionVo);
-        SoftwareVersionVo sVo = new SoftwareVersionVo();
-        sVo.setSoftwareName("mysql");
-        sVo.setVersion("5.9.0");
-        vos.add(sVo);
-        SoftwareVersionVo vo = new SoftwareVersionVo();
-        vo.setSoftwareName("redis");
-        vo.setVersion("3.0.0");
-        vos.add(vo);
-        SofrwateProfileListVo sofrwateProfileListVo = new SofrwateProfileListVo();
-        sofrwateProfileListVo.setIps(ips);
-        sofrwateProfileListVo.setSoftwares(vos);
-        return new ResBody().buildSuccessResBody(sofrwateProfileListVo);
+        SofrwateProfileListVo vo = projectBo.queryAllSoftware();
+        return new ResBody().buildSuccessResBody(vo);
     }
 
-    @RequestMapping(value = "/frontEnd/queryBranchName", method = RequestMethod.POST)
+    /**
+     * @param projectCode
+     * @return {@link ResBody< String>}
+     * @author hs
+     * @date 2020/7/28
+     * @desc 查询项目分支名称
+     */
+    @RequestMapping(value = "/queryBranchName", method = RequestMethod.POST)
     @ApiOperation(value = "查询项目分支名称")
     public ResBody<String> queryProjectBranch(@RequestBody String projectCode) {
         List<String> branchNames = projectBo.findProjectBranch(projectCode);
@@ -202,7 +191,7 @@ public class ProjectController {
      * @date 2020/7/27
      * @desc 运行环境展示
      */
-    @RequestMapping(value = "/frontEnd/queryRunProfile", method = RequestMethod.POST)
+    @RequestMapping(value = "/queryRunProfile", method = RequestMethod.POST)
     @ApiOperation(value = "运行环境展示")
     public ResBody<List<RunProfileListVo>> queryRunProfile() {
         List<RunProfileListVo> vos = new ArrayList<>();
@@ -217,6 +206,13 @@ public class ProjectController {
         return new ResBody().buildSuccessResBody(vos);
     }
 
+    /**
+     * @param autoDeployVo
+     * @return {@link ResBody< Void>}
+     * @author hs
+     * @date 2020/7/28
+     * @desc 自动部署开关
+     */
     @RequestMapping(value = "/updateAutoDeploy", method = RequestMethod.POST)
     @ApiOperation(value = "自动部署开关")
     public ResBody<Void> updateAutoDeploy(AutoDeployVo autoDeployVo) {

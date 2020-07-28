@@ -50,4 +50,10 @@ public class ProjectConstant {
     public static final Integer AUTO_DEPLOY0 = 0;
     public static final Integer AUTO_DEPLOY1 = 1;
 
+    /**
+     * 软件环境/运行环境： 0-新建 1-已存在
+     */
+    public static final Integer HAS_PROFILE0 = 0;
+    public static final Integer HAS_PROFILE1 = 1;
+
 }

@@ -3,6 +3,7 @@ package com.bee.team.fastgo.service.project;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.model.ProjectDoExample;
+import com.bee.team.fastgo.vo.project.SofrwateProfileListVo;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
@@ -91,4 +92,14 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @desc 自动部署开关
      */
     void updateProjectDeploy(AutoDeployVo autoDeployVo);
+
+    /**
+     * @param
+     * @return {@link SofrwateProfileListVo}
+     * @author hs
+     * @date 2020/7/28
+     * @desc 查询所有软件环境信息
+     */
+
+    SofrwateProfileListVo queryAllSoftware();
 }
