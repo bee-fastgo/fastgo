@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @date 2020/7/25
  * @desc 执行脚本请求实体
  **/
-public class ReqExecScriptDTO implements Serializable {
+public class ReqExecInstallScriptDTO implements Serializable {
 
     /**
      * 目标服务器ip
@@ -23,16 +23,6 @@ public class ReqExecScriptDTO implements Serializable {
      * 版本
      */
     private String version;
-
-    /**
-     * 脚本类型
-     * 1.安装
-     * 2.修改
-     * 3.重启
-     * 4.停止
-     * 5.卸载
-     */
-    private String type;
 
     /**
      * 软件下载地址
@@ -61,14 +51,6 @@ public class ReqExecScriptDTO implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getSoftwareDownloadUrl() {
