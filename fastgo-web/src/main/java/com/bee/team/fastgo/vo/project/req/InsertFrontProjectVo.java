@@ -40,10 +40,6 @@ public class InsertFrontProjectVo implements Serializable {
     @NotNull(message = "运行服务器ip不能为空")
     private String runServerIp;
 
-    @ApiModelProperty(value = "运行服务器端口", example = "65535")
-    @NotNull(message = "运行服务器端口不能为空")
-    private String runServerPort;
-
     @ApiModelProperty(value = "项目环境名称", example = "测试环境")
     @NotBlank(message = "项目环境名称不能为空")
     private String profileName;

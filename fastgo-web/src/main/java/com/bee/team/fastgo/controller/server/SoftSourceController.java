@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class SoftSourceController {
     @RequestMapping(value = "/addSoftResource", method = RequestMethod.POST)
     @ApiOperation(value = "添加软件资源")
     @ValidHandler(key = "addSoftResourceResVo", value = ResAddSoftResourceVo.class, isReqBody = false)
-    public ResBody addSoftResource(ResAddSoftResourceVo addSoftResourceResVo) {
+    public ResBody addSoftResource(@RequestBody ResAddSoftResourceVo addSoftResourceResVo) {
         serverSourceBo.insertSource(baseSupport.objectCopy(addSoftResourceResVo, ServerSourceDo.class));
         return new ResBody().buildSuccessResBody();
     }
@@ -44,7 +45,7 @@ public class SoftSourceController {
     @RequestMapping(value = "/removeResource", method = RequestMethod.POST)
     @ApiOperation(value = "删除软件资源")
     @ApiImplicitParam(name = "sourceCode", value = "唯一标识", dataTypeClass = String.class)
-    public ResBody removeResource(String sourceCode) {
+    public ResBody removeResource(@RequestBody String sourceCode) {
         if (StringUtils.isEmpty(sourceCode)) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "标识不能为空");
         }
@@ -55,7 +56,7 @@ public class SoftSourceController {
     @RequestMapping(value = "updateResource", method = RequestMethod.POST)
     @ApiOperation(value = "修改软件资源")
     @ValidHandler(key = "resUpdateResourceVo", value = ResUpdateResourceVo.class, isReqBody = false)
-    public ResBody updateResource(ResUpdateResourceVo resUpdateResourceVo) {
+    public ResBody updateResource(@RequestBody ResUpdateResourceVo resUpdateResourceVo) {
         return new ResBody().buildSuccessResBody();
     }
 }

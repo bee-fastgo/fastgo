@@ -7,7 +7,6 @@ import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.model.ServerSourceDoExample;
 import com.bee.team.fastgo.service.server.ServerSourceBo;
 import com.bee.team.fastgo.vo.server.ResUpdateResourceVo;
-import com.spring.simple.development.core.annotation.base.IsApiService;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.RandomUtils;
@@ -22,7 +21,6 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_D
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 @Service
-@IsApiService
 public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, ServerSourceDoMapperExt, ServerSourceDoExample> implements ServerSourceBo {
 
     @Autowired
