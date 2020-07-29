@@ -197,6 +197,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
         mapper.insertSelective(projectDo);
+        //事件添加webhook
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+        projectPublisher.publish(projectEvent);
     }
 
     @Override
