@@ -69,7 +69,7 @@ public class ProjectListen {
                     List<GitlabProjectDo> gitlibProjectList= gitlibProjects.stream().filter(r -> r.getName().equals(projectDo.getProjectName())).collect(Collectors.toList());
                     GitlabProjectDo gitlabProjectDo = gitlibProjectList.get(0);
                     List<GitlabProjectHook> gitlabProjectHooks = gitlabAPI.getAllWebhook(gitlabProjectDo.getId());
-                    List<GitlabProjectHook> gitlabProjectHookList = gitlabProjectHooks.stream().filter(g -> g.isTagPushEvents()).collect(Collectors.toList());
+                    List<GitlabProjectHook> gitlabProjectHookList = gitlabProjectHooks.stream().filter(g -> g.isPushEvents()).collect(Collectors.toList());
                     if (!CollectionUtils.isEmpty(gitlabProjectHookList)){
                         GitlabProjectHook gitlabProjectHook = gitlabProjectHookList.get(0);
                         GitlabProjectHook hook = gitlabAPI.deleteWebhook(gitlabProjectDo.getId(),gitlabProjectHook.getId());
