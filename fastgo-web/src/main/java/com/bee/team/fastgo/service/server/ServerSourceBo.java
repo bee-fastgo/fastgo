@@ -3,6 +3,7 @@ package com.bee.team.fastgo.service.server;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.model.ServerSourceDoExample;
+import com.bee.team.fastgo.vo.server.ResUpdateResourceVo;
 
 import java.util.List;
 
@@ -50,6 +51,25 @@ public interface ServerSourceBo extends LavaBo<ServerSourceDo, ServerSourceDoExa
      * @date 2020/7/28
      * @desc 获取资源列表
      */
-
     List<ServerSourceDo> getSourcesList();
+
+    /**
+     * @param resUpdateResourceVo
+     * @return
+     * @author xqx
+     * @date 2020/7/28
+     * @desc 修改资源信息
+     */
+    void updateSource(ResUpdateResourceVo resUpdateResourceVo);
+
+    /**
+     * 删除资源
+     *
+     * @param sourceCode
+     * @return
+     * @author xqx
+     * @date 2020/7/28
+     * @desc 删除资源
+     */
+    void deleteSource(String sourceCode);
 }
