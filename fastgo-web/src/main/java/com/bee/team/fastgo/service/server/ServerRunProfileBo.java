@@ -20,7 +20,7 @@ public interface ServerRunProfileBo extends LavaBo<ServerRunProfileDo, ServerRun
      *
      * @param addServerRunProfileVo
      */
-    void addServerRunProfileDo(AddServerRunProfileVo addServerRunProfileVo);
+    ServerRunProfileDo addServerRunProfileDo(AddServerRunProfileVo addServerRunProfileVo);
 
     /**
      * 销毁运行环境
