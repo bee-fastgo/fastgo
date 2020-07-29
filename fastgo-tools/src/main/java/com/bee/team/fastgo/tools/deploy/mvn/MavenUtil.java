@@ -14,9 +14,9 @@ import java.util.List;
  **/
 public class MavenUtil {
     @Value("${java.home}")
-    private String javaHome = "C:\\Program Files\\Java\\jdk1.8.0_202";
+    private String javaHome;
     @Value("${maven.home}")
-    private String mavenHome = "D:\\softwarePath\\apache-maven-3.6.3";
+    private String mavenHome;
 
     public Boolean cleanAndInstall(String projectPath) throws MavenInvocationException {
         InvocationRequest request = new DefaultInvocationRequest();
