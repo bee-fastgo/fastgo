@@ -6,8 +6,11 @@ import com.bee.team.fastgo.mapper.ServerSourceDoMapperExt;
 import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.model.ServerSourceDoExample;
 import com.bee.team.fastgo.service.server.ServerSourceBo;
-import com.bee.team.fastgo.vo.server.ResUpdateResourceVo;
+import com.bee.team.fastgo.vo.server.PageResourceReqVo;
+import com.bee.team.fastgo.vo.server.ServerSourceResVo;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
+import com.spring.simple.development.core.component.mvc.BaseSupport;
+import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,12 +19,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_EXIST;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 @Service
 public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, ServerSourceDoMapperExt, ServerSourceDoExample> implements ServerSourceBo {
+    @Autowired
+    private BaseSupport baseSupport;
 
     @Autowired
     @NoApiMethod
@@ -79,11 +85,6 @@ public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, Serve
     }
 
     @Override
-    public void updateSource(ResUpdateResourceVo resUpdateResourceVo) {
-
-    }
-
-    @Override
     public void deleteSource(String sourceCode) {
         if (StringUtils.isEmpty(sourceCode)) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数不能为空");
@@ -93,4 +94,19 @@ public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, Serve
         serverSourceDo.setIsDeleted("y");
         update(serverSourceDo);
     }
+
+    @Override
+    public ResPageDTO listResources(PageResourceReqVo pageResourceReqVo) {
+        List<ServerSourceResVo> list = baseSupport.listCopy(getSourcesList(),ServerSourceResVo.class);
+        ResPageDTO resPageDTO = new ResPageDTO();
+        resPageDTO.setTotalCount(list.size());
+        resPageDTO.setPageNum(pageResourceReqVo.getPageNum());
+        resPageDTO.setPageSize(pageResourceReqVo.getPageSize());
+        int skip = (pageResourceReqVo.getPageNum() - 1) * pageResourceReqVo.getPageSize();
+
+        resPageDTO.setList(list.stream().skip(skip).limit(pageResourceReqVo.getPageSize()).collect(Collectors.toList()));
+        return resPageDTO;
+    }
+
+
 }

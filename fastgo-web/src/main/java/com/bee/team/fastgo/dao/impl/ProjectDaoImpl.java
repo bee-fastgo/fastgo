@@ -92,6 +92,7 @@ public class ProjectDaoImpl implements ProjectDao {
         List<ComponentEnum> componentEnums = new ArrayList<>();
         componentEnums.add(ComponentEnum.springMvc);
         componentEnums.add(ComponentEnum.mybatis);
+//        componentEnums.add(ComponentEnum.generator);
 //        componentEnums.add(ComponentEnum.dubbo);
 //        componentEnums.add(ComponentEnum.cassandra);
 //        componentEnums.add(ComponentEnum.kafka);
@@ -192,6 +193,7 @@ public class ProjectDaoImpl implements ProjectDao {
         pDo.setRunProfileCode(serverRunProfileDo.getRunProfileCode());
         pDo.setRunProfileConfig(serverRunProfileDo.getSoftwareConfig());
         profileRunprofileRelationDoMapperExt.insertSelective(pDo);
+        flag=PROJECT_STATUS6;
         //添加元配置到项目信息中
         Map<String,Object> base = StringUtil.strToMap(pDo.getRunProfileConfig());
         if (base == null){
@@ -222,7 +224,7 @@ public class ProjectDaoImpl implements ProjectDao {
             psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
             psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
             //修改项目状态
-            if (HAS_PROFILE1.equals(softwareDTO.getConfigFlag())){
+            if (HAS_PROFILE1.toString().equals(softwareDTO.getConfigFlag())){
                 if (PROJECT_STATUS6.equals(flag)){
                     flag = PROJECT_STATUS2;
                 }else if (PROJECT_STATUS1.equals(flag)){
@@ -244,5 +246,4 @@ public class ProjectDaoImpl implements ProjectDao {
         profileConfigRelationDoMapperExt.insertSelective(pcDo);
         return flag;
     }
-
 }

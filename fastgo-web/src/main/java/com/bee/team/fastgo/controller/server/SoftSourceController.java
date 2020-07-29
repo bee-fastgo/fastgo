@@ -1,11 +1,14 @@
 package com.bee.team.fastgo.controller.server;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.service.server.ServerSourceBo;
+import com.bee.team.fastgo.vo.config.req.MapReqVo;
+import com.bee.team.fastgo.vo.server.PageResourceReqVo;
 import com.bee.team.fastgo.vo.server.ResAddSoftResourceVo;
-import com.bee.team.fastgo.vo.server.ResUpdateResourceVo;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
+import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import com.spring.simple.development.support.exception.GlobalException;
 import io.swagger.annotations.Api;
@@ -17,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
@@ -38,7 +45,12 @@ public class SoftSourceController {
     @ApiOperation(value = "添加软件资源")
     @ValidHandler(key = "addSoftResourceResVo", value = ResAddSoftResourceVo.class, isReqBody = false)
     public ResBody addSoftResource(@RequestBody ResAddSoftResourceVo addSoftResourceResVo) {
-        serverSourceBo.insertSource(baseSupport.objectCopy(addSoftResourceResVo, ServerSourceDo.class));
+        ServerSourceDo serverSourceDo = baseSupport.objectCopy(addSoftResourceResVo, ServerSourceDo.class);
+        List<MapReqVo> list = addSoftResourceResVo.getMapReqVos();
+        Map<String, String> map = new HashMap<>();
+        list.stream().forEach(e -> map.put(e.getKey(), e.getValue()));
+        serverSourceDo.setSourceConfig(JSONObject.toJSONString(map));
+        serverSourceBo.insertSource(serverSourceDo);
         return new ResBody().buildSuccessResBody();
     }
 
@@ -53,10 +65,11 @@ public class SoftSourceController {
         return new ResBody().buildSuccessResBody();
     }
 
-    @RequestMapping(value = "updateResource", method = RequestMethod.POST)
-    @ApiOperation(value = "修改软件资源")
-    @ValidHandler(key = "resUpdateResourceVo", value = ResUpdateResourceVo.class, isReqBody = false)
-    public ResBody updateResource(@RequestBody ResUpdateResourceVo resUpdateResourceVo) {
-        return new ResBody().buildSuccessResBody();
+    @RequestMapping(value = "/getResourceList", method = RequestMethod.POST)
+    @ApiOperation(value = "查询软件资源列表（分页）")
+    @ValidHandler(key = "pageResourceReqVo", value = PageResourceReqVo.class, isReqBody = false)
+    public ResBody getResourceList(@RequestBody PageResourceReqVo pageResourceReqVo) {
+        ResPageDTO resPageDTO = serverSourceBo.listResources(pageResourceReqVo);
+        return new ResBody().buildSuccessResBody(resPageDTO);
     }
 }

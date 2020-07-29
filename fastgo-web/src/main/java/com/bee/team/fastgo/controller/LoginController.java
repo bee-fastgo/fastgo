@@ -1,7 +1,6 @@
 package com.bee.team.fastgo.controller;
 
 import com.bee.team.fastgo.service.user.UserBo;
-import com.bee.team.fastgo.vo.user.AddUserReqVo;
 import com.bee.team.fastgo.vo.user.UserLoginReqVo;
 import com.spring.simple.development.core.annotation.base.NoLogin;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
@@ -39,15 +38,5 @@ public class LoginController {
         userBo.login(httpServletRequest, userLoginReqVo.getUserName(), userLoginReqVo.getPassword());
         return new ResBody().buildSuccessResBody();
     }
-
-    @RequestMapping(value = "/insertLogin", method = RequestMethod.POST)
-    @ApiOperation(value = "用户注册")
-    @NoLogin
-    @ValidHandler(key = "addUserReqVo", value = AddUserReqVo.class, isReqBody = false)
-    public ResBody userAdd(@RequestBody AddUserReqVo addUserReqVo) {
-        userBo.insertUser(addUserReqVo.getUserName(), addUserReqVo.getPassword());
-        return new ResBody().buildSuccessResBody();
-    }
-
 
 }

@@ -136,7 +136,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://172.22.5.248:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -208,7 +208,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -221,7 +221,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) || !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
@@ -248,21 +248,21 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         map.put("code",updateProjectStatusVo.getCode());
         map.put("type",updateProjectStatusVo.getType());
         ProjectDo projectDo = mapper.queryProjectInfo(map);
-        if (!ObjectUtils.isEmpty(projectDo)){
+        if (ObjectUtils.isEmpty(projectDo)){
             throw new GlobalException(RES_DATA_NOT_EXIST,"未找到对应的项目信息");
         }
         if (OBJECT_TYPE1.equals(updateProjectStatusVo.getType())){
             //运行环境
-            if (PROJECT_STATUS1.equals(updateProjectStatusVo.getType())){
+            if (PROJECT_STATUS1.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS6.toString());
-            }else if (PROJECT_STATUS5.equals(updateProjectStatusVo.getType())){
+            }else if (PROJECT_STATUS5.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }else if (OBJECT_TYPE2.equals(updateProjectStatusVo.getType())){
             //软件环境
-            if (PROJECT_STATUS1.equals(updateProjectStatusVo.getType())){
+            if (PROJECT_STATUS1.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS5.toString());
-            }else if (PROJECT_STATUS6.equals(updateProjectStatusVo.getType())){
+            }else if (PROJECT_STATUS6.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }
@@ -307,7 +307,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) || !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
@@ -332,7 +332,12 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             //开启自动部署
             projectDo.setAutoDeploy(AUTO_DEPLOY1);
             //事件添加webhook
-            ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+            ProjectEvent projectEvent = null;
+            if (PROJECT_TYPE1.equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
+            }else if (PROJECT_TYPE2.equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
+            }
             projectPublisher.publish(projectEvent);
         }else if (AUTO_DEPLOY1.equals(autoDeployVo.getAutoDeploy())){
             //关闭自动部署

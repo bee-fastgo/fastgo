@@ -1,10 +1,12 @@
 package com.bee.team.fastgo.vo.server;
 
+import com.bee.team.fastgo.vo.config.req.MapReqVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author xqx
@@ -30,13 +32,8 @@ public class ResAddSoftResourceVo {
     @NotNull(message = "资源版本不能为空")
     private String sourceVersion;
 
-    @ApiModelProperty(value = "资源标识", example = "1234564646", required = true)
-    @NotNull(message = "资源标识不能为空")
-    private String sourceCode;
-
-    @ApiModelProperty(value = "软件包元配置", example = "12", required = true)
-    @NotNull(message = "软件包元配置不能为空")
-    private String sourceConfig;
+    @ApiModelProperty(value = "软件包元配置", required = true)
+    private List<MapReqVo> mapReqVos;
 
     @ApiModelProperty(value = "字典名", example = "mysql", required = true)
     @NotNull(message = "字典名不能为空")
