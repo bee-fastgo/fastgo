@@ -248,21 +248,21 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         map.put("code",updateProjectStatusVo.getCode());
         map.put("type",updateProjectStatusVo.getType());
         ProjectDo projectDo = mapper.queryProjectInfo(map);
-        if (!ObjectUtils.isEmpty(projectDo)){
+        if (ObjectUtils.isEmpty(projectDo)){
             throw new GlobalException(RES_DATA_NOT_EXIST,"未找到对应的项目信息");
         }
         if (OBJECT_TYPE1.equals(updateProjectStatusVo.getType())){
             //运行环境
-            if (PROJECT_STATUS1.equals(updateProjectStatusVo.getType())){
+            if (PROJECT_STATUS1.equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS6.toString());
-            }else if (PROJECT_STATUS5.equals(updateProjectStatusVo.getType())){
+            }else if (PROJECT_STATUS5.equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }else if (OBJECT_TYPE2.equals(updateProjectStatusVo.getType())){
             //软件环境
-            if (PROJECT_STATUS1.equals(updateProjectStatusVo.getType())){
+            if (PROJECT_STATUS1.equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS5.toString());
-            }else if (PROJECT_STATUS6.equals(updateProjectStatusVo.getType())){
+            }else if (PROJECT_STATUS6.equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }
