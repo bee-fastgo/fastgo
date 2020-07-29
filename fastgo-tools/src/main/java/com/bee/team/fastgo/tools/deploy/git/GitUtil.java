@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.tools.deploy.git;
 
+import com.spring.simple.development.support.properties.PropertyConfigurer;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -21,16 +22,7 @@ import java.nio.file.Paths;
  * @auth luke
  * @date 2020-07-25
  **/
-@Service
 public class GitUtil {
-
-    @Value("${gitlab.username}")
-    private String gitUser = "root";
-    @Value("${gitlab.password}")
-    private String gitPassword = "restart@2020";
-
-    @Value("${fastgo.project.path}")
-    private String projectPath = "/data/fastgo/deploy/";
 
     /**
      * @param userName
@@ -46,7 +38,7 @@ public class GitUtil {
 
     public Git fromCloneRepository(String repoUrl, String cloneDir, String branchName) throws GitAPIException {
 
-        CredentialsProvider credential = createCredential(gitUser, gitPassword);
+        CredentialsProvider credential = createCredential(PropertyConfigurer.getProperty("gitlab.username"), PropertyConfigurer.getProperty("gitlab.password"));
         Git git = Git.cloneRepository()
                 .setCredentialsProvider(credential)
                 .setURI(repoUrl)
@@ -57,20 +49,20 @@ public class GitUtil {
 
     public String gitPull(String projectName, String projectUrl, String branchName) throws GitAPIException, IOException {
 
-        File file = new File(projectPath + projectName + "/" + branchName);
+        File file = new File(PropertyConfigurer.getProperty("fastgo.project.path") + projectName + "/" + branchName);
         if (file.exists()) {
             gitPull(file);
         } else {
-            fromCloneRepository(projectUrl, projectPath + projectName + "/" + branchName, branchName);
+            fromCloneRepository(projectUrl, PropertyConfigurer.getProperty("fastgo.project.path") + projectName + "/" + branchName, branchName);
         }
-        return projectPath + projectName + "/" + branchName;
+        return PropertyConfigurer.getProperty("fastgo.project.path") + projectName + "/" + branchName;
     }
 
     public void gitPull(File repoDir) throws GitAPIException, IOException {
         File RepoGitDir = new File(repoDir.getAbsolutePath() + "/.git");
         Repository repo = null;
         try {
-            CredentialsProvider credential = createCredential(gitUser, gitPassword);
+            CredentialsProvider credential = createCredential(PropertyConfigurer.getProperty("gitlab.username"), PropertyConfigurer.getProperty("gitlab.password"));
             repo = new FileRepository(RepoGitDir.getAbsolutePath());
             Git git = new Git(repo);
             PullCommand pullCmd = git.pull();
