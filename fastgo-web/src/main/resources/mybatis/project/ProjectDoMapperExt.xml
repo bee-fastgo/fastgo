@@ -18,7 +18,7 @@
     <select id="queryProjectInfo" parameterType="map" resultType="com.bee.team.fastgo.model.ProjectDo">
         select * from t_project p
         inner join t_project_profile pp on p.projectCode = pp.projectCode
-        where pp.prifileCode = #{code}
+        where pp.profileCode = #{code}
     </select>
 
     <!--查询部署所需项目信息-->
