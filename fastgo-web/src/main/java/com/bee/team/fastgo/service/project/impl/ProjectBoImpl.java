@@ -18,8 +18,10 @@ import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
 import com.bee.team.fastgo.service.api.server.dto.res.ResSourceListDTO;
 import com.bee.team.fastgo.service.project.ProjectBo;
+import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
+import com.bee.team.fastgo.vo.server.ServerVo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.utils.Pager;
@@ -56,6 +58,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Autowired
     private BaseSupport baseSupport;
+
+    @Autowired
+    private ServerBo serverBo;
 
     @Autowired
     private SourceApi sourceApi;
@@ -131,7 +136,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://172.22.5.248:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -203,7 +208,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -216,8 +221,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus())){
-            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建，不能部署");
+        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
         SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
@@ -302,8 +307,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus())){
-            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建，不能部署");
+        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
         SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());
@@ -327,7 +332,12 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             //开启自动部署
             projectDo.setAutoDeploy(AUTO_DEPLOY1);
             //事件添加webhook
-            ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+            ProjectEvent projectEvent = null;
+            if (PROJECT_TYPE1.equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
+            }else if (PROJECT_TYPE2.equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
+            }
             projectPublisher.publish(projectEvent);
         }else if (AUTO_DEPLOY1.equals(autoDeployVo.getAutoDeploy())){
             //关闭自动部署
@@ -346,6 +356,15 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         SofrwateProfileListVo vo = new SofrwateProfileListVo();
         vo.setResSourceListDTOList(dtos);
         return vo;
+    }
+
+    @Override
+    public RunProfileListVo findRunProfile() {
+        List<ServerVo> serverVoList = serverBo.queryListServer();
+        List<String> list = serverVoList.stream().map(r -> r.getServerIp()).collect(Collectors.toList());
+        RunProfileListVo runProfileListVo = new RunProfileListVo();
+        runProfileListVo.setIps(list);
+        return runProfileListVo;
     }
 
 

@@ -5,6 +5,7 @@ import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.mapper.ProfileRunprofileRelationDoMapperExt;
+import com.bee.team.fastgo.mapper.ServerExecutorLogDoMapperExt;
 import com.bee.team.fastgo.mapper.ServerRunProfileDoMapperExt;
 import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.model.ServerRunProfileDo;
@@ -45,6 +46,11 @@ public class ServerRunProfileBoImpl extends AbstractLavaBoImpl<ServerRunProfileD
 
     @Autowired
     private ProfileRunprofileRelationDoMapperExt profileRunprofileRelationDoMapperExt;
+
+    @Autowired
+    public void setBaseMapper(ServerRunProfileDoMapperExt mapper) {
+        setMapper(mapper);
+    }
 
     @Override
     public ServerRunProfileDo addServerRunProfileDo(AddServerRunProfileVo addServerRunProfileVo) {

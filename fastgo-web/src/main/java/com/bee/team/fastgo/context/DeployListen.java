@@ -36,7 +36,7 @@ public class DeployListen {
     private DeployService deployService;
 
     @Async
-    @EventListener(ProjectEvent.class)
+    @EventListener(DeployEvent.class)
     public void listener(DeployEvent deployEvent){
         Integer type = deployEvent.getType();
         try{
