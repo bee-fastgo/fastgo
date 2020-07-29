@@ -17,7 +17,6 @@ import com.bee.team.fastgo.vo.server.ReqAddEnvironmentVo;
 import com.bee.team.fastgo.vo.server.ResSoftwareEnvironmentVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.spring.simple.development.core.annotation.base.IsApiService;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Service
-@IsApiService
 public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwareProfileDo, ServerSoftwareProfileDoMapperExt, ServerSoftwareProfileDoExample> implements ServerSoftwareProfileBo {
 
 
@@ -60,18 +58,18 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
     @Override
     public void createEnvironment(ReqAddEnvironmentVo reqAddEnvironmentVo) {
         ServerSoftwareProfileDo dbServerSoftwareProfileDo = getServerSoftwareProfileByServerIpAndSoftwareNameAndVersion(reqAddEnvironmentVo.getServerIp(), reqAddEnvironmentVo.getSoftwareName(), reqAddEnvironmentVo.getVersion());
-        if(dbServerSoftwareProfileDo != null){
+        if (dbServerSoftwareProfileDo != null) {
             throw new GlobalException(ScriptException.ENV_ABNORMAL, "环境已存在");
         }
-        if(Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).noneMatch(s -> s.equals(reqAddEnvironmentVo.getSoftwareName()))) {
+        if (Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).noneMatch(s -> s.equals(reqAddEnvironmentVo.getSoftwareName()))) {
             throw new GlobalException(ScriptException.ENV_ABNORMAL, "不支持的软件类型");
         }
         ServerSourceDo serverSourceDo = serverSourceBo.getSourceByNameAndVersion(reqAddEnvironmentVo.getSoftwareName(), reqAddEnvironmentVo.getVersion());
-        if(serverSourceDo == null){
+        if (serverSourceDo == null) {
             throw new GlobalException(ScriptException.ENV_ABNORMAL, "软件资源不存在请检查");
         }
         ServerDo serverDoByIp = serverBo.getServerDoByIp(reqAddEnvironmentVo.getServerIp());
-        if (serverDoByIp == null){
+        if (serverDoByIp == null) {
             throw new GlobalException(ScriptException.ENV_ABNORMAL, "该服务器不处于托管中");
         }
 
@@ -96,7 +94,7 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
         ServerSoftwareProfileDoExample serverSoftwareProfileDoExample = new ServerSoftwareProfileDoExample();
         serverSoftwareProfileDoExample.createCriteria().andSoftwareCodeEqualTo(softwareCode);
         List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = selectByExample(serverSoftwareProfileDoExample);
-        if(CollectionUtils.isEmpty(serverSoftwareProfileDoList)){
+        if (CollectionUtils.isEmpty(serverSoftwareProfileDoList)) {
             throw new GlobalException(ScriptException.ENV_ABNORMAL, "软件资源不存在请检查");
         }
         ServerSoftwareProfileDo serverSoftwareProfileDo = serverSoftwareProfileDoList.get(0);
@@ -116,9 +114,9 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
     @Override
     public ResPageDTO<ResSoftwareEnvironmentVo> getSoftwareEnvironmentByPage(QuerySoftwareEnvironmentVo querySoftwareEnvironmentVo) {
         ServerSoftwareProfileDoExample serverSoftwareProfileDoExample = new ServerSoftwareProfileDoExample();
-        if(StringUtils.isNotEmpty(querySoftwareEnvironmentVo.getSoftwareName())) {
+        if (StringUtils.isNotEmpty(querySoftwareEnvironmentVo.getSoftwareName())) {
             //是否支持该软件类型
-            if(Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).noneMatch(s -> s.equals(querySoftwareEnvironmentVo.getSoftwareName()))) {
+            if (Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).noneMatch(s -> s.equals(querySoftwareEnvironmentVo.getSoftwareName()))) {
                 throw new GlobalException(ScriptException.SCRIPT_ABNORMAL, "不支持的软件类型");
             }
             serverSoftwareProfileDoExample.createCriteria().andSoftwareNameEqualTo(querySoftwareEnvironmentVo.getSoftwareName());
@@ -136,7 +134,6 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
     public void updateSoftwareConfigBySoftwareCode(String softwareCode, String softwareConfig) {
 
     }
-
 
 
     @Override
@@ -169,12 +166,12 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
         return CollectionUtils.isNotEmpty(serverSoftwareProfileDoList) ? serverSoftwareProfileDoList.get(0) : null;
     }
 
-    private void checkEnvironment(String softwareCode){
+    private void checkEnvironment(String softwareCode) {
         ProfileSoftwareRelationDoExample profileSoftwareRelationDoExample = new ProfileSoftwareRelationDoExample();
         profileSoftwareRelationDoExample.createCriteria().andSoftwareCodeEqualTo(softwareCode);
         List<ProfileSoftwareRelationDo> profileSoftwareRelationDos = profileSoftwareRelationDoMapperExt.selectByExample(profileSoftwareRelationDoExample);
-        if(CollectionUtils.isNotEmpty(profileSoftwareRelationDos)){
-            throw new GlobalException(ScriptException.ENV_ABNORMAL,"该环境正在启用中");
+        if (CollectionUtils.isNotEmpty(profileSoftwareRelationDos)) {
+            throw new GlobalException(ScriptException.ENV_ABNORMAL, "该环境正在启用中");
         }
     }
 }
