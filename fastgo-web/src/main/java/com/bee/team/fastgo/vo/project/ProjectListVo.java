@@ -10,6 +10,9 @@ import java.io.Serializable;
 @ApiModel(value = "projectListVo",description = "项目展示vo")
 public class ProjectListVo implements Serializable {
 
+    @ApiModelProperty(value = "主键id", required = true, example = "11")
+    private Integer id;
+
     @ApiModelProperty(value = "项目名称", required = true, example = "testProject")
     private String projectName;
 
