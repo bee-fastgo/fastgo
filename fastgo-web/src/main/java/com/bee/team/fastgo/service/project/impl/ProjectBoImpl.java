@@ -253,16 +253,16 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         if (OBJECT_TYPE1.equals(updateProjectStatusVo.getType())){
             //运行环境
-            if (PROJECT_STATUS1.equals(projectDo.getProjectStatus())){
+            if (PROJECT_STATUS1.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS6.toString());
-            }else if (PROJECT_STATUS5.equals(projectDo.getProjectStatus())){
+            }else if (PROJECT_STATUS5.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }else if (OBJECT_TYPE2.equals(updateProjectStatusVo.getType())){
             //软件环境
-            if (PROJECT_STATUS1.equals(projectDo.getProjectStatus())){
+            if (PROJECT_STATUS1.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS5.toString());
-            }else if (PROJECT_STATUS6.equals(projectDo.getProjectStatus())){
+            }else if (PROJECT_STATUS6.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }
