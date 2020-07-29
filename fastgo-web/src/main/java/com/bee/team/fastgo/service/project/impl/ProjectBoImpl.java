@@ -221,7 +221,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
@@ -307,7 +307,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
