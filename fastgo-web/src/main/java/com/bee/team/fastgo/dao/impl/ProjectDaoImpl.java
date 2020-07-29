@@ -193,6 +193,7 @@ public class ProjectDaoImpl implements ProjectDao {
         pDo.setRunProfileCode(serverRunProfileDo.getRunProfileCode());
         pDo.setRunProfileConfig(serverRunProfileDo.getSoftwareConfig());
         profileRunprofileRelationDoMapperExt.insertSelective(pDo);
+        flag=PROJECT_STATUS6;
         //添加元配置到项目信息中
         Map<String,Object> base = StringUtil.strToMap(pDo.getRunProfileConfig());
         if (base == null){
