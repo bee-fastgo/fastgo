@@ -14,6 +14,9 @@ import lombok.Data;
 @ApiModel(value = "autoDeployVo",description = "自动部署项目vo")
 public class AutoDeployVo {
 
+    @ApiModelProperty(value = "主键id",example = "11")
+    private Integer id;
+
     @ApiModelProperty(value = "项目code",example = "TEST")
     private String projectCode;
 
