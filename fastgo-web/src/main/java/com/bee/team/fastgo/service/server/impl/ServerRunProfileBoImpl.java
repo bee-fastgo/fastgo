@@ -47,7 +47,7 @@ public class ServerRunProfileBoImpl extends AbstractLavaBoImpl<ServerRunProfileD
     private ProfileRunprofileRelationDoMapperExt profileRunprofileRelationDoMapperExt;
 
     @Override
-    public void addServerRunProfileDo(AddServerRunProfileVo addServerRunProfileVo) {
+    public ServerRunProfileDo addServerRunProfileDo(AddServerRunProfileVo addServerRunProfileVo) {
         ServerDo serverDo = serverBo.getServerDoByIp(addServerRunProfileVo.getServerIp());
         if (serverDo == null) {
             throw new GlobalException(ResponseCode.RES_DATA_NOT_EXIST, "服务器资源不存在");
@@ -68,6 +68,7 @@ public class ServerRunProfileBoImpl extends AbstractLavaBoImpl<ServerRunProfileD
         serverRunProfileDo.setSoftwareConfig(JSONObject.toJSONString(runProfileVo));
         serverRunProfileDo.setRunProfileCode(SoftwareEnum.DOCKER.name());
         insert(serverRunProfileDo);
+        return serverRunProfileDo;
     }
 
     @Override

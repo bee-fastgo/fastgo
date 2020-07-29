@@ -215,7 +215,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/updateAutoDeploy", method = RequestMethod.POST)
     @ApiOperation(value = "自动部署开关")
-    public ResBody<Void> updateAutoDeploy(AutoDeployVo autoDeployVo) {
+    public ResBody<Void> updateAutoDeploy(@RequestBody AutoDeployVo autoDeployVo) {
         projectBo.updateProjectDeploy(autoDeployVo);
         return new ResBody().buildSuccessResBody();
     }
