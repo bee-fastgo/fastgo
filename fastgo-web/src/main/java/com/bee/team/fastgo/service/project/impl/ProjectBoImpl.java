@@ -2,6 +2,8 @@ package com.bee.team.fastgo.service.project.impl;
 
 import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.constant.ProjectConstant;
+import com.bee.team.fastgo.context.DeployEvent;
+import com.bee.team.fastgo.context.DeployPublisher;
 import com.bee.team.fastgo.context.ProjectEvent;
 import com.bee.team.fastgo.context.ProjectPublisher;
 import com.bee.team.fastgo.dao.ProjectDao;
@@ -66,6 +68,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Autowired
     private ProjectPublisher projectPublisher;
+
+    @Autowired
+    private DeployPublisher deployPublisher;
 
 
     @Override
@@ -204,11 +209,25 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Override
     public void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo) {
+        ProjectDoExample example = new ProjectDoExample();
+        example.createCriteria().andProjectCodeEqualTo(deployBackPorjectVo.getProjectCode());
+        List<ProjectDo> projectDoList = mapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(projectDoList)){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
+        }
+        ProjectDo projectDo = projectDoList.get(0);
+        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus())){
+            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建，不能部署");
+        }
         //获取项目运行环境信息
         SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
         dto.setBranchName(deployBackPorjectVo.getBranchName());
         //调取服务器部署项目脚本
-        deployService.deploySimple(dto);
+        DeployEvent deployEvent = new DeployEvent(new Object(),dto,null,PROJECT_TYPE2,projectDo.getId().intValue());
+        deployPublisher.publish(deployEvent);
+        //修改项目状态为部署中
+        projectDo.setProjectStatus(PROJECT_STATUS3.toString());
+        mapper.updateByPrimaryKeySelective(projectDo);
     }
 
     /**
@@ -276,13 +295,27 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Override
     public void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo) {
+        ProjectDoExample example = new ProjectDoExample();
+        example.createCriteria().andProjectCodeEqualTo(deployFrontPorjectVo.getProjectCode());
+        List<ProjectDo> projectDoList = mapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(projectDoList)){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
+        }
+        ProjectDo projectDo = projectDoList.get(0);
+        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus())){
+            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建，不能部署");
+        }
         //获取项目运行环境信息
         SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());
         VueDeployDTO deployDTO = baseSupport.objectCopy(dto,VueDeployDTO.class);
         deployDTO.setBranchName(deployFrontPorjectVo.getBranchName());
         deployDTO.setServiceUrl(deployFrontPorjectVo.getServiceUrl());
         //调取服务器部署项目脚本
-        deployService.deploySimple(deployDTO);
+        DeployEvent deployEvent = new DeployEvent(new Object(),null,deployDTO,PROJECT_TYPE1,projectDo.getId().intValue());
+        deployPublisher.publish(deployEvent);
+        //修改项目状态为部署中
+        projectDo.setProjectStatus(PROJECT_STATUS3.toString());
+        mapper.updateByPrimaryKeySelective(projectDo);
     }
 
     @Override

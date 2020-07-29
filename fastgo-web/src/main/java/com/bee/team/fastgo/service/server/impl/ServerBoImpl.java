@@ -2,6 +2,9 @@ package com.bee.team.fastgo.service.server.impl;
 
 import ch.ethz.ssh2.Connection;
 import com.alibaba.lava.base.AbstractLavaBoImpl;
+import com.bee.team.fastgo.hander.InitServer;
+import com.bee.team.fastgo.hander.event.EventPublisher;
+import com.bee.team.fastgo.hander.event.InitServerEvent;
 import com.bee.team.fastgo.job.core.biz.model.RegistryParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
 import com.bee.team.fastgo.mapper.ServerDoMapperExt;
@@ -15,10 +18,6 @@ import com.bee.team.fastgo.vo.server.QueryServerVo;
 import com.bee.team.fastgo.vo.server.ServerVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.constant.CommonConstant;
@@ -30,8 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import static com.spring.simple.development.support.exception.GlobalResponseCode.SERVICE_FAILED;
@@ -44,6 +43,9 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
 
     @Autowired
     private BaseSupport baseSupport;
+
+    @Autowired
+    private EventPublisher eventPublisher;
 
     @Autowired
     public void setBaseMapper(ServerDoMapperExt mapper) {
@@ -61,36 +63,12 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
         ServerDo.setType(CommonConstant.CODE1);
         insert(ServerDo);
 
-        Connection conn = null;
-        try {
-            conn = new Connection(addServerVo.getServerIp(), addServerVo.getSshPort());
-            System.out.println(DateUtils.getCurrentTime() + "开始远程传输文件");
-            conn.connect();
-
-            boolean isAuthenticated = conn.authenticateWithPassword(addServerVo.getSshUser(), addServerVo.getSshPassword());
-            if (!isAuthenticated) {
-                throw new IOException("Authentication failed.文件scp到数据服务器时发生异常");
-            }
-            String cmd = "yum -y install wget && wget http://172.22.5.73/software/init.tar.gz && tar -zxf init.tar.gz && bash ./init/install_jdk.sh ";
-            Scp.invokeCmd(conn.openSession(), cmd);
-        }
-        catch (IOException e) {
-            throw new GlobalException(SERVICE_FAILED);
-        } finally {
-            if (conn != null) {
-                conn.close();
-            }
-        }
-
-//        try {
-//            initServer(ServerDo.getServerIp(),
-//                    ServerDo.getSshPort(),
-//                    ServerDo.getSshUser(),
-//                    ServerDo.getSshPassword(),
-//                    "yum -y install wget && wget http://172.22.5.73/software/init.tar.gz && tar -zxf init.tar.gz && bash ./init/install_jdk.sh");
-//        } catch (JSchException e) {
-//            throw new GlobalException(ResponseCode.RES_DATA_EXIST, "初始化服务器失败");
-//        }
+        InitServer initServer = new InitServer();
+        initServer.setIp(ServerDo.getServerIp());
+        initServer.setPort(ServerDo.getSshPort());
+        initServer.setUser(ServerDo.getSshUser());
+        initServer.setPassword(ServerDo.getSshPassword());
+        eventPublisher.publishEvent(new InitServerEvent(initServer));
     }
 
     @Override
@@ -192,23 +170,6 @@ public class ServerBoImpl extends AbstractLavaBoImpl<ServerDo, ServerDoMapperExt
             update(ServerDo);
         }
         return ReturnT.SUCCESS;
-    }
-
-
-    private void initServer(String host, int port, String user, String password, String command) throws JSchException {
-        JSch jsch = new JSch();
-        Session session = jsch.getSession(user, host, port);
-        session.setConfig("StrictHostKeyChecking", "no");
-        session.setPassword(password);
-        session.connect();
-
-        ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
-        channelExec.setCommand(command);
-        channelExec.setErrStream(System.err);
-        channelExec.connect();
-
-        channelExec.disconnect();
-        session.disconnect();
     }
 
 }

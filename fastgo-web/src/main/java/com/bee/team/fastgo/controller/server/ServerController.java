@@ -41,7 +41,7 @@ public class ServerController {
      * @Param [addServerVo]
      **/
     @RequestMapping(value = "/addServer", method = RequestMethod.POST)
-    @ValidHandler(key = "addServerVo", value = AddServerVo.class)
+    @ValidHandler(key = "addServerVo", value = AddServerVo.class,isReqBody=false)
     @ApiOperation(value = "添加服务器")
     public ResBody<Void> addServer(@ApiParam(name = "addServerVo", value = "添加服务器") @RequestBody AddServerVo addServerVo) {
         serverBo.addServerDo(addServerVo);
