@@ -9,6 +9,7 @@ import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.tools.deploy.scp.Scp;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 
 import static com.spring.simple.development.support.exception.GlobalResponseCode.SERVICE_FAILED;
 
@@ -28,6 +30,9 @@ import static com.spring.simple.development.support.exception.GlobalResponseCode
 @EnableAsync
 @Component
 public class SeverListener {
+
+    @Value("${server.port}")
+    private Integer port;
 
     @Async
     @EventListener
@@ -53,7 +58,8 @@ public class SeverListener {
             File file = new File("/data/fastgo/sources/init.tar.gz");
             if(file.exists()){
                 uploadFile(initServer.getIp(), initServer.getPort(),initServer.getUser(),initServer.getPassword(),file,"/root/data");
-                Scp.invokeCmd(conn.openSession(),"cd /root/data && tar -zxvf init.tar.gz && bash /root/data/init/install_jdk.sh http://172.22.5.248:9999");
+                String hostAddress = InetAddress.getLocalHost().getHostAddress();
+                Scp.invokeCmd(conn.openSession(),"cd /root/data && tar -zxvf init.tar.gz && bash /root/data/init/install_jdk.sh http://" + hostAddress + ":" + port);
             }
         }
         catch (IOException e) {
