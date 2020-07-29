@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -34,7 +33,6 @@ public class ResAddSoftResourceVo {
     private String sourceVersion;
 
     @ApiModelProperty(value = "软件包元配置", required = true)
-    @NotBlank(message = "软件包元配置不能为空")
     private List<MapReqVo> mapReqVos;
 
     @ApiModelProperty(value = "字典名", example = "mysql", required = true)

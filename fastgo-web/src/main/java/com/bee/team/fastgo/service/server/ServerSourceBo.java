@@ -3,7 +3,8 @@ package com.bee.team.fastgo.service.server;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.model.ServerSourceDoExample;
-import com.bee.team.fastgo.vo.server.ResUpdateResourceVo;
+import com.bee.team.fastgo.vo.server.PageResourceReqVo;
+import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
 import java.util.List;
 
@@ -53,7 +54,6 @@ public interface ServerSourceBo extends LavaBo<ServerSourceDo, ServerSourceDoExa
      */
     List<ServerSourceDo> getSourcesList();
 
-
     /**
      * 删除资源
      *
@@ -64,4 +64,16 @@ public interface ServerSourceBo extends LavaBo<ServerSourceDo, ServerSourceDoExa
      * @desc 删除资源
      */
     void deleteSource(String sourceCode);
+
+    /**
+     * 分页获取软件列表信息
+     *
+     * @param pageResourceReqVo
+     * @return {@link ResPageDTO}
+     * @author xqx
+     * @date 2020/7/29
+     * @desc 分页获取软件列表信息
+     */
+
+    ResPageDTO listResources(PageResourceReqVo pageResourceReqVo);
 }
