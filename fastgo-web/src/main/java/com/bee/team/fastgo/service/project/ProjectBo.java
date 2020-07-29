@@ -3,6 +3,7 @@ package com.bee.team.fastgo.service.project;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.model.ProjectDoExample;
+import com.bee.team.fastgo.vo.project.SofrwateProfileListVo;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
@@ -57,7 +58,7 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @param deployBackPorjectVo
      * @return
      */
-    String execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo);
+    void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo);
 
     /**
      * 修改项目状态接口
@@ -73,4 +74,32 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @desc 查询项目分支信息
      */
     List<String> findProjectBranch(String projectCode);
+
+    /**
+     * @param deployFrontPorjectVo
+     * @return
+     * @author hs
+     * @date 2020/7/28
+     * @desc 部署前台项目
+     */
+    void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo);
+
+    /**
+     * @param autoDeployVo
+     * @return
+     * @author hs
+     * @date 2020/7/28
+     * @desc 自动部署开关
+     */
+    void updateProjectDeploy(AutoDeployVo autoDeployVo);
+
+    /**
+     * @param
+     * @return {@link SofrwateProfileListVo}
+     * @author hs
+     * @date 2020/7/28
+     * @desc 查询所有软件环境信息
+     */
+
+    SofrwateProfileListVo queryAllSoftware();
 }

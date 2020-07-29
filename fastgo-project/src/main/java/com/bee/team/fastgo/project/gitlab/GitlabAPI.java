@@ -55,6 +55,15 @@ public class GitlabAPI {
     }
 
     /**
+     * delete类型请求
+     *
+     * @return
+     */
+    public GitlabHTTPRequestor deleteRequest() {
+        return new GitlabHTTPRequestor(this).authenticate(apiToken, tokenType, authMethod).method("DELETE");
+    }
+
+    /**
      * 获取请求路径
      *
      * @param tailAPIUrl
@@ -160,7 +169,7 @@ public class GitlabAPI {
     }
 
     /**
-     * 新建一个项目push事件
+     * 新建一个webHook项目push事件
      * @param id
      * @return
      * @throws IOException
@@ -168,6 +177,29 @@ public class GitlabAPI {
     public GitlabProjectHook addWebhook(Integer id,String url) throws IOException {
         String tailUrl = "projects/"+ id + "/hooks";
         return postRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).addData("url",url).execute(tailUrl,GitlabProjectHook.class);
+    }
+
+    /**
+     * 查询项目所有webhook
+     * @param id
+     * @return
+     * @throws IOException
+     */
+    public List<GitlabProjectHook> getAllWebhook(Integer id) throws IOException {
+        String tailUrl = "projects/"+ id + "/hooks";
+        GitlabProjectHook[] gitlabProjectHooks = getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabProjectHook[].class);
+        return Arrays.asList(gitlabProjectHooks);
+    }
+
+    /**
+     * 删除项目webhook
+     * @param id，hookId
+     * @return
+     * @throws IOException
+     */
+    public GitlabProjectHook deleteWebhook(Integer id,Integer hookId) throws IOException {
+        String tailUrl = "projects/"+ id + "/hooks/"+hookId;
+        return deleteRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabProjectHook.class);
     }
 
     /**
@@ -186,11 +218,13 @@ public class GitlabAPI {
 
 
 
+
+
     public static void main(String[] args) throws IOException {
         GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
         //List<GitlabProjectDo> list = gitlabAPI.getAllProject();
         //GitlabProjectDo gitlabProjectDo = gitlabAPI.createNewProject("hsFirst","hs the first project");
-        List<GitlabBranch> gitlabBranches = gitlabAPI.queryAllBranchInfo(2);
+        GitlabProjectHook gitlabBranches = gitlabAPI.deleteWebhook(75,37);
         System.out.println(gitlabBranches);
     }
 

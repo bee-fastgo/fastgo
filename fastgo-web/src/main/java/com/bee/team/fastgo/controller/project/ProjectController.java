@@ -86,9 +86,25 @@ public class ProjectController {
     @RequestMapping(value = "/backEnd/deployBackProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目部署")
     @ValidHandler(key = "deployBackPorjectVo", value = DeployBackPorjectVo.class, isReqBody = false)
-    public ResBody<String> deployBackProject(@RequestBody DeployBackPorjectVo deployBackPorjectVo) {
-        String result = projectBo.execDeployBackProject(deployBackPorjectVo);
-        return new ResBody().buildSuccessResBody(result);
+    public ResBody<Void> deployBackProject(@RequestBody DeployBackPorjectVo deployBackPorjectVo) {
+        projectBo.execDeployBackProject(deployBackPorjectVo);
+        return new ResBody().buildSuccessResBody();
+    }
+
+    /**
+     * @param deployFrontPorjectVo
+     * @return {@link ResBody< Void>}
+     * @author hs
+     * @date 2020/7/28
+     * @desc 前台项目部署
+     */
+
+    @RequestMapping(value = "/backEnd/deployFrontProject", method = RequestMethod.POST)
+    @ApiOperation(value = "前台项目部署")
+    @ValidHandler(key = "deployBackPorjectVo", value = DeployBackPorjectVo.class, isReqBody = false)
+    public ResBody<Void> deployFrontProject(@RequestBody DeployFrontPorjectVo deployFrontPorjectVo) {
+        projectBo.execDeployFrontProject(deployFrontPorjectVo);
+        return new ResBody().buildSuccessResBody();
     }
 
     /**
@@ -142,28 +158,66 @@ public class ProjectController {
 
     /**
      * @param
-     * @return {@link ResBody< ProfileListVo>}
+     * @return {@link ResBody< SofrwateProfileListVo>}
      * @author hs
      * @date 2020/7/27
      * @desc 软件环境展示
      */
-    @RequestMapping(value = "/frontEnd/queryProfile", method = RequestMethod.POST)
-    @ApiOperation(value = "软件环境、运行环境展示")
-    public ResBody<ProfileListVo> queryProfile() {
-        List<String> ips = new ArrayList<>();
-        ips.add("1.1.1.1");
-        ProfileListVo profileListVo = new ProfileListVo();
-        profileListVo.setIps(ips);
-        return new ResBody().buildSuccessResBody(profileListVo);
+    @RequestMapping(value = "/querySoftwareProfile", method = RequestMethod.POST)
+    @ApiOperation(value = "软件环境展示")
+    public ResBody<SofrwateProfileListVo> queryProfile() {
+        SofrwateProfileListVo vo = projectBo.queryAllSoftware();
+        return new ResBody().buildSuccessResBody(vo);
     }
 
-    @RequestMapping(value = "/frontEnd/queryBranchName", method = RequestMethod.POST)
+    /**
+     * @param projectCode
+     * @return {@link ResBody< String>}
+     * @author hs
+     * @date 2020/7/28
+     * @desc 查询项目分支名称
+     */
+    @RequestMapping(value = "/queryBranchName", method = RequestMethod.POST)
     @ApiOperation(value = "查询项目分支名称")
     public ResBody<String> queryProjectBranch(@RequestBody String projectCode) {
         List<String> branchNames = projectBo.findProjectBranch(projectCode);
         return new ResBody().buildSuccessResBody(branchNames);
     }
 
+    /**
+     * @param
+     * @return {@link ResBody< SofrwateProfileListVo>}
+     * @author hs
+     * @date 2020/7/27
+     * @desc 运行环境展示
+     */
+    @RequestMapping(value = "/queryRunProfile", method = RequestMethod.POST)
+    @ApiOperation(value = "运行环境展示")
+    public ResBody<List<RunProfileListVo>> queryRunProfile() {
+        List<RunProfileListVo> vos = new ArrayList<>();
+        RunProfileListVo runProfileListVo = new RunProfileListVo();
+        runProfileListVo.setIp("123.123.123.123");
+        runProfileListVo.setPort("35356");
+        vos.add(runProfileListVo);
+        RunProfileListVo rVo = new RunProfileListVo();
+        rVo.setIp("11.11.1.2");
+        rVo.setPort("30300");
+        vos.add(rVo);
+        return new ResBody().buildSuccessResBody(vos);
+    }
 
+    /**
+     * @param autoDeployVo
+     * @return {@link ResBody< Void>}
+     * @author hs
+     * @date 2020/7/28
+     * @desc 自动部署开关
+     */
+    @RequestMapping(value = "/updateAutoDeploy", method = RequestMethod.POST)
+    @ApiOperation(value = "自动部署开关")
+    public ResBody<Void> updateAutoDeploy(AutoDeployVo autoDeployVo) {
+        projectBo.updateProjectDeploy(autoDeployVo);
+        return new ResBody().buildSuccessResBody();
+    }
 
 }

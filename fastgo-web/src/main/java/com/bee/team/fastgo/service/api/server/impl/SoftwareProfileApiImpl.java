@@ -1,29 +1,27 @@
 package com.bee.team.fastgo.service.api.server.impl;
 
-import com.bee.team.fastgo.common.ScriptTypeConstant;
 import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.exception.sever.ScriptException;
 import com.bee.team.fastgo.hander.JobHandler;
 import com.bee.team.fastgo.hander.JobPush;
-import com.bee.team.fastgo.hander.JobPushImpl;
 import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
 import com.bee.team.fastgo.job.core.biz.model.ReturnT;
 import com.bee.team.fastgo.model.ServerDo;
 import com.bee.team.fastgo.model.ServerSoftwareProfileDo;
-import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
-import com.bee.team.fastgo.service.api.server.dto.req.ReqExecScriptDTO;
-import com.bee.team.fastgo.service.api.server.dto.req.ReqSoftwareInstallScriptExecResultDTO;
-import com.bee.team.fastgo.service.api.server.dto.res.ResCreateSoftwareDTO;
+import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.service.api.server.ScriptApi;
 import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqExecInstallScriptDTO;
+import com.bee.team.fastgo.service.api.server.dto.res.ResCreateSoftwareDTO;
 import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.service.server.ServerSoftwareProfileBo;
+import com.bee.team.fastgo.service.server.ServerSourceBo;
 import com.bee.team.fastgo.vo.project.req.UpdateProjectStatusVo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.support.constant.CommonConstant;
 import com.spring.simple.development.support.exception.GlobalException;
-import com.spring.simple.development.support.utils.LocalCacheUtil;
 import com.spring.simple.development.support.utils.RandomUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +47,9 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
     @Autowired
     private ProjectBo projectBo;
+
+    @Autowired
+    private ServerSourceBo serverSourceBo;
 
     @Autowired
     private ServerSoftwareProfileBo serverSoftwareProfileBo;
@@ -80,12 +81,16 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
             throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"服务器不处于托管中");
         }
 
+        // 调用软件资源库获取软件的所有基本信息
+        ServerSourceDo serverSourceDo = serverSourceBo.getSourceByNameAndVersion(reqCreateSoftwareDTO.getSoftwareName(), reqCreateSoftwareDTO.getVersion());
+        if(serverSourceDo == null){
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"软件资源不存在请检查");
+        }
+
         // 3.为该服务器安装软件,并拿到脚本执行的key
-        ReqExecScriptDTO reqExecScriptDTO = baseSupport.objectCopy(reqCreateSoftwareDTO, ReqExecScriptDTO.class);
-        // TODO 调用软件资源库获取下载地址
-        reqExecScriptDTO.setSoftwareDownloadUrl("http://172.22.5.73/software");
-        reqExecScriptDTO.setType(ScriptTypeConstant.INSTALL);
-        String selectId = scriptApi.execScript(reqExecScriptDTO);
+        ReqExecInstallScriptDTO reqExecInstallScriptDTO = baseSupport.objectCopy(reqCreateSoftwareDTO, ReqExecInstallScriptDTO.class);
+        reqExecInstallScriptDTO.setSoftwareDownloadUrl(serverSourceDo.getSourceDownUrl());
+        String selectId = scriptApi.execInstallScript(reqExecInstallScriptDTO);
         JobHandler.jobMap.put(selectId, this);
         // 保存至缓存
         SoftwareInstallInfo softwareInstallInfo = new SoftwareInstallInfo();
@@ -100,15 +105,14 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         serverSoftwareProfileDo.setSoftwareCode(RandomUtil.randomAll(16));
         serverSoftwareProfileDo.setSoftwareName(reqCreateSoftwareDTO.getSoftwareName());
         serverSoftwareProfileDo.setVersion(reqCreateSoftwareDTO.getVersion());
-        // TODO 软件环境元配置从软件资源库获取
-        serverSoftwareProfileDo.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
+        serverSoftwareProfileDo.setSoftwareConfig(serverSourceDo.getSourceConfig());
         serverSoftwareProfileBo.saveServerSoftwareProfile(serverSoftwareProfileDo);
 
         // 5.返回配置
         ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
         resCreateSoftwareDTO.setConfigFlag(CommonConstant.CODE0);
         resCreateSoftwareDTO.setSoftwareCode(serverSoftwareProfileDo.getSoftwareCode());
-        resCreateSoftwareDTO.setSoftwareConfig("{\"port\":\"3306\",\"user\":\"root\",\"password\":\"123456\"}");
+        resCreateSoftwareDTO.setSoftwareConfig(serverSourceDo.getSourceConfig());
         return resCreateSoftwareDTO;
     }
 

@@ -1,14 +1,14 @@
-package com.bee.team.fastgo.tools.deploy;
+package com.bee.team.fastgo.service.api.server.dto.req;
 
 import lombok.Data;
 
 /**
  * @author luke
- * @desc 部署对象
+ * @desc simple项目部署
  * @date 2020-07-28
  **/
 @Data
-public class DeployDTO {
+public class VueDeployDTO {
     /**
      * 项目名
      */
@@ -30,22 +30,9 @@ public class DeployDTO {
      * 项目端口
      */
     String projectPort;
-    /**
-     * ssh端口
-     */
-    Integer servicePort;
-    /**
-     * sshUser
-     */
-    String serviceUserName;
-    /**
-     * ssh 密码
-     */
-    String serviceUserPassword;
 
     /**
-     * 后端服务地址
+     * simple服务器地址
      */
-    String simpleServiceUrl;
-
+    String serviceUrl;
 }

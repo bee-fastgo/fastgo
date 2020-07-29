@@ -10,7 +10,11 @@ import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.project.gitlab.GitlabAPI;
 import com.bee.team.fastgo.project.model.GitlabBranch;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
-import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
+import com.bee.team.fastgo.service.api.server.DeployService;
+import com.bee.team.fastgo.service.api.server.SourceApi;
+import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
+import com.bee.team.fastgo.service.api.server.dto.res.ResSourceListDTO;
 import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
@@ -52,10 +56,17 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     private BaseSupport baseSupport;
 
     @Autowired
+    private SourceApi sourceApi;
+
+    @Autowired
     private ProjectDao projectDao;
 
     @Autowired
+    private DeployService deployService;
+
+    @Autowired
     private ProjectPublisher projectPublisher;
+
 
     @Override
     public ResPageDTO<ProjectListVo> queryBackProjectInfo(QueryProjectListVo queryProjectListVo) {
@@ -115,7 +126,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com");
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -189,9 +200,12 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     }
 
     @Override
-    public String execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo) {
-        // TODO: 2020/7/24 调取服务器部署项目脚本
-        return "";
+    public void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo) {
+        //获取项目运行环境信息
+        SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
+        dto.setBranchName(deployBackPorjectVo.getBranchName());
+        //调取服务器部署项目脚本
+        deployService.deploySimple(dto);
     }
 
     /**
@@ -199,7 +213,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
      * @return
      * @author hs
      * @date 2020/7/25
-     * @desc TODO
+     * @desc 服务方回调，修改项目状态
      */
     @Override
     public void updateProjectStatus(UpdateProjectStatusVo updateProjectStatusVo) {
@@ -255,6 +269,47 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo) {
+        //获取项目运行环境信息
+        SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());
+        VueDeployDTO deployDTO = baseSupport.objectCopy(dto,VueDeployDTO.class);
+        deployDTO.setBranchName(deployFrontPorjectVo.getBranchName());
+        deployDTO.setServiceUrl(deployFrontPorjectVo.getServiceUrl());
+        //调取服务器部署项目脚本
+        deployService.deploySimple(deployDTO);
+    }
+
+    @Override
+    public void updateProjectDeploy(AutoDeployVo autoDeployVo) {
+        ProjectDo projectDo = new ProjectDo();
+        projectDo.setId(autoDeployVo.getId().longValue());
+        String projectCode = autoDeployVo.getProjectCode();
+        if (AUTO_DEPLOY0.equals(autoDeployVo.getAutoDeploy())){
+            //开启自动部署
+            projectDo.setAutoDeploy(AUTO_DEPLOY1);
+            //事件添加webhook
+            ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+            projectPublisher.publish(projectEvent);
+        }else if (AUTO_DEPLOY1.equals(autoDeployVo.getAutoDeploy())){
+            //关闭自动部署
+            projectDo.setAutoDeploy(AUTO_DEPLOY0);
+            //事件删除webhook
+            ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"",AUTO_DEPLOY0);
+            projectPublisher.publish(projectEvent);
+        }
+        mapper.updateByPrimaryKeySelective(projectDo);
+    }
+
+    @Override
+    public SofrwateProfileListVo queryAllSoftware() {
+        //调取服务接口，查询所有服务信息
+        List<ResSourceListDTO> dtos = sourceApi.getSourceList();
+        SofrwateProfileListVo vo = new SofrwateProfileListVo();
+        vo.setResSourceListDTOList(dtos);
+        return vo;
     }
 
 

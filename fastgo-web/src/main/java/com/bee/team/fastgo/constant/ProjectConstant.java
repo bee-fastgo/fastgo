@@ -44,5 +44,16 @@ public class ProjectConstant {
     public static final Integer IS_CONFIRM0 = 0;
     public static final Integer IS_CONFIRM1 = 1;
 
+    /**
+     * 自动部署开关： 0-关闭 1-开启
+     */
+    public static final Integer AUTO_DEPLOY0 = 0;
+    public static final Integer AUTO_DEPLOY1 = 1;
+
+    /**
+     * 软件环境/运行环境： 0-新建 1-已存在
+     */
+    public static final Integer HAS_PROFILE0 = 0;
+    public static final Integer HAS_PROFILE1 = 1;
 
 }

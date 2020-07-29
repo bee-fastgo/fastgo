@@ -6,7 +6,6 @@ import org.mybatis.spring.annotation.MapperScan;
 
 import java.util.List;
 
-@MapperScan
 public interface ProfileSoftwareRelationDoMapperExt extends com.alibaba.lava.base.LavaMapper<com.bee.team.fastgo.model.ProfileSoftwareRelationDo, com.bee.team.fastgo.model.ProfileSoftwareRelationDoExample> {
 
     void batchInsertProfileSoftware(@Param("psDos") List<ProfileSoftwareRelationDo> psDos);
