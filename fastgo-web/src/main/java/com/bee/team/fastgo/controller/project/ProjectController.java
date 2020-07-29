@@ -99,7 +99,7 @@ public class ProjectController {
      * @desc 前台项目部署
      */
 
-    @RequestMapping(value = "/backEnd/deployFrontProject", method = RequestMethod.POST)
+    @RequestMapping(value = "/frontEnd/deployFrontProject", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目部署")
     @ValidHandler(key = "deployBackPorjectVo", value = DeployBackPorjectVo.class, isReqBody = false)
     public ResBody<Void> deployFrontProject(@RequestBody DeployFrontPorjectVo deployFrontPorjectVo) {

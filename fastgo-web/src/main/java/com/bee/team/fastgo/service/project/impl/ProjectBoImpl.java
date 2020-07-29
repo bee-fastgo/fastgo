@@ -136,7 +136,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://172.22.5.248:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -208,7 +208,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -332,7 +332,12 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             //开启自动部署
             projectDo.setAutoDeploy(AUTO_DEPLOY1);
             //事件添加webhook
-            ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://www.baidu.com",AUTO_DEPLOY1);
+            ProjectEvent projectEvent = null;
+            if (PROJECT_TYPE1.equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
+            }else if (PROJECT_TYPE2.equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
+            }
             projectPublisher.publish(projectEvent);
         }else if (AUTO_DEPLOY1.equals(autoDeployVo.getAutoDeploy())){
             //关闭自动部署
