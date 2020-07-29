@@ -37,7 +37,7 @@ public class DeployServiceImpl implements DeployService {
             ServerDo serverDo = serverBo.getServerDoByIp(simpleDeployDTO.getServiceIp());
             DeployDTO deployDTO = baseSupport.objectCopy(simpleDeployDTO, DeployDTO.class);
             deployDTO.setServicePort(serverDo.getSshPort());
-            deployDTO.setServiceUserName(serverDo.getServerName());
+            deployDTO.setServiceUserName(serverDo.getSshUser());
             deployDTO.setServiceUserPassword(serverDo.getSshPassword());
             DeployHandler.deploy(deployDTO);
         } catch (Exception e) {
