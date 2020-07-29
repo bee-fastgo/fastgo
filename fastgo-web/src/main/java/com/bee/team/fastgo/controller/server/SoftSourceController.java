@@ -3,7 +3,6 @@ package com.bee.team.fastgo.controller.server;
 import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.service.server.ServerSourceBo;
 import com.bee.team.fastgo.vo.server.ResAddSoftResourceVo;
-import com.bee.team.fastgo.vo.server.ResUpdateResourceVo;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
@@ -50,13 +49,6 @@ public class SoftSourceController {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "标识不能为空");
         }
         serverSourceBo.deleteSource(sourceCode);
-        return new ResBody().buildSuccessResBody();
-    }
-
-    @RequestMapping(value = "updateResource", method = RequestMethod.POST)
-    @ApiOperation(value = "修改软件资源")
-    @ValidHandler(key = "resUpdateResourceVo", value = ResUpdateResourceVo.class, isReqBody = false)
-    public ResBody updateResource(@RequestBody ResUpdateResourceVo resUpdateResourceVo) {
         return new ResBody().buildSuccessResBody();
     }
 }

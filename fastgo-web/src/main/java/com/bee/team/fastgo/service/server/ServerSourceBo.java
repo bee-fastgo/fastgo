@@ -53,14 +53,6 @@ public interface ServerSourceBo extends LavaBo<ServerSourceDo, ServerSourceDoExa
      */
     List<ServerSourceDo> getSourcesList();
 
-    /**
-     * @param resUpdateResourceVo
-     * @return
-     * @author xqx
-     * @date 2020/7/28
-     * @desc 修改资源信息
-     */
-    void updateSource(ResUpdateResourceVo resUpdateResourceVo);
 
     /**
      * 删除资源
