@@ -193,17 +193,9 @@ public class ProjectController {
      */
     @RequestMapping(value = "/queryRunProfile", method = RequestMethod.POST)
     @ApiOperation(value = "运行环境展示")
-    public ResBody<List<RunProfileListVo>> queryRunProfile() {
-        List<RunProfileListVo> vos = new ArrayList<>();
-        RunProfileListVo runProfileListVo = new RunProfileListVo();
-        runProfileListVo.setIp("123.123.123.123");
-        runProfileListVo.setPort("35356");
-        vos.add(runProfileListVo);
-        RunProfileListVo rVo = new RunProfileListVo();
-        rVo.setIp("11.11.1.2");
-        rVo.setPort("30300");
-        vos.add(rVo);
-        return new ResBody().buildSuccessResBody(vos);
+    public ResBody<RunProfileListVo> queryRunProfile() {
+        RunProfileListVo runProfileListVo = projectBo.findRunProfile();
+        return new ResBody().buildSuccessResBody(runProfileListVo);
     }
 
     /**

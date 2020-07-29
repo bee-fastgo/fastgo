@@ -13,9 +13,11 @@ import com.bee.team.fastgo.project.utils.GitUtil;
 import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
 import com.bee.team.fastgo.service.api.server.dto.res.ResCreateSoftwareDTO;
+import com.bee.team.fastgo.service.server.ServerRunProfileBo;
 import com.bee.team.fastgo.utils.StringUtil;
 import com.bee.team.fastgo.vo.project.req.InsertBackProjectProfileVo;
 import com.bee.team.fastgo.vo.project.req.SoftwareInfoVo;
+import com.bee.team.fastgo.vo.server.AddServerRunProfileVo;
 import com.simple.code.generate.component.ComponentNameGenerate;
 import com.simple.code.generate.dto.SimpleConfigDto;
 import com.simple.code.generate.simpleenum.ComponentEnum;
@@ -54,6 +56,9 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Autowired
     private SoftwareProfileApi softwareProfileApi;
+
+    @Autowired
+    private ServerRunProfileBo serverRunProfileBo;
 
     @Autowired
     private ProjectProfileDoMapperExt projectProfileDoMapperExt;
@@ -163,6 +168,7 @@ public class ProjectDaoImpl implements ProjectDao {
         //flag 新增环境时，项目的状态
         int flag = 1;
         Map<String,Object> map = new HashMap<>();
+
         //1.项目，项目环境关联信息
         ProjectProfileDo projectProfileDo = baseSupport.objectCopy(insertBackProjectProfileVo,ProjectProfileDo.class);
         //定义项目环境code（项目名_PROFILE）
@@ -178,10 +184,13 @@ public class ProjectDaoImpl implements ProjectDao {
         //2.项目环境，运行环境关联信息
         ProfileRunprofileRelationDo pDo = baseSupport.objectCopy(insertBackProjectProfileVo,ProfileRunprofileRelationDo.class);
         pDo.setProfileCode(projectProfileCode);
-        // TODO: 2020/7/22 调取服务器接口，创建新的运行环境,获取运行环境元配置,修改flag
-        pDo.setRunProfileCode("RUN_TEST_CODE");
-        Map<String,Object> runProfileConfig = new HashMap<>();
-        pDo.setRunProfileConfig(runProfileConfig.toString());
+        //调取服务器接口，创建新的运行环境,获取运行环境元配置,修改flag
+        AddServerRunProfileVo vo = new AddServerRunProfileVo();
+        vo.setServerIp(insertBackProjectProfileVo.getRunServerIp());
+        vo.setSoftwareName(insertBackProjectProfileVo.getProjectName());
+        ServerRunProfileDo serverRunProfileDo = serverRunProfileBo.addServerRunProfileDo(vo);
+        pDo.setRunProfileCode(serverRunProfileDo.getRunProfileCode());
+        pDo.setRunProfileConfig(serverRunProfileDo.getSoftwareConfig());
         profileRunprofileRelationDoMapperExt.insertSelective(pDo);
         //添加元配置到项目信息中
         Map<String,Object> base = StringUtil.strToMap(pDo.getRunProfileConfig());

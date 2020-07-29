@@ -18,8 +18,10 @@ import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
 import com.bee.team.fastgo.service.api.server.dto.res.ResSourceListDTO;
 import com.bee.team.fastgo.service.project.ProjectBo;
+import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
+import com.bee.team.fastgo.vo.server.ServerVo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.utils.Pager;
@@ -56,6 +58,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Autowired
     private BaseSupport baseSupport;
+
+    @Autowired
+    private ServerBo serverBo;
 
     @Autowired
     private SourceApi sourceApi;
@@ -346,6 +351,15 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         SofrwateProfileListVo vo = new SofrwateProfileListVo();
         vo.setResSourceListDTOList(dtos);
         return vo;
+    }
+
+    @Override
+    public RunProfileListVo findRunProfile() {
+        List<ServerVo> serverVoList = serverBo.queryListServer();
+        List<String> list = serverVoList.stream().map(r -> r.getServerIp()).collect(Collectors.toList());
+        RunProfileListVo runProfileListVo = new RunProfileListVo();
+        runProfileListVo.setIps(list);
+        return runProfileListVo;
     }
 
 

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -18,9 +19,6 @@ import java.io.Serializable;
 public class RunProfileListVo implements Serializable {
 
     @ApiModelProperty(value = "服务器ip",example = "1.1.1.1")
-    private String ip;
-
-    @ApiModelProperty(value = "服务器端口",example = "30300")
-    private  String port;
+    private List<String> ips;
 
 }

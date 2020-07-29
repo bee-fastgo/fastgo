@@ -3,6 +3,7 @@ package com.bee.team.fastgo.service.project;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.model.ProjectDoExample;
+import com.bee.team.fastgo.vo.project.RunProfileListVo;
 import com.bee.team.fastgo.vo.project.SofrwateProfileListVo;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
@@ -102,4 +103,14 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      */
 
     SofrwateProfileListVo queryAllSoftware();
+
+    /**
+     * @param
+     * @return
+     * @author hs
+     * @date 2020/7/29
+     * @desc 查询所有的运行环境
+     */
+
+    RunProfileListVo findRunProfile();
 }
