@@ -6,7 +6,6 @@ import com.bee.team.fastgo.mapper.ServerSourceDoMapperExt;
 import com.bee.team.fastgo.model.ServerSourceDo;
 import com.bee.team.fastgo.model.ServerSourceDoExample;
 import com.bee.team.fastgo.service.server.ServerSourceBo;
-import com.bee.team.fastgo.vo.server.ResUpdateResourceVo;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.RandomUtils;
@@ -76,11 +75,6 @@ public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, Serve
     public List<ServerSourceDo> getSourcesList() {
         ServerSourceDoExample example = new ServerSourceDoExample();
         return selectByExample(example);
-    }
-
-    @Override
-    public void updateSource(ResUpdateResourceVo resUpdateResourceVo) {
-
     }
 
     @Override

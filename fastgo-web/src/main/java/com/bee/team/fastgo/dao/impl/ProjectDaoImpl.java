@@ -92,7 +92,7 @@ public class ProjectDaoImpl implements ProjectDao {
         List<ComponentEnum> componentEnums = new ArrayList<>();
         componentEnums.add(ComponentEnum.springMvc);
         componentEnums.add(ComponentEnum.mybatis);
-        componentEnums.add(ComponentEnum.generator);
+//        componentEnums.add(ComponentEnum.generator);
 //        componentEnums.add(ComponentEnum.dubbo);
 //        componentEnums.add(ComponentEnum.cassandra);
 //        componentEnums.add(ComponentEnum.kafka);
