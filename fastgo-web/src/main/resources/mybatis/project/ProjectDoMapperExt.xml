@@ -23,7 +23,7 @@
 
     <!--查询部署所需项目信息-->
     <select id="findDeployProjectInfo" parameterType="java.lang.String" resultType="com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO">
-        select p.projectName,p.gitUrl,pr.runServerIp as runServerIp from t_project p
+        select p.projectName,p.gitUrl,pr.runServerIp as serviceIp from t_project p
         inner join t_project_profile pp on p.projectCode = pp.projectCode
         inner join t_profile_runprofile_relation pr on pr.profileCode = pp.profileCode
         where p.projectCode = #{projectCode}
