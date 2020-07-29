@@ -224,7 +224,7 @@ public class ProjectDaoImpl implements ProjectDao {
             psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
             psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
             //修改项目状态
-            if (HAS_PROFILE1.equals(softwareDTO.getConfigFlag())){
+            if (HAS_PROFILE1.toString().equals(softwareDTO.getConfigFlag())){
                 if (PROJECT_STATUS6.equals(flag)){
                     flag = PROJECT_STATUS2;
                 }else if (PROJECT_STATUS1.equals(flag)){
