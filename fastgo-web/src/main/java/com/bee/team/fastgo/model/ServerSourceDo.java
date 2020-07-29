@@ -7,7 +7,7 @@ import lombok.Data;
  * @description MyBatis Generator 自动创建,对应数据表为：t_server_source
  *
  * @author liko
- * @date   2020/07/28
+ * @date   2020/07/29
  */
 @Data
 public class ServerSourceDo extends LavaDo {

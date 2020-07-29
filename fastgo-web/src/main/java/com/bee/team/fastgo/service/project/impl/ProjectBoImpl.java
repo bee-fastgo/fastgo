@@ -221,7 +221,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
@@ -248,21 +248,21 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         map.put("code",updateProjectStatusVo.getCode());
         map.put("type",updateProjectStatusVo.getType());
         ProjectDo projectDo = mapper.queryProjectInfo(map);
-        if (!ObjectUtils.isEmpty(projectDo)){
+        if (ObjectUtils.isEmpty(projectDo)){
             throw new GlobalException(RES_DATA_NOT_EXIST,"未找到对应的项目信息");
         }
         if (OBJECT_TYPE1.equals(updateProjectStatusVo.getType())){
             //运行环境
-            if (PROJECT_STATUS1.equals(updateProjectStatusVo.getType())){
+            if (PROJECT_STATUS1.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS6.toString());
-            }else if (PROJECT_STATUS5.equals(updateProjectStatusVo.getType())){
+            }else if (PROJECT_STATUS5.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }else if (OBJECT_TYPE2.equals(updateProjectStatusVo.getType())){
             //软件环境
-            if (PROJECT_STATUS1.equals(updateProjectStatusVo.getType())){
+            if (PROJECT_STATUS1.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS5.toString());
-            }else if (PROJECT_STATUS6.equals(updateProjectStatusVo.getType())){
+            }else if (PROJECT_STATUS6.toString().equals(projectDo.getProjectStatus())){
                 projectDo.setProjectStatus(PROJECT_STATUS2.toString());
             }
         }
@@ -307,7 +307,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.equals(projectDo.getProjectStatus())){
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
