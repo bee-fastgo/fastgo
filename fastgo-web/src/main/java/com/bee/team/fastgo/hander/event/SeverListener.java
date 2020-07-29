@@ -6,6 +6,7 @@ import ch.ethz.ssh2.SCPOutputStream;
 import com.bee.team.fastgo.hander.InitServer;
 import com.bee.team.fastgo.hander.JobHandler;
 import com.bee.team.fastgo.job.core.biz.model.HandleCallbackParam;
+import com.bee.team.fastgo.job.core.util.IpUtil;
 import com.bee.team.fastgo.tools.deploy.scp.Scp;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.DateUtils;
@@ -58,8 +59,7 @@ public class SeverListener {
             File file = new File("/data/fastgo/sources/init.tar.gz");
             if(file.exists()){
                 uploadFile(initServer.getIp(), initServer.getPort(),initServer.getUser(),initServer.getPassword(),file,"/root/data");
-                String hostAddress = InetAddress.getLocalHost().getHostAddress();
-                Scp.invokeCmd(conn.openSession(),"cd /root/data && tar -zxvf init.tar.gz && bash /root/data/init/install_jdk.sh http://" + hostAddress + ":" + port);
+                Scp.invokeCmd(conn.openSession(),"cd /root/data && tar -zxvf init.tar.gz && bash /root/data/init/install_jdk.sh http://" + IpUtil.getIp() + ":" + port);
             }
         }
         catch (IOException e) {
