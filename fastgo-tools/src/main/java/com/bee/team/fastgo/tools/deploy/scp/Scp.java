@@ -153,6 +153,19 @@ public class Scp {
         }
     }
 
+    public static String getVueDockerFile(String projectPort) {
+        String dockerFile = "'# Base Image设置基础镜像\n" +
+                "FROM nginx\n" +
+                "\n" +
+                "MAINTAINER fastgo\n" +
+                "\n" +
+                "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n" +
+                "COPY ./dist  /usr/share/nginx/html/\n" +
+                "COPY default.conf /etc/nginx/conf.d/default.conf\n" +
+                "EXPOSE " + projectPort + "\n'";
+        return dockerFile;
+    }
+
     public static String getDockerFile(String projectName) {
         String dockerFile = "'FROM openjdk:8-jre-slim\n" +
                 "MAINTAINER fastgo\n" +
@@ -165,19 +178,6 @@ public class Scp {
                 "ADD " + projectName + " /" + projectName + "\n" +
                 "\n" +
                 "ENTRYPOINT [\"sh\",\"-c\",\"java -jar $JAVA_OPTS /" + projectName + "/" + projectName + ".jar $PARAMS\"]'";
-        return dockerFile;
-    }
-
-    public static String getVueDockerFile(String projectPort) {
-        String dockerFile = "'# Base Image设置基础镜像\n" +
-                "FROM nginx\n" +
-                "\n" +
-                "MAINTAINER fastgo\n" +
-                "\n" +
-                "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n" +
-                "COPY ./dist  /usr/share/nginx/html/\n" +
-                "COPY default.conf /etc/nginx/conf.d/default.conf\n" +
-                "EXPOSE " + projectPort + "\n'";
         return dockerFile;
     }
 
