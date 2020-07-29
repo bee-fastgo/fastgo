@@ -37,10 +37,6 @@ public class InsertBackProjectProfileVo implements Serializable {
     @NotBlank(message = "项目环境名称不能为空")
     private String profileName;
 
-    @ApiModelProperty(value = "运行服务器端口", example = "65535")
-    @NotNull(message = "运行服务器端口不能为空")
-    private String runServerPort;
-
     @ApiModelProperty(value = "软件环境list", example = "[{'softwareServerIp':'127.11.11.13','softwareName':'mysql','version':'5.0.0'}]")
     private List<SoftwareInfoVo> softwareInfoVos;
 
