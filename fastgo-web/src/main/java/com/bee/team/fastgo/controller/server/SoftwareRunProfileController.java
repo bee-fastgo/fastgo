@@ -37,7 +37,7 @@ public class SoftwareRunProfileController {
     @RequestMapping(value = "/queryPageServerRunProfileVo", method = RequestMethod.POST)
     @ValidHandler(key = "queryRunProfileVo", value = QueryRunProfileVo.class)
     @ApiOperation(value = "查询运行环境(分页)")
-    public ResBody<ServerVo> queryPageServerRunProfileVo(@ApiParam(name = "queryRunProfileVo", value = "查询运行环境") @RequestBody QueryRunProfileVo queryRunProfileVo) {
+    public ResBody<ServerRunProfileVo> queryPageServerRunProfileVo(@ApiParam(name = "queryRunProfileVo", value = "查询运行环境") @RequestBody QueryRunProfileVo queryRunProfileVo) {
         ResPageDTO resPageDTO = serverRunProfileBo.queryPageServerRunProfileDo(queryRunProfileVo);
         return new ResBody().buildSuccessResBody(resPageDTO);
     }
