@@ -31,4 +31,7 @@ public class ProjectListVo implements Serializable {
     @ApiModelProperty(value = "项目包名", required = true, example = "com.bee.fastgo")
     private String packageName;
 
+    @ApiModelProperty(value = "自动部署", required = true, example = "0")
+    private Integer autoDeploy;
+
 }

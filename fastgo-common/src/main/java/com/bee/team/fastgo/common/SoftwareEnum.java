@@ -15,7 +15,8 @@ public enum SoftwareEnum {
     SHIRO("shiro"),
     ELASTICSEARCH("elasticsearch"),
     FLUME("flume"),
-    ZOOKEEPER("zookeeper");
+    ZOOKEEPER("zookeeper"),
+    DOCKER("docker");
 
 
     private String softwareName;
