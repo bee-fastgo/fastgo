@@ -3,6 +3,7 @@ package com.bee.team.fastgo.dao.impl;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.constant.ProjectConstant;
 import com.bee.team.fastgo.dao.ProjectDao;
+import com.bee.team.fastgo.job.core.util.IpUtil;
 import com.bee.team.fastgo.mapper.ProfileConfigRelationDoMapperExt;
 import com.bee.team.fastgo.mapper.ProfileRunprofileRelationDoMapperExt;
 import com.bee.team.fastgo.mapper.ProfileSoftwareRelationDoMapperExt;
@@ -42,6 +43,8 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_P
 
 @Component
 public class ProjectDaoImpl implements ProjectDao {
+    @Value("${server.port}")
+    private Integer port;
 
     @Value("${gitlab.username}")
     private String username;
@@ -84,7 +87,7 @@ public class ProjectDaoImpl implements ProjectDao {
         SimpleConfigDto simpleConfigDto = new SimpleConfigDto();
         simpleConfigDto.setBranchName(ProjectConstant.PROJECT_BRANCH);
         simpleConfigDto.setProjectCode(projectDo.getProjectCode());
-        simpleConfigDto.setFastGoServer("http://172.22.5.248:9999/config/getProjectConfigByCode");
+        simpleConfigDto.setFastGoServer(IpUtil.getIp() + ":" + port+"/config/getProjectConfigJson");
         // mybatis自动生成代码
         simpleConfigDto.setMybatisIsAutoGenerate(false);
         simpleConfigDto.setMysqlIp("172.22.5.248");
