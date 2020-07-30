@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.controller.server;
 
+import com.bee.team.fastgo.job.core.util.IpUtil;
 import com.bee.team.fastgo.utils.FileUploadUtil;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import com.spring.simple.development.support.exception.GlobalException;
@@ -32,9 +33,11 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_P
 @Api(tags = "文件管理")
 public class FileController {
     @Value("${server.file.root.parh}")
-    public String fileRootPath;
+    private String fileRootPath;
     @Value("${server.file.static.path}")
-    public String mapPath;
+    private String mapPath;
+    @Value("${server.port}")
+    private String port;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ApiOperation(value = "文件上传")
@@ -49,7 +52,7 @@ public class FileController {
         String fileName = file.getOriginalFilename();
         if (FileUploadUtil.upload(file, localPath, fileName)) {
             // 得到去掉了uri的路径
-            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + mapPath + fileName;
+            String url = request.getScheme() + "://" + IpUtil.getIp() + ":" + port + request.getContextPath() + mapPath + fileName;
             System.out.println(url);
             return new ResBody().buildSuccessResBody(url);
         }
