@@ -133,7 +133,12 @@ public class DeployHandler {
             scriptFile.delete();
         }
         ScriptUtil.markScriptFile(scriptFileName, cmd);
-        Process process = Runtime.getRuntime().exec(scriptFileName);
+        Process process;
+        if (isWindows()) {
+            process = Runtime.getRuntime().exec(scriptFileName);
+        } else {
+            process = Runtime.getRuntime().exec("bash " + scriptFileName);
+        }
         InputStream in = process.getInputStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
         String line;
