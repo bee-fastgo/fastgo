@@ -52,7 +52,7 @@ public class DeployServiceImpl implements DeployService {
             ServerDo serverDo = serverBo.getServerDoByIp(vueDeployDTO.getServiceIp());
             DeployDTO deployDTO = baseSupport.objectCopy(vueDeployDTO, DeployDTO.class);
             deployDTO.setServicePort(serverDo.getSshPort());
-            deployDTO.setServiceUserName(serverDo.getServerName());
+            deployDTO.setServiceUserName(serverDo.getSshUser());
             deployDTO.setServiceUserPassword(serverDo.getSshPassword());
             deployDTO.setSimpleServiceUrl(vueDeployDTO.getServiceUrl());
             DeployHandler.deployVue(deployDTO);
