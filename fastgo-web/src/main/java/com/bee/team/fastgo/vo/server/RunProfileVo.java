@@ -1,6 +1,5 @@
 package com.bee.team.fastgo.vo.server;
 
-import com.spring.simple.development.core.component.mvc.page.ReqPageDTO;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
@@ -11,7 +10,7 @@ import lombok.Data;
  **/
 @Data
 @ApiModel(value = "runProfileVo", description = "查询运行环境")
-public class RunProfileVo extends ReqPageDTO {
+public class RunProfileVo{
     /**
      * 运行环境Ip
      */
