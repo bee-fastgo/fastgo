@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.service.config;
 
+import com.bee.team.fastgo.vo.config.req.FindProjectConfigVo;
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
@@ -26,14 +27,14 @@ public interface ProjectConfigBo {
     /**
      * 获取项目配置信息
      *
-     * @param projectCode
+     * @param findProjectConfigVo
      * @return {@link Map< String, Object>}
      * @author xqx
      * @date 2020/7/25
      * @desc 获取项目配置信息
      */
 
-    Map<String, Object> getProjectConfigByCode(String projectCode);
+    Map<String, Object> getProjectConfigByCode(FindProjectConfigVo findProjectConfigVo);
 
     /**
      * @param updateProjectConfigReqVo

@@ -49,12 +49,12 @@ public class ConfigController {
 
     @RequestMapping(value = "/getProjectConfigByCode", method = RequestMethod.POST)
     @ApiOperation(value = "项目的配置信息详情")
-    @ApiImplicitParam(name = "projectCode", value = "项目配置code", dataTypeClass = String.class)
-    public ResBody getProjectConfigByCode(@RequestBody String projectCode) {
-        if (StringUtils.isEmpty(projectCode)) {
-            throw new GlobalException(RES_PARAM_IS_EMPTY, "code不能为空");
+    @ApiImplicitParam(name = "findProjectConfigVo", value = "项目code", dataTypeClass = FindProjectConfigVo.class)
+    public ResBody getProjectConfigByCode(@RequestBody FindProjectConfigVo findProjectConfigVo) {
+        if (StringUtils.isEmpty(findProjectConfigVo.getProjectCode()) || StringUtils.isEmpty(findProjectConfigVo.getBranchName())) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "code或分支名不能为空");
         }
-        Map<String, Object> map = projectConfigBo.getProjectConfigByCode(projectCode);
+        Map<String, Object> map = projectConfigBo.getProjectConfigByCode(findProjectConfigVo);
         return new ResBody().buildSuccessResBody(map);
     }
 

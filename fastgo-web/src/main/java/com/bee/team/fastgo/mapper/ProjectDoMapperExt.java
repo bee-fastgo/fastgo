@@ -2,6 +2,7 @@ package com.bee.team.fastgo.mapper;
 
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
+import com.bee.team.fastgo.vo.project.DeployInfoVo;
 import com.bee.team.fastgo.vo.project.ProjectListVo;
 import org.mybatis.spring.annotation.MapperScan;
 
@@ -36,5 +37,15 @@ public interface ProjectDoMapperExt extends com.alibaba.lava.base.LavaMapper<com
      * @date 2020/7/28
      * @desc 查询部署所需项目信息
      */
-    SimpleDeployDTO findDeployProjectInfo(String projectCode);
+    DeployInfoVo findDeployProjectInfo(String projectCode);
+
+    /**
+     * @param map
+     * @return {@link String}
+     * @author hs
+     * @date 2020/7/30
+     * @desc 获取项目配置中心code
+     */
+
+    String findProjectConfigCode(Map<String,Object> map);
 }

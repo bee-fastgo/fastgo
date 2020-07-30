@@ -19,6 +19,7 @@ import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
 import com.bee.team.fastgo.service.api.server.dto.res.ResSourceListDTO;
 import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.service.server.ServerBo;
+import com.bee.team.fastgo.utils.StringUtil;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.bee.team.fastgo.vo.server.ServerVo;
@@ -225,8 +226,15 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
-        SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
+        DeployInfoVo vo = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
+        Map<String,Object> map = StringUtil.strToMap(vo.getRunProfileConfig());
+        if (map == null){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"项目运行环境不存在");
+        }
+        SimpleDeployDTO dto = baseSupport.objectCopy(vo,SimpleDeployDTO.class);
         dto.setBranchName(deployBackPorjectVo.getBranchName());
+        String port = map.get("port").toString();
+        dto.setProjectPort(port.substring(0,port.indexOf(".")));
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),dto,null,PROJECT_TYPE2,projectDo.getId().intValue());
         deployPublisher.publish(deployEvent);
@@ -311,9 +319,15 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
         }
         //获取项目运行环境信息
-        SimpleDeployDTO dto = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());
-        VueDeployDTO deployDTO = baseSupport.objectCopy(dto,VueDeployDTO.class);
+        DeployInfoVo vo = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());
+        Map<String,Object> map = StringUtil.strToMap(vo.getRunProfileConfig());
+        if (map == null){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"项目运行环境不存在");
+        }
+        VueDeployDTO deployDTO = baseSupport.objectCopy(vo,VueDeployDTO.class);
         deployDTO.setBranchName(deployFrontPorjectVo.getBranchName());
+        String port = map.get("port").toString();
+        deployDTO.setProjectPort(port.substring(0,port.indexOf(".")));
         deployDTO.setServiceUrl(deployFrontPorjectVo.getServiceUrl());
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),null,deployDTO,PROJECT_TYPE1,projectDo.getId().intValue());
