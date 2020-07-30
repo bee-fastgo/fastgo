@@ -114,7 +114,7 @@ public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, Serve
             throw new GlobalException(RES_PARAM_IS_EMPTY, "字典名不能为空");
         }
         ServerSourceDoExample example = new ServerSourceDoExample();
-        example.createCriteria().andSourceNameEqualTo(softwareName).andIsDeletedEqualTo("n");
+        example.createCriteria().andSoftwareNameEqualTo(softwareName).andIsDeletedEqualTo("n");
         List<String> list = selectByExample(example).stream().map(ServerSourceDo::getSourceVersion).collect(Collectors.toList());
         return list;
     }
