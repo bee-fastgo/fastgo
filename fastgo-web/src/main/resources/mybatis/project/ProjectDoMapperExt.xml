@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bee.team.fastgo.mapper.ProjectDoMapperExt">
 
+    <!--查询后台项目条数-->
+    <select id="queryBackProjectTotal" resultType="java.lang.Integer">
+        select count(1) from t_project where projectType = '2'
+    </select>
+
+    <!--查询前台项目条数-->
+    <select id="queryFrontProjectTotal" resultType="java.lang.Integer">
+        select count(1) from t_project where projectType = '1'
+    </select>
+
     <!--查询后台项目列表-->
     <select id="findBackPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
         select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project where projectType = '2'

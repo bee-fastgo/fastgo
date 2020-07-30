@@ -82,13 +82,18 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Override
     public ResPageDTO<ProjectListVo> queryBackProjectInfo(QueryProjectListVo queryProjectListVo) {
         Pager<ProjectListVo> pager = new Pager<>();
+        //查询数据条数
+        Map<String,Object> map = new HashMap<>();
+        Integer count = mapper.queryBackProjectTotal();
+        pager.setTotal(count);
         pager.setPageNo(queryProjectListVo.getPageNum());
         pager.setLimit(queryProjectListVo.getPageSize());
-        Map<String,Object> map = new HashMap<>();
-        map.put("start",pager.getStart());
-        map.put("limit",pager.getLimit());
-        List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
-        pager.setData(projectListVoList);
+        if (count > 1){
+            map.put("start",pager.getStart());
+            map.put("limit",pager.getLimit());
+            List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
+            pager.setData(projectListVoList);
+        }
         return baseSupport.pagerCopy(pager,ProjectListVo.class);
     }
 
@@ -155,13 +160,18 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Override
     public ResPageDTO<ProjectListVo> queryFrontProjectInfo(QueryProjectListVo queryProjectListVo) {
         Pager<ProjectListVo> pager = new Pager<>();
+        Map<String,Object> map = new HashMap<>();
+        //查询前台项目条数
+        Integer count = mapper.queryFrontProjectTotal();
+        pager.setTotal(count);
         pager.setPageNo(queryProjectListVo.getPageNum());
         pager.setLimit(queryProjectListVo.getPageSize());
-        Map<String,Object> map = new HashMap<>();
-        map.put("start",pager.getStart());
-        map.put("limit",pager.getLimit());
-        List<ProjectListVo> projectListVoList = mapper.findFrontPorjectList(map);
-        pager.setData(projectListVoList);
+        if (count > 0){
+            map.put("start",pager.getStart());
+            map.put("limit",pager.getLimit());
+            List<ProjectListVo> projectListVoList = mapper.findFrontPorjectList(map);
+            pager.setData(projectListVoList);
+        }
         return baseSupport.pagerCopy(pager,ProjectListVo.class);
     }
 
