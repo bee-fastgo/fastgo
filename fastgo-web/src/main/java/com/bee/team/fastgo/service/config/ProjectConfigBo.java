@@ -45,4 +45,16 @@ public interface ProjectConfigBo {
      */
     void updateProjectConfig(UpdateProjectConfigReqVo updateProjectConfigReqVo);
 
+    /**
+     * 获取项目的配置信息（JSON）
+     *
+     * @param projectCode
+     * @param branchName
+     * @return {@link String}
+     * @author xqx
+     * @date 2020/7/25
+     * @desc 获取项目的配置信息（JSON）
+     */
+    String getOneProjectConfigToJSON(String projectCode, String branchName);
+
 }

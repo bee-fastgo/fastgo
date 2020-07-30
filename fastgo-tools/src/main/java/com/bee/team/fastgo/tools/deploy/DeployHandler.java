@@ -85,7 +85,7 @@ public class DeployHandler {
             cmd = "cd " + System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "\n npm install -registry=https://registry.npm.taobao.org";
             scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueInstall.bat";
         } else {
-            cmd = "cd " + projectPath + "\n npm install -registry=https://registry.npm.taobao.org";
+            cmd = "cd " + projectPath + "\n npm install -registry=https://registry.npm.taobao.org --unsafe-perm=true --allow-root";
             scriptFileName = projectPath + "/" + "vueInstall.sh";
         }
         System.out.println("执行项目编译命令：" + cmd);
@@ -124,7 +124,7 @@ public class DeployHandler {
             cmd = "cd " + System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "\n  npm run build";
             scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueBuild.bat";
         } else {
-            cmd = "cd " + projectPath + "\n  npm run build";
+            cmd = "cd " + projectPath + "\n  npm run build:prod";
             scriptFileName = projectPath + "/" + "vueBuild.sh";
         }
         System.out.println("执行项目打包命令：" + cmd);
