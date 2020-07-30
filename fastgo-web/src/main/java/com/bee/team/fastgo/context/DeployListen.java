@@ -39,6 +39,9 @@ public class DeployListen {
     @EventListener(DeployEvent.class)
     public void listener(DeployEvent deployEvent){
         Integer type = deployEvent.getType();
+        ProjectDo projectDo = new ProjectDo();
+        Integer id = deployEvent.getId();
+        projectDo.setId(id.longValue());
         try{
             if (PROJECT_TYPE1.equals(type)){
                 VueDeployDTO deployDTO = deployEvent.getVueDeployDTO();
@@ -47,15 +50,15 @@ public class DeployListen {
                 SimpleDeployDTO deployDTO = deployEvent.getDeployDTO();
                 deployService.deploySimple(deployDTO);
             }
+            //修改项目状态
+            projectDo.setProjectStatus(PROJECT_STATUS4.toString());
+            projectDoMapperExt.updateByPrimaryKeySelective(projectDo);
         }catch (Exception e){
             logger.error("项目部署失败");
+            //修改项目状态
+            projectDo.setProjectStatus(PROJECT_STATUS7.toString());
+            projectDoMapperExt.updateByPrimaryKeySelective(projectDo);
         }
-        //修改项目状态
-        ProjectDo projectDo = new ProjectDo();
-        Integer id = deployEvent.getId();
-        projectDo.setId(id.longValue());
-        projectDo.setProjectStatus(PROJECT_STATUS4.toString());
-        projectDoMapperExt.updateByPrimaryKeySelective(projectDo);
     }
 
 }

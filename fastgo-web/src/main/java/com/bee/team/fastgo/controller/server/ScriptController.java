@@ -2,6 +2,7 @@ package com.bee.team.fastgo.controller.server;
 
 import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.service.server.ServerScriptBo;
+import com.bee.team.fastgo.service.server.ServerSourceBo;
 import com.bee.team.fastgo.vo.server.*;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
@@ -30,19 +31,28 @@ public class ScriptController {
     @Autowired
     private ServerScriptBo serverScriptBo;
 
+    @Autowired
+    private ServerSourceBo serverSourceBo;
+
     /**
      * 获取支持的软件类型
      * @param
-     * @return {@link ResBody<String>}
+     * @return {@link ResBody<ResSoftwareVo>}
      * @author jgz
      * @date 13:17 2020/7/24
      * @Description
      */
     @GetMapping("/getSoftwareList")
     @ApiOperation(value = "获取支持的软件类型")
-    public ResBody<String> getSoftwareList(){
-        List<String> collect = Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).collect(Collectors.toList());
-        return new ResBody().buildSuccessResBody(collect);
+    public ResBody<ResSoftwareVo> getSoftwareList(){
+        List<ResSoftwareVo> collect = Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).map(softwareName -> {
+            ResSoftwareVo resSoftwareVo = new ResSoftwareVo();
+            resSoftwareVo.setSoftwareName(softwareName);
+            List<String> versionList = serverSourceBo.listVersions(softwareName);
+            resSoftwareVo.setVersionList(versionList);
+            return resSoftwareVo;
+        }).collect(Collectors.toList());
+        return new ResBody<>().buildSuccessResBody(collect);
     }
 
     /**

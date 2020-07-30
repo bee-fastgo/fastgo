@@ -82,13 +82,24 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Override
     public ResPageDTO<ProjectListVo> queryBackProjectInfo(QueryProjectListVo queryProjectListVo) {
         Pager<ProjectListVo> pager = new Pager<>();
+        //查询数据条数
+        Map<String,Object> map = new HashMap<>();
+        map.put("projectName",queryProjectListVo.getProjectName());
+        if (!StringUtils.isEmpty(queryProjectListVo.getProjectName())){
+            String projectName = "%"+queryProjectListVo.getProjectName()+"%";
+            map.put("projectName",projectName);
+        }
+        map.put("projectStatus",queryProjectListVo.getProjectStatus());
+        Integer count = mapper.queryBackProjectTotal(map);
+        pager.setTotal(count);
         pager.setPageNo(queryProjectListVo.getPageNum());
         pager.setLimit(queryProjectListVo.getPageSize());
-        Map<String,Object> map = new HashMap<>();
-        map.put("start",pager.getStart());
-        map.put("limit",pager.getLimit());
-        List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
-        pager.setData(projectListVoList);
+        if (count > 1){
+            map.put("start",pager.getStart());
+            map.put("limit",pager.getLimit());
+            List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
+            pager.setData(projectListVoList);
+        }
         return baseSupport.pagerCopy(pager,ProjectListVo.class);
     }
 
@@ -155,13 +166,24 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Override
     public ResPageDTO<ProjectListVo> queryFrontProjectInfo(QueryProjectListVo queryProjectListVo) {
         Pager<ProjectListVo> pager = new Pager<>();
+        Map<String,Object> map = new HashMap<>();
+        //查询前台项目条数
+        map.put("projectName",queryProjectListVo.getProjectName());
+        if (!StringUtils.isEmpty(queryProjectListVo.getProjectName())){
+            String projectName = "%"+queryProjectListVo.getProjectName()+"%";
+            map.put("projectName",projectName);
+        }
+        map.put("projectStatus",queryProjectListVo.getProjectStatus());
+        Integer count = mapper.queryFrontProjectTotal(map);
+        pager.setTotal(count);
         pager.setPageNo(queryProjectListVo.getPageNum());
         pager.setLimit(queryProjectListVo.getPageSize());
-        Map<String,Object> map = new HashMap<>();
-        map.put("start",pager.getStart());
-        map.put("limit",pager.getLimit());
-        List<ProjectListVo> projectListVoList = mapper.findFrontPorjectList(map);
-        pager.setData(projectListVoList);
+        if (count > 0){
+            map.put("start",pager.getStart());
+            map.put("limit",pager.getLimit());
+            List<ProjectListVo> projectListVoList = mapper.findFrontPorjectList(map);
+            pager.setData(projectListVoList);
+        }
         return baseSupport.pagerCopy(pager,ProjectListVo.class);
     }
 
@@ -222,8 +244,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
-            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS7.toString().equals(projectDo.getProjectStatus())){
+            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目当前状态不能部署");
         }
         //获取项目运行环境信息
         DeployInfoVo vo = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
@@ -315,8 +337,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus())){
-            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目状态不是已创建或已部署状态，不能部署");
+        if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS7.toString().equals(projectDo.getProjectStatus())){
+            throw new GlobalException(RES_ILLEGAL_OPERATION,"项目当前状态不能部署");
         }
         //获取项目运行环境信息
         DeployInfoVo vo = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());

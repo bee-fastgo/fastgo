@@ -48,4 +48,24 @@ public interface ProjectDoMapperExt extends com.alibaba.lava.base.LavaMapper<com
      */
 
     String findProjectConfigCode(Map<String,Object> map);
+
+    /**
+     * @param map
+     * @return {@link Integer}
+     * @author hs
+     * @date 2020/7/30
+     * @desc 查询后台项目条数
+     */
+
+    Integer queryBackProjectTotal(Map<String,Object> map);
+
+    /**
+     * @param map
+     * @return {@link Integer}
+     * @author hs
+     * @date 2020/7/30
+     * @desc 查询前台项目条数
+     */
+
+    Integer queryFrontProjectTotal(Map<String,Object> map);
 }

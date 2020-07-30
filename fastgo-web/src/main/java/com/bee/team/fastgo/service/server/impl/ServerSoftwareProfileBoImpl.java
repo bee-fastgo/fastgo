@@ -33,7 +33,6 @@ import java.util.stream.Stream;
 @Service
 public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwareProfileDo, ServerSoftwareProfileDoMapperExt, ServerSoftwareProfileDoExample> implements ServerSoftwareProfileBo {
 
-
     @Autowired
     private BaseSupport baseSupport;
 
@@ -91,6 +90,7 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
     public void deleteServerSoftwareProfileBySoftwareCode(String softwareCode) {
         // 查询是否有项目正在使用这个环境
         checkEnvironment(softwareCode);
+        // 删除软件环境
         ServerSoftwareProfileDoExample serverSoftwareProfileDoExample = new ServerSoftwareProfileDoExample();
         serverSoftwareProfileDoExample.createCriteria().andSoftwareCodeEqualTo(softwareCode);
         List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = selectByExample(serverSoftwareProfileDoExample);

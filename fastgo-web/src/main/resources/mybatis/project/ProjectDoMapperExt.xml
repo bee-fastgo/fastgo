@@ -2,15 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bee.team.fastgo.mapper.ProjectDoMapperExt">
 
+    <!--查询后台项目条数-->
+    <select id="queryBackProjectTotal" parameterType="map" resultType="java.lang.Integer">
+        select count(1) from t_project where projectType = '2'
+        <if test="projectName!=null and projectName!=''">
+            and projectName like #{projectName}
+        </if>
+        <if test="projectStatus!=null and projectStatus!=''">
+            and projectStatus = #{projectStatus}
+        </if>
+    </select>
+
+    <!--查询前台项目条数-->
+    <select id="queryFrontProjectTotal" parameterType="map" resultType="java.lang.Integer">
+        select count(1) from t_project where projectType = '1'
+        <if test="projectName!=null and projectName!=''">
+            and projectName like #{projectName}
+        </if>
+        <if test="projectStatus!=null and projectStatus!=''">
+            and projectStatus = #{projectStatus}
+        </if>
+    </select>
+
     <!--查询后台项目列表-->
     <select id="findBackPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
         select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project where projectType = '2'
+        <if test="projectName!=null and projectName!=''">
+            and projectName like #{projectName}
+        </if>
+        <if test="projectStatus!=null and projectStatus!=''">
+            and projectStatus = #{projectStatus}
+        </if>
         limit #{start},#{limit}
     </select>
 
     <!--查询前台项目列表-->
     <select id="findFrontPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
         select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project where projectType = '1'
+        <if test="projectName!=null and projectName!=''">
+            and projectName like #{projectName}
+        </if>
+        <if test="projectStatus!=null and projectStatus!=''">
+            and projectStatus = #{projectStatus}
+        </if>
         limit #{start},#{limit}
     </select>
 
