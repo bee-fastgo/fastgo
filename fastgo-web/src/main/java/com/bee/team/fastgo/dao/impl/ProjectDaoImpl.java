@@ -123,7 +123,7 @@ public class ProjectDaoImpl implements ProjectDao {
             //克隆远程分支到本地
             Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempbackdir/"+gitlabProjectDo.getName(),provider);
             //添加代码到本地库
-            String mv = "cp -r " + filePath + "/* " + projectUrl+"/tempbackdir/"+gitlabProjectDo.getName()+"/";
+            String mv = "cp -a " + filePath + "/. " + projectUrl+"/tempbackdir/"+gitlabProjectDo.getName()+"/";
             String[] cmd = new String[]{"sh","-c",mv};
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(cmd).waitFor();
@@ -150,7 +150,7 @@ public class ProjectDaoImpl implements ProjectDao {
             //克隆远程分支到本地
             Git git = GitUtil.fromCloneRepository(gitlabProjectDo.getHttpUrl(),projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName(),provider);
             //添加代码到本地库
-            String mv = "cp -r " + filePath + "/* " + projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName()+"/";
+            String mv = "cp -a " + filePath + "/. " + projectUrl+"/tempfrontdir/"+gitlabProjectDo.getName()+"/";
             String[] cmd = new String[]{"sh","-c",mv};
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(cmd).waitFor();

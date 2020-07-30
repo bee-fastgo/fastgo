@@ -83,10 +83,10 @@ public class DeployHandler {
         String cmd;
         if (isWindows()) {
             cmd = "cd " + System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "\n npm install -registry=https://registry.npm.taobao.org";
-            scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueBuild.bat";
+            scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueInstall.bat";
         } else {
             cmd = "cd " + projectPath + "\n npm install -registry=https://registry.npm.taobao.org";
-            scriptFileName = projectPath + "/" + "vueBuild.sh";
+            scriptFileName = projectPath + "/" + "vueInstall.sh";
         }
         System.out.println("执行项目编译命令：" + cmd);
         File scriptFile = new File(scriptFileName);
@@ -133,7 +133,12 @@ public class DeployHandler {
             scriptFile.delete();
         }
         ScriptUtil.markScriptFile(scriptFileName, cmd);
-        Process process = Runtime.getRuntime().exec(scriptFileName);
+        Process process;
+        if (isWindows()) {
+            process = Runtime.getRuntime().exec(scriptFileName);
+        } else {
+            process = Runtime.getRuntime().exec("bash " + scriptFileName);
+        }
         InputStream in = process.getInputStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
         String line;
