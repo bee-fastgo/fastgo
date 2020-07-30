@@ -202,7 +202,7 @@ public class ProjectDaoImpl implements ProjectDao {
         profileRunprofileRelationDoMapperExt.insertSelective(pDo);
         flag=PROJECT_STATUS6;
         //添加元配置到项目信息中
-        Map<String,Object> base = StringUtil.strToMap(pDo.getRunProfileConfig());
+        Map<String,String> base = StringUtil.strToMap(pDo.getRunProfileConfig());
         if (base == null){
             base = new HashMap<>();
         }

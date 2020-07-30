@@ -1,8 +1,10 @@
 package com.bee.team.fastgo.mapper;
 
+import com.bee.team.fastgo.model.ProfileRunprofileRelationDo;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
 import com.bee.team.fastgo.vo.project.DeployInfoVo;
+import com.bee.team.fastgo.vo.project.ProjectBranchAndAccessAddrVo;
 import com.bee.team.fastgo.vo.project.ProjectListVo;
 import org.mybatis.spring.annotation.MapperScan;
 
@@ -68,4 +70,14 @@ public interface ProjectDoMapperExt extends com.alibaba.lava.base.LavaMapper<com
      */
 
     Integer queryFrontProjectTotal(Map<String,Object> map);
+
+    /**
+     * @param
+     * @return {@link ProfileRunprofileRelationDo}
+     * @author hs
+     * @date 2020/7/30
+     * @desc 查询项目运行环境
+     */
+
+    List<ProjectBranchAndAccessAddrVo> findProjectAccessAddr(String projectCode);
 }

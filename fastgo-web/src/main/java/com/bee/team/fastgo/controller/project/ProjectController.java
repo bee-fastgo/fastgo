@@ -4,23 +4,26 @@ import com.bee.team.fastgo.service.project.ProjectBo;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
-import com.spring.simple.development.core.annotation.base.swagger.ApiImplicitParam;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
+import com.spring.simple.development.support.exception.GlobalException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
+import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
  * @description:
- * @author: luke
+ * @author: hs
  * @time: 2020/7/17 0017 10:32
  */
 @Api(tags = "项目相关")
@@ -210,6 +213,23 @@ public class ProjectController {
     public ResBody<Void> updateAutoDeploy(@RequestBody AutoDeployVo autoDeployVo) {
         projectBo.updateProjectDeploy(autoDeployVo);
         return new ResBody().buildSuccessResBody();
+    }
+
+    /**
+     * @param projectCode
+     * @return {@link ResBody< String>}
+     * @author hs
+     * @date 2020/7/30
+     * @desc 获取项目状态
+     */
+    @RequestMapping(value = "/getProjectStatus", method = RequestMethod.POST)
+    @ApiOperation(value = "获取项目状态")
+    public ResBody<String> getProjectStatus(@RequestBody String projectCode) {
+        if (StringUtils.isEmpty(projectCode)){
+            throw new GlobalException(RES_PARAM_IS_EMPTY,"项目code不能为空");
+        }
+        String status = projectBo.getProjectStatus(projectCode);
+        return new ResBody().buildSuccessResBody(status);
     }
 
 }
