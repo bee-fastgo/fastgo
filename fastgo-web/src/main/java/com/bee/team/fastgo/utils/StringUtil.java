@@ -13,9 +13,6 @@ public class StringUtil {
      * String 转 map
      */
     public static Map<String,String> strToMap(String str){
-        Map<String, String> map = new HashMap<>();
-        map = (Map)JSONObject.parseObject(str, Map.class);
-        return map;
+        return (Map<String,String>)JSONObject.parseObject(str, Map.class);
     }
-
 }

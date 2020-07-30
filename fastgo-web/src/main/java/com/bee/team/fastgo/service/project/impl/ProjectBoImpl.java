@@ -252,13 +252,13 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         //获取项目运行环境信息
         DeployInfoVo vo = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
-        Map<String,String> map = StringUtil.strToMap(vo.getRunProfileConfig());
+        Map map = StringUtil.strToMap(vo.getRunProfileConfig());
         if (map == null){
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目运行环境不存在");
         }
         SimpleDeployDTO dto = baseSupport.objectCopy(vo,SimpleDeployDTO.class);
         dto.setBranchName(deployBackPorjectVo.getBranchName());
-        String port = map.get("port").toString();
+        String port = (String) map.get("port");
         dto.setProjectPort(port.substring(0,port.indexOf(".")));
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),dto,null,PROJECT_TYPE2,projectDo.getId().intValue());
