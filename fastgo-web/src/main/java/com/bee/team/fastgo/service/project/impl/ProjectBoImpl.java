@@ -258,7 +258,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         SimpleDeployDTO dto = baseSupport.objectCopy(vo,SimpleDeployDTO.class);
         dto.setBranchName(deployBackPorjectVo.getBranchName());
-        String port = (String) map.get("port");
+        String port = String.valueOf(map.get("port"));
         dto.setProjectPort(port.substring(0,port.indexOf(".")));
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),dto,null,PROJECT_TYPE2,projectDo.getId().intValue());
