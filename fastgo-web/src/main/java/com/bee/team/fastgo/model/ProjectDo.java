@@ -37,7 +37,7 @@ public class ProjectDo extends LavaDo {
     private String gitToken;
 
     /**
-     * 项目状态：1.项目创建中，2.项目创建成功，3.项目部署中 4.项目部署完成，5-软件环境部署成功，6-运行环境部署成功
+     * 项目状态：1.项目创建中，2.项目创建成功，3.项目部署中 4.项目部署完成，5-软件环境部署成功，6-运行环境部署成功，7-项目部署失败
      */
     private String projectStatus;
 
