@@ -13,6 +13,7 @@ import com.bee.team.fastgo.project.utils.GitUtil;
 import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
 import com.bee.team.fastgo.service.api.server.dto.res.ResCreateSoftwareDTO;
+import com.bee.team.fastgo.service.config.ProjectConfigBo;
 import com.bee.team.fastgo.service.server.ServerRunProfileBo;
 import com.bee.team.fastgo.utils.StringUtil;
 import com.bee.team.fastgo.vo.project.req.InsertBackProjectProfileVo;
@@ -55,6 +56,9 @@ public class ProjectDaoImpl implements ProjectDao {
     private BaseSupport baseSupport;
 
     @Autowired
+    private ProjectConfigBo projectConfigBo;
+
+    @Autowired
     private SoftwareProfileApi softwareProfileApi;
 
     @Autowired
@@ -80,7 +84,7 @@ public class ProjectDaoImpl implements ProjectDao {
         SimpleConfigDto simpleConfigDto = new SimpleConfigDto();
         simpleConfigDto.setBranchName(ProjectConstant.PROJECT_BRANCH);
         simpleConfigDto.setProjectCode(projectDo.getProjectCode());
-        simpleConfigDto.setFastGoServer("http://tech20.com");
+        simpleConfigDto.setFastGoServer("http://172.22.5.248:9999/config/getProjectConfigByCode");
         // mybatis自动生成代码
         simpleConfigDto.setMybatisIsAutoGenerate(false);
         simpleConfigDto.setMysqlIp("172.22.5.248");

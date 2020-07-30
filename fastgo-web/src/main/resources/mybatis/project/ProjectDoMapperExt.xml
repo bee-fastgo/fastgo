@@ -22,9 +22,18 @@
     </select>
 
     <!--查询部署所需项目信息-->
-    <select id="findDeployProjectInfo" parameterType="java.lang.String" resultType="com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO">
-        select projectName,gitUrl from t_project
-        where projectCode = #{projectCode}
+    <select id="findDeployProjectInfo" parameterType="java.lang.String" resultType="com.bee.team.fastgo.vo.project.DeployInfoVo">
+        select p.projectName,p.gitUrl,pr.runServerIp as serviceIp,pr.runProfileConfig from t_project p
+        inner join t_project_profile pp on p.projectCode = pp.projectCode
+        inner join t_profile_runprofile_relation pr on pr.profileCode = pp.profileCode
+        where p.projectCode = #{projectCode}
+    </select>
+
+    <!--获取项目配置中心code-->
+    <select id="findProjectConfigCode" parameterType="map" resultType="java.lang.String">
+        select tpcr.configCode from t_profile_config_relation tpcr
+        inner join t_project_profile pp on pp.profileCode = tpcr.profileCode
+        where pp.projectCode = #{projectCode} and pp.branchName = #{branchName}
     </select>
 
 </mapper>

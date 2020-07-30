@@ -2,7 +2,10 @@ package com.bee.team.fastgo.service.config.impl;
 
 import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
+import com.bee.team.fastgo.mapper.ProjectDoMapperExt;
+import com.bee.team.fastgo.mapper.ProjectProfileDoMapperExt;
 import com.bee.team.fastgo.service.config.ProjectConfigBo;
+import com.bee.team.fastgo.vo.config.req.FindProjectConfigVo;
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
 import com.bee.team.fastgo.vo.config.req.SoftReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
@@ -10,6 +13,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.exception.GlobalException;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +35,9 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_D
 public class ProjectConfigBoImpl implements ProjectConfigBo {
     @Autowired
     private ConfigProjectBo configProjectBo;
+
+    @Autowired
+    private ProjectDoMapperExt projectDoMapperExt;
 
 
     @Override
@@ -69,10 +76,14 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
     }
 
     @Override
-    public Map<String, Object> getProjectConfigByCode(String projectCode) {
+    public Map<String, Object> getProjectConfigByCode(FindProjectConfigVo findProjectConfigVo) {
+        Map<String,Object> projectMap = new HashMap<>();
+        projectMap.put("projectCode",findProjectConfigVo.getProjectCode());
+        projectMap.put("branchName",findProjectConfigVo.getBranchName());
+        String configCode = projectDoMapperExt.findProjectConfigCode(projectMap);
         Map<String, Object> map = new HashMap<>();
         // MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE== base.configCode
-        map.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, projectCode);
+        map.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, configCode);
         return (Map<String, Object>) configProjectBo.getOneProjectConfigInfo(map, Map.class);
     }
 
