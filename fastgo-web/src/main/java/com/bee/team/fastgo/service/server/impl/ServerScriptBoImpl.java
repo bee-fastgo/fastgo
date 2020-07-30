@@ -3,12 +3,11 @@ package com.bee.team.fastgo.service.server.impl;
 import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.exception.sever.ScriptException;
-import com.bee.team.fastgo.hander.SimpleExecutorCmd;
-import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;
 import com.bee.team.fastgo.mapper.ServerScriptDoMapperExt;
 import com.bee.team.fastgo.model.ServerScriptDo;
 import com.bee.team.fastgo.model.ServerScriptDoExample;
 import com.bee.team.fastgo.service.server.ServerScriptBo;
+import com.bee.team.fastgo.service.server.ServerSourceBo;
 import com.bee.team.fastgo.vo.server.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -22,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -31,6 +29,9 @@ public class ServerScriptBoImpl extends AbstractLavaBoImpl<ServerScriptDo, Serve
 
     @Autowired
     private BaseSupport baseSupport;
+
+    @Autowired
+    private ServerSourceBo serverSourceBo;
 
     @Autowired
     @NoApiMethod
@@ -47,6 +48,10 @@ public class ServerScriptBoImpl extends AbstractLavaBoImpl<ServerScriptDo, Serve
         //是否支持该软件
         if(Stream.of(SoftwareEnum.values()).map(SoftwareEnum::name).map(String::toLowerCase).noneMatch(s -> s.equals(reqAddScriptVo.getSoftwareName()))) {
             throw new GlobalException(ScriptException.SCRIPT_ABNORMAL, "不支持的软件类型");
+        }
+        //是否支持该版本
+        if(!serverSourceBo.listVersions(reqAddScriptVo.getSoftwareName()).contains(reqAddScriptVo.getVersion())){
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL, "不支持的软件版本");
         }
         //通过软件名,版本号,脚本类型判断脚本是否已存在
         if(scriptExistBySoftwareNameAndVersionAndType(reqAddScriptVo.getSoftwareName(),reqAddScriptVo.getVersion(),reqAddScriptVo.getType())){
