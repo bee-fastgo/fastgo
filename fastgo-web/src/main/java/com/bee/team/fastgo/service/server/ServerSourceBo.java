@@ -76,4 +76,15 @@ public interface ServerSourceBo extends LavaBo<ServerSourceDo, ServerSourceDoExa
      */
 
     ResPageDTO listResources(PageResourceReqVo pageResourceReqVo);
+
+    /**
+     * 根据字典名获取软件所有的版本号
+     *
+     * @param softwareName
+     * @return {@link List< String>}
+     * @author xqx
+     * @date 2020/7/30
+     * @desc 根据字典名获取软件所有的版本号
+     */
+    List<String> listVersions(String softwareName);
 }

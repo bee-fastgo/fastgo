@@ -97,7 +97,7 @@ public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, Serve
 
     @Override
     public ResPageDTO listResources(PageResourceReqVo pageResourceReqVo) {
-        List<ServerSourceResVo> list = baseSupport.listCopy(getSourcesList(),ServerSourceResVo.class);
+        List<ServerSourceResVo> list = baseSupport.listCopy(getSourcesList(), ServerSourceResVo.class);
         ResPageDTO resPageDTO = new ResPageDTO();
         resPageDTO.setTotalCount(list.size());
         resPageDTO.setPageNum(pageResourceReqVo.getPageNum());
@@ -106,6 +106,17 @@ public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, Serve
 
         resPageDTO.setList(list.stream().skip(skip).limit(pageResourceReqVo.getPageSize()).collect(Collectors.toList()));
         return resPageDTO;
+    }
+
+    @Override
+    public List<String> listVersions(String softwareName) {
+        if (StringUtils.isEmpty(softwareName)) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "字典名不能为空");
+        }
+        ServerSourceDoExample example = new ServerSourceDoExample();
+        example.createCriteria().andSourceNameEqualTo(softwareName).andIsDeletedEqualTo("n");
+        List<String> list = selectByExample(example).stream().map(ServerSourceDo::getSourceVersion).collect(Collectors.toList());
+        return list;
     }
 
 
