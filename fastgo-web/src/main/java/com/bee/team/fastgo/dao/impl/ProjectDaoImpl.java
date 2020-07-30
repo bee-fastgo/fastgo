@@ -87,7 +87,7 @@ public class ProjectDaoImpl implements ProjectDao {
         SimpleConfigDto simpleConfigDto = new SimpleConfigDto();
         simpleConfigDto.setBranchName(ProjectConstant.PROJECT_BRANCH);
         simpleConfigDto.setProjectCode(projectDo.getProjectCode());
-        simpleConfigDto.setFastGoServer(IpUtil.getIp() + ":" + port+"/config/getProjectConfigJson");
+        simpleConfigDto.setFastGoServer("http://"+IpUtil.getIp() + ":" + port+"/config/getProjectConfigJson");
         // mybatis自动生成代码
         simpleConfigDto.setMybatisIsAutoGenerate(false);
         simpleConfigDto.setMysqlIp("172.22.5.248");
