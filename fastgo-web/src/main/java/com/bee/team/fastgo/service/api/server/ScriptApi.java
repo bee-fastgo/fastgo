@@ -1,7 +1,6 @@
 package com.bee.team.fastgo.service.api.server;
 
-import com.bee.team.fastgo.service.api.server.dto.req.ReqExecInstallScriptDTO;
-import com.bee.team.fastgo.service.api.server.dto.req.ReqExecUnInstallScriptDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.*;
 
 /**
  * 脚本相关api
@@ -11,7 +10,7 @@ import com.bee.team.fastgo.service.api.server.dto.req.ReqExecUnInstallScriptDTO;
 public interface ScriptApi {
 
     /**
-     * 为对应的服务器执行脚本
+     * 为对应的服务器执行安装脚本
      * @param reqExecInstallScriptDTO 请求体
      * @return {@link java.lang.String 查询id}
      * @author jgz
@@ -22,7 +21,7 @@ public interface ScriptApi {
 
 
     /**
-     *
+     * 为对应的服务器执行卸载脚本
       * @param reqExecUnInstallScriptDTO
      * @return {@link java.lang.String 查询id}
      * @author jgz
@@ -30,4 +29,35 @@ public interface ScriptApi {
      * @desc
      */
     String execUninstallScript(ReqExecUnInstallScriptDTO reqExecUnInstallScriptDTO);
+
+    /**
+     * 执行停止脚本
+      * @param reqExecStopScriptDTO
+     * @return {@link java.lang.String 查询id}
+     * @author jgz
+     * @date 2020/7/30
+     * @desc
+     */
+    String execStopScript(ReqExecStopScriptDTO reqExecStopScriptDTO);
+
+    /**
+     * 执行重启脚本
+      * @param reqExecRestartScriptDTO
+     * @return {@link java.lang.String 查询id}
+     * @author jgz
+     * @date 2020/7/30
+     * @desc
+     */
+    String execRestartScript(ReqExecRestartScriptDTO reqExecRestartScriptDTO);
+
+
+    /**
+     * 执行跟新配置脚本
+      * @param reqExecUpdateScriptDTO
+     * @return {@link java.lang.String 查询id}
+     * @author jgz
+     * @date 2020/7/30
+     * @desc
+     */
+    String execUpdateScript(ReqExecUpdateScriptDTO reqExecUpdateScriptDTO);
 }

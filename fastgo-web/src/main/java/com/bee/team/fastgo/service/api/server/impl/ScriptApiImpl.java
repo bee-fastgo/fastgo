@@ -6,8 +6,7 @@ import com.bee.team.fastgo.hander.SimpleExecutorCmd;
 import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;
 import com.bee.team.fastgo.model.ServerScriptDo;
 import com.bee.team.fastgo.service.api.server.ScriptApi;
-import com.bee.team.fastgo.service.api.server.dto.req.ReqExecInstallScriptDTO;
-import com.bee.team.fastgo.service.api.server.dto.req.ReqExecUnInstallScriptDTO;
+import com.bee.team.fastgo.service.api.server.dto.req.*;
 import com.bee.team.fastgo.service.server.ServerScriptBo;
 import com.spring.simple.development.support.exception.GlobalException;
 import org.apache.commons.lang3.StringUtils;
@@ -76,6 +75,54 @@ public class ScriptApiImpl implements ScriptApi {
         return SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, serverScriptDo.getScript(), param, -1, ip);
     }
 
+    @Override
+    public String execStopScript(ReqExecStopScriptDTO reqExecStopScriptDTO) {
+        if(StringUtils.isEmpty(reqExecStopScriptDTO.getIp())) {
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"服务器IP为空");
+        }
+        if(StringUtils.isEmpty(reqExecStopScriptDTO.getSoftwareName())) {
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"软件名为空");
+        }
+        if(StringUtils.isEmpty(reqExecStopScriptDTO.getVersion())) {
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"软件版本号为空");
+        }
+        String softwareName = reqExecStopScriptDTO.getSoftwareName();
+        String version = reqExecStopScriptDTO.getVersion();
+        String ip = reqExecStopScriptDTO.getIp();
+
+        //获取脚本
+        ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.STOP);
+
+        String param = StringUtils.join(Arrays.asList(softwareName, version), ",");
+        return SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, serverScriptDo.getScript(), param, -1, ip);
+    }
+
+    @Override
+    public String execRestartScript(ReqExecRestartScriptDTO reqExecRestartScriptDTO) {
+        if(StringUtils.isEmpty(reqExecRestartScriptDTO.getIp())) {
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"服务器IP为空");
+        }
+        if(StringUtils.isEmpty(reqExecRestartScriptDTO.getSoftwareName())) {
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"软件名为空");
+        }
+        if(StringUtils.isEmpty(reqExecRestartScriptDTO.getVersion())) {
+            throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"软件版本号为空");
+        }
+        String softwareName = reqExecRestartScriptDTO.getSoftwareName();
+        String version = reqExecRestartScriptDTO.getVersion();
+        String ip = reqExecRestartScriptDTO.getIp();
+
+        //获取脚本
+        ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.STOP);
+
+        String param = StringUtils.join(Arrays.asList(softwareName, version), ",");
+        return SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, serverScriptDo.getScript(), param, -1, ip);
+    }
+
+    @Override
+    public String execUpdateScript(ReqExecUpdateScriptDTO reqExecUpdateScriptDTO) {
+        throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"暂未实现");
+    }
 
 
 }
