@@ -30,23 +30,19 @@ public class TestProject {
     @Test
     public void testInsertProject() {
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "fastGo-config");
+        map1.put("name", "fastGo-web-test02");
         map1.put("ip", "172.22.5.248");
         map1.put("port", "8080");
-        map1.put("description", "极go");
+        map1.put("description", "极goweb");
         Map<String, Object> map2 = new HashMap<>();
-        map2.put("spring.simple.datasource.driverClassName", "com.mysql.jdbc.Driver");
-        map2.put("spring.simple.datasource.url", "jdbc:mysql://172.22.5.248:3306/funder?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&serverTimezone=CTT");
-        map2.put("spring.simple.datasource.username", "root");
-        map2.put("spring.simple.datasource.password", "123456");
-        Map<String, Object> map3 = new HashMap<>();
-        map3.put("spring.simple.redisHost", "172.22.5.247");
-        map3.put("spring.simple.redisPort", "6379");
-        map3.put("spring.simple.redisPwd", "123456");
+
+        map2.put("ip", "172.22.5.248");
+        map2.put("port","3306");
+        map2.put("userName", "root");
+        map2.put("password", "123456");
         Map<String, Object> map = new HashMap<>();
         map.put("base", map1);
         map.put("mysql", map2);
-        map.put("redis", map3);
         String code = configProjectBo.insertProject(map);
         System.out.println(code);
     }
@@ -80,7 +76,7 @@ public class TestProject {
     @Test
     public void testGetJSONProjectInfo() {
         Map<String, Object> map = new HashMap<>();
-        map.put("configCode", "UyRbVcaPnho33N85");
+        map.put("base.configCode", "EOThpCykb1oImcvW");
         System.out.println(configProjectBo.getOneProjectConfigToJSON(map));
     }
 

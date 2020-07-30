@@ -3,7 +3,6 @@ package com.bee.team.fastgo.service.config.impl;
 import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.mapper.ProjectDoMapperExt;
-import com.bee.team.fastgo.mapper.ProjectProfileDoMapperExt;
 import com.bee.team.fastgo.service.config.ProjectConfigBo;
 import com.bee.team.fastgo.vo.config.req.FindProjectConfigVo;
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
@@ -13,7 +12,6 @@ import com.mongodb.client.result.UpdateResult;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.exception.GlobalException;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.bee.team.fastgo.exception.config.ProjectConfigException.UPDATE_PROJECT_FAILED;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
+import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
  * @author xqx
@@ -77,9 +76,9 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
 
     @Override
     public Map<String, Object> getProjectConfigByCode(FindProjectConfigVo findProjectConfigVo) {
-        Map<String,Object> projectMap = new HashMap<>();
-        projectMap.put("projectCode",findProjectConfigVo.getProjectCode());
-        projectMap.put("branchName",findProjectConfigVo.getBranchName());
+        Map<String, Object> projectMap = new HashMap<>();
+        projectMap.put("projectCode", findProjectConfigVo.getProjectCode());
+        projectMap.put("branchName", findProjectConfigVo.getBranchName());
         String configCode = projectDoMapperExt.findProjectConfigCode(projectMap);
         Map<String, Object> map = new HashMap<>();
         // MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE== base.configCode
@@ -133,5 +132,21 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
         if (result.getMatchedCount() < 1 || result.getModifiedCount() < 1) {
             throw new GlobalException(UPDATE_PROJECT_FAILED);
         }
+    }
+
+    @Override
+    public String getOneProjectConfigToJSON(String projectCode, String branchName) {
+        if (StringUtils.isEmpty(projectCode) || StringUtils.isEmpty(branchName)) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "项目的code不能为空");
+        }
+        Map<String, Object> projectMap = new HashMap<>();
+        projectMap.put("projectCode", projectCode);
+        projectMap.put("branchName", branchName);
+        String configCode = projectDoMapperExt.findProjectConfigCode(projectMap);
+
+        // 封装查询条件 按 配置中心的唯一标识 configCode查询
+        Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, configCode);
+        return configProjectBo.getOneProjectConfigToJSON(queryMap);
     }
 }

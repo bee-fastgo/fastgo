@@ -9,6 +9,7 @@ import com.spring.simple.development.core.component.mvc.res.ResBody;
 import com.spring.simple.development.support.exception.GlobalException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,16 @@ public class ConfigController {
         projectConfigBo.updateProjectConfig(updateProjectConfigReqVo);
         return new ResBody().buildSuccessResBody();
     }
+
+    @RequestMapping(value = "/getProjectConfigJson", method = RequestMethod.GET)
+    @ApiOperation(value = "获取JSON格式的配置信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectCode", value = "项目code", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "branch", value = "分支", dataTypeClass = String.class)})
+    public String getProjectConfigJson(String projectCode, String branch) {
+        return projectConfigBo.getOneProjectConfigToJSON(projectCode, branch);
+    }
+
 
     /*
     二、模板库管理

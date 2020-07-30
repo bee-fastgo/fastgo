@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
@@ -48,26 +49,26 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         }
         // 获取所有的模板集合
         List<Map<String, Object>> list = configTemplateBo.findAllTemplateList(Map.class);
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("base", baseConfig((Map<String, Object>) map.get("base")));
         list.stream().forEach(e -> {
             // 如果包含模板中的name，就将模板的数据添加到map中
             if (map.containsKey(e.get(MongoCommonValue.TEMPLATE_NAME))) {
-                Map<String, Object> map1 = (Map<String, Object>) map.get(e.get("name"));
+                Map<String, Object> map1 = (Map<String, Object>) map.get(e.get(MongoCommonValue.TEMPLATE_NAME));
                 // 过滤name、id和code
-                e.remove(MongoCommonValue.TEMPLATE_NAME);
                 e.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
                 e.remove(MongoCommonValue.TEMPLATE_CODE);
-                map1.putAll(e);
+                // 定制mysql配置
+                if (e.get(MongoCommonValue.TEMPLATE_NAME).toString().equals("mysql")) {
+                    returnMap.put("mysql", mysqlConfig(map1, e));
+                }
             }
         });
-        // 给项目设置唯一标识
-        Map<String, Object> newInsertBaseMap = (Map<String, Object>) map.get(MongoCommonValue.PROJECT_BASE_KEY);
-        newInsertBaseMap.put(MongoCommonValue.PROJECT_CODE, RandomUtils.getRandomStr(16));
-        map.remove(MongoCommonValue.PROJECT_BASE_KEY);
-        map.put(MongoCommonValue.PROJECT_BASE_KEY, newInsertBaseMap);
         // 添加成功获取返回的基础base配置
-        Map<String, Object> returnBaseMap = (Map<String, Object>) template.insert(map, MongoCollectionValue.CONFIG_PROJECT).get(MongoCommonValue.PROJECT_BASE_KEY);
+        Map<String, Object> returnBaseMap = (Map<String, Object>) template.insert(returnMap, MongoCollectionValue.CONFIG_PROJECT).get(MongoCommonValue.PROJECT_BASE_KEY);
         return returnBaseMap.get(MongoCommonValue.PROJECT_CODE).toString();
     }
+
 
     @Override
     public DeleteResult removeOneProject(Map map) {
@@ -107,6 +108,8 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         baseMap.remove(MongoCommonValue.PROJECT_NAME);
         baseMap.remove(MongoCommonValue.PROJECT_DESCRIPTION);
         baseMap.remove(MongoCommonValue.PROJECT_CODE);
+        baseMap.remove("ip");
+        baseMap.remove("description");
 
         // 提取key
         List<Object> list = Arrays.asList(configMap.keySet().toArray());
@@ -131,6 +134,32 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         Update update = new Update();
         List<Object> listSet = Arrays.asList(updateMap.keySet().toArray());
         listSet.stream().forEach(e -> update.set(e.toString(), updateMap.get(e)));
+        // 获取要修改的所有软件名
+        List<String> newSofts = listSet.stream().map(e -> e.toString().substring(0, e.toString().indexOf("."))).collect(Collectors.toList());
+
+        // 获取原本项目的所有软件名
+        List<Object> oldSofts = Arrays.asList(template.findOne(query, Map.class, MongoCollectionValue.CONFIG_PROJECT).keySet().toArray());
+
+        // 如果有新增的软件，就将模板中该软件的配置信息取出来作为该软件的配置信息
+        newSofts.stream().forEach(e -> {
+            // 如果不包含就增加基础配置
+            if (!oldSofts.contains(e)) {
+                // 根据软件名查询模板信息
+                Map<String, Object> map = new HashMap<>();
+                map.put(MongoCommonValue.TEMPLATE_NAME, e);
+                Map<String, Object> tempMap = (Map<String, Object>) configTemplateBo.findTemplateByCondition(map, Map.class);
+
+                // 过滤name、id和code
+                tempMap.remove(MongoCommonValue.TEMPLATE_NAME);
+                tempMap.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
+                tempMap.remove(MongoCommonValue.TEMPLATE_CODE);
+
+                // 转移到修改的map中
+                update.set(e, tempMap);
+
+            }
+        });
+
         // 修改指定的值，如果数据不存在键就添加该键值对
         return template.updateFirst(query, update, MongoCollectionValue.CONFIG_PROJECT);
     }
@@ -182,6 +211,26 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
             query.addCriteria(criteria);
         }
         return template.count(query, MongoCollectionValue.CONFIG_PROJECT);
+    }
+
+    private Map<String, Object> mysqlConfig(Map<String, Object> project, Map<String, Object> template) {
+        // 定制mysql的项目配置
+        Map<String, Object> map = new HashMap<>();
+        template.remove(MongoCommonValue.TEMPLATE_NAME);
+        map.put("spring.simple.datasource.url", ("jdbc:mysql://" + project.get("ip") + ":" + project.get("port") + "/" + project.get("dataSourceName") + "?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&serverTimezone=CTT"));
+        map.put("spring.simple.datasource.username", project.get("userName"));
+        map.put("spring.simple.datasource.password", project.get("password"));
+        map.putAll(template);
+        return map;
+    }
+
+    private Map<String, Object> baseConfig(Map<String, Object> project) {
+        // 定制mysql的项目配置
+        Map<String, Object> map = new HashMap<>();
+        project.put("server.port", project.get("port"));
+        project.remove("port");
+        project.put("configCode", RandomUtils.getRandomStr(16));
+        return project;
     }
 
 }
