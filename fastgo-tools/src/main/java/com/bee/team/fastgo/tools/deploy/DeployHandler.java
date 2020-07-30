@@ -56,17 +56,18 @@ public class DeployHandler {
         invokeBuildVue(projectPath);
         String localPath = projectPath + "/dist/";
         if (isWindows()) {
-            localPath = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/dist/";;
+            localPath = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/dist/";
+            ;
         }
-        File file = new File(projectPath+"/dist.tar.gz");
-        if(file.exists()){
+        File file = new File(projectPath + "/dist.tar.gz");
+        if (file.exists()) {
             file.delete();
         }
-        GzipUtil.compress(localPath, projectPath+"/dist.tar.gz");
+        GzipUtil.compress(localPath, projectPath + "/dist.tar.gz");
         // 4 推送
         Scp.uploadFile(deployDTO.getServiceIp(), deployDTO.getServicePort().intValue(), deployDTO.getServiceUserName(), deployDTO.getServiceUserPassword(), file, projectPath);
         // 5 部署
-        Scp.vueDeploy(deployDTO.getProjectName(),deployDTO.getProjectPort(), deployDTO.getServicePort(), deployDTO.getServiceIp(), deployDTO.getServiceUserName(), deployDTO.getServiceUserPassword(), projectPath, deployDTO.getSimpleServiceUrl());
+        Scp.vueDeploy(deployDTO.getProjectName(), deployDTO.getProjectPort(), deployDTO.getServicePort(), deployDTO.getServiceIp(), deployDTO.getServiceUserName(), deployDTO.getServiceUserPassword(), projectPath, deployDTO.getSimpleServiceUrl());
 
     }
 
@@ -82,10 +83,10 @@ public class DeployHandler {
         String cmd;
         if (isWindows()) {
             cmd = "cd " + System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "\n npm install -registry=https://registry.npm.taobao.org";
-            scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueBuild.bat";
+            scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueInstall.bat";
         } else {
-            cmd = "cd " + projectPath + "\n npm install -registry=https://registry.npm.taobao.org";
-            scriptFileName = projectPath + "/" + "vueBuild.sh";
+            cmd = "cd " + projectPath + "\n npm install -registry=https://registry.npm.taobao.org --unsafe-perm=true --allow-root";
+            scriptFileName = projectPath + "/" + "vueInstall.sh";
         }
         System.out.println("执行项目编译命令：" + cmd);
         File scriptFile = new File(scriptFileName);
@@ -93,7 +94,12 @@ public class DeployHandler {
             scriptFile.delete();
         }
         ScriptUtil.markScriptFile(scriptFileName, cmd);
-        Process process = Runtime.getRuntime().exec(scriptFileName);
+        Process process;
+        if (isWindows()) {
+            process = Runtime.getRuntime().exec(scriptFileName);
+        } else {
+            process = Runtime.getRuntime().exec("bash " + scriptFileName);
+        }
         InputStream in = process.getInputStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
         String line;
@@ -118,7 +124,7 @@ public class DeployHandler {
             cmd = "cd " + System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "\n  npm run build";
             scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueBuild.bat";
         } else {
-            cmd = "cd " + projectPath + "\n  npm run build";
+            cmd = "cd " + projectPath + "\n  npm run build:prod";
             scriptFileName = projectPath + "/" + "vueBuild.sh";
         }
         System.out.println("执行项目打包命令：" + cmd);
@@ -127,7 +133,12 @@ public class DeployHandler {
             scriptFile.delete();
         }
         ScriptUtil.markScriptFile(scriptFileName, cmd);
-        Process process = Runtime.getRuntime().exec(scriptFileName);
+        Process process;
+        if (isWindows()) {
+            process = Runtime.getRuntime().exec(scriptFileName);
+        } else {
+            process = Runtime.getRuntime().exec("bash " + scriptFileName);
+        }
         InputStream in = process.getInputStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
         String line;
