@@ -18,5 +18,5 @@ public class RunProfileVo{
     /**
      * 运行环境端口
      */
-    private Integer port;
+    private String port;
 }

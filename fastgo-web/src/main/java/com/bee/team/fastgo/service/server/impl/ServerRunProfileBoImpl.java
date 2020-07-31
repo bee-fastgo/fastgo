@@ -70,7 +70,7 @@ public class ServerRunProfileBoImpl extends AbstractLavaBoImpl<ServerRunProfileD
         serverRunProfileDo.setSoftwareName(addServerRunProfileVo.getSoftwareName());
         RunProfileVo runProfileVo = new RunProfileVo();
         runProfileVo.setIp(addServerRunProfileVo.getServerIp());
-        runProfileVo.setPort(port);
+        runProfileVo.setPort(String.valueOf(port));
         serverRunProfileDo.setSoftwareConfig(JSONObject.toJSONString(runProfileVo));
         serverRunProfileDo.setRunProfileCode(SoftwareEnum.DOCKER.name());
         insert(serverRunProfileDo);
@@ -100,7 +100,7 @@ public class ServerRunProfileBoImpl extends AbstractLavaBoImpl<ServerRunProfileD
         }
         for (ServerRunProfileDo serverRunProfileDo : serverRunProfileDos) {
             RunProfileVo runProfileVo = JSONObject.parseObject(serverRunProfileDo.getSoftwareConfig(), RunProfileVo.class);
-            if (runProfileVo.getPort() == port) {
+            if (runProfileVo.getPort().equals(String.valueOf(port))) {
                 return serverRunProfileDo;
             }
         }
