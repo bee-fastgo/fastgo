@@ -50,7 +50,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         // 获取所有的模板集合
         List<Map<String, Object>> list = configTemplateBo.findAllTemplateList(Map.class);
         Map<String, Object> returnMap = new HashMap<>();
-        returnMap.put("base", baseConfig((Map<String, Object>) map.get("base")));
+        returnMap.put(MongoCommonValue.PROJECT_BASE_KEY, baseConfig((Map<String, Object>) map.get(MongoCommonValue.PROJECT_BASE_KEY)));
         list.stream().forEach(e -> {
             // 如果包含模板中的name，就将模板的数据添加到map中
             if (map.containsKey(e.get(MongoCommonValue.TEMPLATE_NAME))) {
@@ -59,8 +59,12 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                 e.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
                 e.remove(MongoCommonValue.TEMPLATE_CODE);
                 // 定制mysql配置
-                if (e.get(MongoCommonValue.TEMPLATE_NAME).toString().equals("mysql")) {
+                if ("mysql".equals(e.get(MongoCommonValue.TEMPLATE_NAME).toString())) {
                     returnMap.put("mysql", mysqlConfig(map1, e));
+                }
+                // 定制redis
+                if ("redis".equals(e.get(MongoCommonValue.TEMPLATE_NAME).toString())) {
+                    returnMap.put("redis", redisConfig(map1, e));
                 }
             }
         });
@@ -108,15 +112,18 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         baseMap.remove(MongoCommonValue.PROJECT_NAME);
         baseMap.remove(MongoCommonValue.PROJECT_DESCRIPTION);
         baseMap.remove(MongoCommonValue.PROJECT_CODE);
-        baseMap.remove("ip");
-        baseMap.remove("description");
+        baseMap.remove(MongoCommonValue.PROJECT_IP);
 
         // 提取key
         List<Object> list = Arrays.asList(configMap.keySet().toArray());
 
         // 将内嵌文档的内容提取出来，并且放到新的map对象中
         Map<String, Object> newMap = new HashMap<>();
-        list.stream().forEach(e -> newMap.putAll((Map<String, Object>) configMap.get(e.toString())));
+        list.stream().forEach(e -> {
+            Map<String, Object> inMap = (Map<String, Object>) configMap.get(e.toString());
+            inMap.remove(MongoCommonValue.TEMPLATE_DESCRIPTION);
+            newMap.putAll(inMap);
+        });
 
         // 返回新map的json格式数据
         return JSONObject.toJSONString(newMap);
@@ -214,6 +221,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     }
 
     private Map<String, Object> mysqlConfig(Map<String, Object> project, Map<String, Object> template) {
+        // project 项目里面的软件配置，template 软件的模板
         // 定制mysql的项目配置
         Map<String, Object> map = new HashMap<>();
         template.remove(MongoCommonValue.TEMPLATE_NAME);
@@ -222,6 +230,18 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         map.put("spring.simple.datasource.password", project.get("password"));
         map.putAll(template);
         return map;
+    }
+
+    private Map<String, Object> redisConfig(Map<String, Object> project, Map<String, Object> template) {
+        // project 项目里软件的基础配置
+        // 定制redis配置
+        Map<String, Object> map = new HashMap<>();
+        template.remove(MongoCommonValue.TEMPLATE_NAME);
+        map.put("spring.simple.redisHost", project.get("ip"));
+        map.put("spring.simple.redisPort", project.get("port"));
+        map.put("spring.simple.redisPwd", project.get("password"));
+        return map;
+
     }
 
     private Map<String, Object> baseConfig(Map<String, Object> project) {

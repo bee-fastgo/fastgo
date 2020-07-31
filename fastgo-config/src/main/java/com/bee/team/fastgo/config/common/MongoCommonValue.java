@@ -24,6 +24,9 @@ public class MongoCommonValue {
     // 项目描述
     public static final String PROJECT_DESCRIPTION = "description";
 
+    // 项目ip
+    public static final String PROJECT_IP = "ip";
+
     // 模板的id
     public static final String CONFIG_TEMPLATE_ID = "_id";
 
