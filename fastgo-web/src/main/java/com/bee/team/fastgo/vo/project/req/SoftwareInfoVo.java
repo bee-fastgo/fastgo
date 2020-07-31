@@ -23,9 +23,4 @@ public class SoftwareInfoVo implements Serializable {
     @NotBlank(message = "软件版本号不能为空")
     private String version;
 
-    @ApiModelProperty(value = "软件配置必须信息", example = "{'mysql':{'dataSourceName':'test','sql':'xxxx'},'kafka':{'ip':'172.xx.xx.xx'}}")
-    private String config;
-
-
-
 }

@@ -40,4 +40,7 @@ public class InsertBackProjectProfileVo implements Serializable {
     @ApiModelProperty(value = "软件环境list", example = "[{'softwareServerIp':'127.11.11.13','softwareName':'mysql','version':'5.0.0'}]")
     private List<SoftwareInfoVo> softwareInfoVos;
 
+    @ApiModelProperty(value = "软件配置必须信息", example = "{'mysql':{'dataSourceName':'test','sql':'xxxx'},'kafka':{'ip':'172.xx.xx.xx'}}")
+    private String config;
+
 }

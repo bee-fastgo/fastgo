@@ -229,8 +229,10 @@ public class ProjectDaoImpl implements ProjectDao {
                 dto.setVersion(softwareInfoVo.getVersion());
                 dto.setProfileCode(projectProfileCode);
                 //数据库配置
-                Map<String,String> mysqlMap = mysqlConfigCheck(softwareInfoVo);
-                dto.setConfig(mysqlMap);
+                if (softwareInfoVo.getSoftwareName().toUpperCase().equals(SoftwareEnum.MYSQL.name())){
+                    Map<String,String> mysqlMap = mysqlConfigCheck(softwareInfoVo,insertBackProjectProfileVo);
+                    dto.setConfig(mysqlMap);
+                }
                 ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);
                 psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
                 psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
@@ -260,9 +262,9 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     //检验mysql必备配置
-    private Map<String,String> mysqlConfigCheck(SoftwareInfoVo softwareInfoVo) {
+    private Map<String,String> mysqlConfigCheck(SoftwareInfoVo softwareInfoVo,InsertBackProjectProfileVo vo) {
         //软件必需配置信息
-        Map<String,String> configMap = StringUtil.strToMap(softwareInfoVo.getConfig());
+        Map<String,String> configMap = StringUtil.strToMap(vo.getConfig());
         if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name())){
             if (configMap.containsKey(SoftwareEnum.MYSQL.name())){
                 Map<String,String> mysqlMap = StringUtil.strToMap(configMap.get(SoftwareEnum.MYSQL.name()));
