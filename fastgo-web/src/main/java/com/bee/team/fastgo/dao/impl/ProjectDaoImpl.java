@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.dao.impl;
 
+import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.constant.ProjectConstant;
 import com.bee.team.fastgo.dao.ProjectDao;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bee.team.fastgo.constant.ProjectConstant.*;
-import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
+import static com.spring.simple.development.support.exception.ResponseCode.*;
 
 @Component
 public class ProjectDaoImpl implements ProjectDao {
@@ -227,6 +228,9 @@ public class ProjectDaoImpl implements ProjectDao {
                 dto.setSoftwareName(softwareInfoVo.getSoftwareName());
                 dto.setVersion(softwareInfoVo.getVersion());
                 dto.setProfileCode(projectProfileCode);
+                //数据库配置
+                Map<String,String> mysqlMap = mysqlConfigCheck(softwareInfoVo);
+                dto.setConfig(mysqlMap);
                 ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);
                 psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
                 psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
@@ -253,5 +257,25 @@ public class ProjectDaoImpl implements ProjectDao {
         pcDo.setProfileCode(projectProfileCode);
         profileConfigRelationDoMapperExt.insertSelective(pcDo);
         return flag;
+    }
+
+    //检验mysql必备配置
+    private Map<String,String> mysqlConfigCheck(SoftwareInfoVo softwareInfoVo) {
+        //软件必需配置信息
+        Map<String,String> configMap = StringUtil.strToMap(softwareInfoVo.getConfig());
+        if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name())){
+            if (configMap.containsKey(SoftwareEnum.MYSQL.name())){
+                Map<String,String> mysqlMap = StringUtil.strToMap(configMap.get(SoftwareEnum.MYSQL.name()));
+                if (mysqlMap.containsKey("dataSourceName")){
+                    if (StringUtils.isEmpty(mysqlMap.get("dataSourceName"))){
+                        throw new GlobalException(RES_ILLEGAL_OPERATION,"数据库库名未传递");
+                    }
+                    return mysqlMap;
+                }
+            }else {
+                throw new GlobalException(RES_ILLEGAL_OPERATION,"数据库必需配置未传递");
+            }
+        }
+        return null;
     }
 }
