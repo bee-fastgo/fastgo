@@ -92,13 +92,15 @@ public class Scp {
             String step4 = "echo " + getDockerFile(projectName) + " >> " + remotePath + "/Dockerfile";
             invokeCmd(conn.openSession(), step4);
             // 构建docker
-            String step5 = "docker build -t " + projectName + " .";
+            String step5 = "cd  " + remotePath + "\n" + "docker build -t " + projectName + " .";
             invokeCmd(conn.openSession(), step5);
             // 部署
-            String step6 = "docker stop " + projectName + "Docker";
-            String step7 = "docker rm " + projectName + "Docker";
-            String step8 = "docker   run --name=" + projectName + "Docker -d -p " + port + ":" + port + " " + projectName;
-            invokeCmd(conn.openSession(), step6 + "\n" + step7 + "\n" + step8);
+            String step6 = "cd  " + remotePath + "\n" + "docker stop " + projectName + "Docker";
+            String step7 = "cd  " + remotePath + "\n" + "docker rm " + projectName + "Docker";
+            String step8 = "cd  " + remotePath + "\n" + "docker   run --name=" + projectName + "Docker -d -p " + port + ":" + port + " " + projectName;
+            invokeCmd(conn.openSession(), step6);
+            invokeCmd(conn.openSession(), step7);
+            invokeCmd(conn.openSession(), step8);
             System.out.println(DateUtils.getCurrentTime() + "部署完成");
         } finally {
             if (conn != null) {
