@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @ApiModel(value = "projectListVo",description = "项目展示vo")
@@ -35,6 +36,6 @@ public class ProjectListVo implements Serializable {
     private Integer autoDeploy;
 
     @ApiModelProperty(value = "访问地址", required = true, example = "172.22.5.22:9999")
-    private String accessAddr;
+    private List<ProjectBranchAndAccessAddrVo> accessAddrs;
 
 }

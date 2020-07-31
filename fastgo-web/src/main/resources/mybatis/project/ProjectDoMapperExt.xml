@@ -33,6 +33,7 @@
         <if test="projectStatus!=null and projectStatus!=''">
             and projectStatus = #{projectStatus}
         </if>
+        order By gmt_create desc
         limit #{start},#{limit}
     </select>
 
@@ -45,6 +46,7 @@
         <if test="projectStatus!=null and projectStatus!=''">
             and projectStatus = #{projectStatus}
         </if>
+        order By gmt_create desc
         limit #{start},#{limit}
     </select>
 

@@ -7,6 +7,7 @@ import com.bee.team.fastgo.context.DeployPublisher;
 import com.bee.team.fastgo.context.ProjectEvent;
 import com.bee.team.fastgo.context.ProjectPublisher;
 import com.bee.team.fastgo.dao.ProjectDao;
+import com.bee.team.fastgo.job.core.util.IpUtil;
 import com.bee.team.fastgo.mapper.*;
 import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.project.gitlab.GitlabAPI;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +48,19 @@ import static com.spring.simple.development.support.exception.ResponseCode.*;
 @Service
 public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapperExt, ProjectDoExample> implements ProjectBo {
 
+    @Value("${server.port}")
+    private Integer port;
+
+    @Value("${gitlab.url}")
+    private String gitUrl;
+
     @Value("${project.publicTemplate}")
     private String publicTemplate;
 
     @Value("${frontTemplate}")
     private String frontTemplate;
+
+
 
     @Autowired
     public void setBaseMapper(ProjectDoMapperExt mapper) {
@@ -98,10 +108,17 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             map.put("start",pager.getStart());
             map.put("limit",pager.getLimit());
             List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
-            for (ProjectListVo projectListVo : projectListVoList){
-                List<ProjectBranchAndAccessAddrVo> profileRunprofileRelationDos = mapper.findProjectAccessAddr(projectListVo.getProjectCode());
-            }
-            pager.setData(projectListVoList);
+            List<ProjectListVo> projectListVos = projectListVoList.stream().map(ProjectListVo -> {
+                List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(ProjectListVo.getProjectCode());
+                List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
+                    Map runMap = StringUtil.strToMap(ProjectBranchAndAccessAddrVo.getRunProfileConfig());
+                    ProjectBranchAndAccessAddrVo.setAccessAddr(runMap.get("ip")+":"+runMap.get("port"));
+                    return ProjectBranchAndAccessAddrVo;
+                }).collect(Collectors.toList());
+                ProjectListVo.setAccessAddrs(projectBranchAndAccessAddrVos);
+                return ProjectListVo;
+            }).collect(Collectors.toList());
+            pager.setData(projectListVos);
         }
         return baseSupport.pagerCopy(pager,ProjectListVo.class);
     }
@@ -111,7 +128,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         //项目基本信息
         ProjectDo projectDo = baseSupport.objectCopy(insertBackProjectVo,ProjectDo.class);
         //定义项目code(项目名大写)
-        String projectCode = insertBackProjectVo.getProjectName().toUpperCase();
+        String projectCode = StringUtil.getRandomUUID();
         projectDo.setProjectCode(projectCode);
         projectDo.setProjectType(ProjectConstant.PROJECT_TYPE2.toString());
         projectDo.setProjectStatus(PROJECT_STATUS1.toString());
@@ -137,7 +154,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
            //创建新的gitlab后台项目
             GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
             try {
-                GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
+                GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,null,null,null);
                 gitlabProjectDo = gitlabAPI.createNewProject(insertBackProjectVo.getProjectName(),insertBackProjectVo.getProjectDesc());
                 if (ObjectUtils.isEmpty(gitlabProjectDo)){
                     throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
@@ -151,7 +168,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://172.22.5.248:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/backEnd/deployBackProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -185,7 +202,17 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             map.put("start",pager.getStart());
             map.put("limit",pager.getLimit());
             List<ProjectListVo> projectListVoList = mapper.findFrontPorjectList(map);
-            pager.setData(projectListVoList);
+            List<ProjectListVo> projectListVos = projectListVoList.stream().map(ProjectListVo -> {
+                List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(ProjectListVo.getProjectCode());
+                List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
+                    Map runMap = StringUtil.strToMap(ProjectBranchAndAccessAddrVo.getRunProfileConfig());
+                    ProjectBranchAndAccessAddrVo.setAccessAddr(runMap.get("ip")+":"+runMap.get("port"));
+                    return ProjectBranchAndAccessAddrVo;
+                }).collect(Collectors.toList());
+                ProjectListVo.setAccessAddrs(projectBranchAndAccessAddrVos);
+                return ProjectListVo;
+            }).collect(Collectors.toList());
+            pager.setData(projectListVos);
         }
         return baseSupport.pagerCopy(pager,ProjectListVo.class);
     }
@@ -195,7 +222,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         //项目基本信息
         ProjectDo projectDo = baseSupport.objectCopy(insertFrontProjectVo,ProjectDo.class);
         //定义项目code(项目名大写)
-        String projectCode = insertFrontProjectVo.getProjectName().toUpperCase();
+        String projectCode = StringUtil.getRandomUUID();
         projectDo.setProjectCode(projectCode);
         projectDo.setProjectType(ProjectConstant.PROJECT_TYPE1.toString());
         projectDo.setProjectStatus(PROJECT_STATUS1.toString());
@@ -209,9 +236,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         //生成前台项目模板
         if (StringUtils.isEmpty(insertFrontProjectVo.getGitUrl())){
             //创建新的gitlab后台项目
-            GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
+            GitlabProjectDo gitlabProjectDo;
             try {
-                GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
+                GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,null,null,null);
                 gitlabProjectDo = gitlabAPI.createNewProject(insertFrontProjectVo.getProjectName(),insertFrontProjectVo.getProjectDesc());
                 if (ObjectUtils.isEmpty(gitlabProjectDo)){
                     throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
@@ -234,7 +261,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
+        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
         projectPublisher.publish(projectEvent);
     }
 
@@ -312,7 +339,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
+        GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,null,null,null);
         //获取项目gtilab id
         try{
             List<GitlabProjectDo> gitlibProjects = gitlabAPI.getAllProject();
@@ -351,8 +378,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         VueDeployDTO deployDTO = baseSupport.objectCopy(vo,VueDeployDTO.class);
         deployDTO.setBranchName(deployFrontPorjectVo.getBranchName());
-        String port = map.get("port").toString();
-        deployDTO.setProjectPort(port.substring(0,port.indexOf(".")));
+        String port = String.valueOf(map.get("port"));
+        deployDTO.setProjectPort(port);
         deployDTO.setServiceUrl(deployFrontPorjectVo.getServiceUrl());
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),null,deployDTO,PROJECT_TYPE1,projectDo.getId().intValue());
@@ -378,10 +405,10 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             projectDo.setAutoDeploy(AUTO_DEPLOY1);
             //事件添加webhook
             ProjectEvent projectEvent = null;
-            if (PROJECT_TYPE1.equals(projectDo.getProjectType())){
-                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
-            }else if (PROJECT_TYPE2.equals(projectDo.getProjectType())){
-                projectEvent = new ProjectEvent(new Object(),projectCode,"http://deployServer.com:9999/project/backEnd/deployBackProject",AUTO_DEPLOY1);
+            if (PROJECT_TYPE1.toString().equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
+            }else if (PROJECT_TYPE2.toString().equals(projectDo.getProjectType())){
+                projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/backEnd/deployBackProject",AUTO_DEPLOY1);
             }
             projectPublisher.publish(projectEvent);
         }else if (AUTO_DEPLOY1.equals(autoDeployVo.getAutoDeploy())){
