@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,9 +48,6 @@ import java.util.stream.Stream;
  **/
 @Service
 public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
-
-    @Autowired
-    private BaseSupport baseSupport;
 
     @Autowired
     private ServerBo serverBo;
@@ -66,8 +64,6 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
     @Autowired
     private ServerSoftwareProfileBo serverSoftwareProfileBo;
 
-    @Autowired
-    private ScriptApi scriptApi;
 
     private static CopyOnWriteArrayList<SoftwareInstallInfo> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
 
@@ -189,8 +185,12 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
         String version = reqCreateSoftwareDTO.getVersion();
         String downloadUrl = serverSourceDo.getSourceDownUrl();
-        String sql = StringUtils.isEmpty(config.get("sql")) ? "create database if not exists "+ config.get("dataSourceName") + ";" : config.get("sql");
-        String param = StringUtils.join(Arrays.asList(softwareName, version, downloadUrl,sql), ",");
+        List<String> strings = Arrays.asList(softwareName, version, downloadUrl,config.get("dataSourceName"));
+        if(StringUtils.isNotEmpty(config.get("sqlUrl"))){
+            strings.add(config.get("sqlUrl"));
+        }
+
+        String param = StringUtils.join(strings, ",");
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
