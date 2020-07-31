@@ -51,7 +51,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         List<Map<String, Object>> list = configTemplateBo.findAllTemplateList(Map.class);
         Map<String, Object> returnMap = new HashMap<>();
         returnMap.put(MongoCommonValue.PROJECT_BASE_KEY, baseConfig((Map<String, Object>) map.get(MongoCommonValue.PROJECT_BASE_KEY)));
-        list.stream().forEach(e -> {
+        for (Map e : list) {
             // 如果包含模板中的name，就将模板的数据添加到map中
             if (map.containsKey(e.get(MongoCommonValue.TEMPLATE_NAME))) {
                 Map<String, Object> map1 = (Map<String, Object>) map.get(e.get(MongoCommonValue.TEMPLATE_NAME));
@@ -61,13 +61,17 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                 // 定制mysql配置
                 if ("mysql".equals(e.get(MongoCommonValue.TEMPLATE_NAME).toString())) {
                     returnMap.put("mysql", mysqlConfig(map1, e));
+                    continue;
                 }
                 // 定制redis
                 if ("redis".equals(e.get(MongoCommonValue.TEMPLATE_NAME).toString())) {
                     returnMap.put("redis", redisConfig(map1, e));
+                    continue;
                 }
             }
-        });
+
+        }
+
         // 添加成功获取返回的基础base配置
         Map<String, Object> returnBaseMap = (Map<String, Object>) template.insert(returnMap, MongoCollectionValue.CONFIG_PROJECT).get(MongoCommonValue.PROJECT_BASE_KEY);
         return returnBaseMap.get(MongoCommonValue.PROJECT_CODE).toString();
