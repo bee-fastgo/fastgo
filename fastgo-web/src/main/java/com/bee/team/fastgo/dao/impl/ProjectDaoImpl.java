@@ -229,7 +229,7 @@ public class ProjectDaoImpl implements ProjectDao {
                 dto.setVersion(softwareInfoVo.getVersion());
                 dto.setProfileCode(projectProfileCode);
                 //数据库配置
-                if (softwareInfoVo.getSoftwareName().toUpperCase().equals(SoftwareEnum.MYSQL.name())){
+                if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name().toLowerCase())){
                     Map<String,String> mysqlMap = mysqlConfigCheck(softwareInfoVo,insertBackProjectProfileVo);
                     dto.setConfig(mysqlMap);
                 }
@@ -265,9 +265,9 @@ public class ProjectDaoImpl implements ProjectDao {
     private Map<String,String> mysqlConfigCheck(SoftwareInfoVo softwareInfoVo,InsertBackProjectProfileVo vo) {
         //软件必需配置信息
         Map<String,String> configMap = StringUtil.strToMap(vo.getConfig());
-        if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name())){
-            if (configMap.containsKey(SoftwareEnum.MYSQL.name())){
-                Map<String,String> mysqlMap = StringUtil.strToMap(configMap.get(SoftwareEnum.MYSQL.name()));
+        if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name().toLowerCase())){
+            if (configMap.containsKey(SoftwareEnum.MYSQL.name().toLowerCase())){
+                Map<String,String> mysqlMap = StringUtil.strToMap(configMap.get(SoftwareEnum.MYSQL.name().toLowerCase()));
                 if (mysqlMap.containsKey("dataSourceName")){
                     if (StringUtils.isEmpty(mysqlMap.get("dataSourceName"))){
                         throw new GlobalException(RES_ILLEGAL_OPERATION,"数据库库名未传递");
