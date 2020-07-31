@@ -229,7 +229,7 @@ public class ProjectDaoImpl implements ProjectDao {
                 dto.setVersion(softwareInfoVo.getVersion());
                 dto.setProfileCode(projectProfileCode);
                 //数据库配置
-                if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name())){
+                if (softwareInfoVo.getSoftwareName().toUpperCase().equals(SoftwareEnum.MYSQL.name())){
                     Map<String,String> mysqlMap = mysqlConfigCheck(softwareInfoVo,insertBackProjectProfileVo);
                     dto.setConfig(mysqlMap);
                 }
