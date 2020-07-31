@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 /**
@@ -195,6 +196,22 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
+        new Thread(()->{
+            try {
+                TimeUnit.MINUTES.sleep(1);
+                SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, "#!/bin/bash\n" +
+                        "\n" +
+                        "software=$1\n" +
+                        "version=$2\n" +
+                        "targetPath=/data/fastgo/software\n" +
+                        "\n" +
+                        "pkill -9 mysql\n" +
+                        "\n" +
+                        "$targetPath/$software-$version/support-files/mysql.server start",StringUtils.join(Arrays.asList(reqCreateSoftwareDTO.getSoftwareName(),reqCreateSoftwareDTO.getVersion()),","), -1, reqCreateSoftwareDTO.getIp());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
         return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
 
