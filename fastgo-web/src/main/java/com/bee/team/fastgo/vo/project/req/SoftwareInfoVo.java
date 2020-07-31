@@ -3,6 +3,7 @@ package com.bee.team.fastgo.vo.project.req;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import scala.util.parsing.combinator.testing.Str;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -21,6 +22,9 @@ public class SoftwareInfoVo implements Serializable {
     @ApiModelProperty(value = "软件版本号", example = "5.0")
     @NotBlank(message = "软件版本号不能为空")
     private String version;
+
+    @ApiModelProperty(value = "软件配置必须信息", example = "{'mysql':{'dataSourceName':'test','sql':'xxxx'},'kafka':{'ip':'172.xx.xx.xx'}}")
+    private String config;
 
 
 
