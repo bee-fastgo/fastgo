@@ -98,6 +98,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             map.put("start",pager.getStart());
             map.put("limit",pager.getLimit());
             List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
+            for (ProjectListVo projectListVo : projectListVoList){
+                List<ProjectBranchAndAccessAddrVo> profileRunprofileRelationDos = mapper.findProjectAccessAddr(projectListVo.getProjectCode());
+            }
             pager.setData(projectListVoList);
         }
         return baseSupport.pagerCopy(pager,ProjectListVo.class);
@@ -249,14 +252,14 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         //获取项目运行环境信息
         DeployInfoVo vo = mapper.findDeployProjectInfo(deployBackPorjectVo.getProjectCode());
-        Map<String,Object> map = StringUtil.strToMap(vo.getRunProfileConfig());
+        Map map = StringUtil.strToMap(vo.getRunProfileConfig());
         if (map == null){
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目运行环境不存在");
         }
         SimpleDeployDTO dto = baseSupport.objectCopy(vo,SimpleDeployDTO.class);
         dto.setBranchName(deployBackPorjectVo.getBranchName());
-        String port = map.get("port").toString();
-        dto.setProjectPort(port.substring(0,port.indexOf(".")));
+        String port = String.valueOf(map.get("port"));
+        dto.setProjectPort(port);
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),dto,null,PROJECT_TYPE2,projectDo.getId().intValue());
         deployPublisher.publish(deployEvent);
@@ -342,7 +345,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         //获取项目运行环境信息
         DeployInfoVo vo = mapper.findDeployProjectInfo(deployFrontPorjectVo.getProjectCode());
-        Map<String,Object> map = StringUtil.strToMap(vo.getRunProfileConfig());
+        Map<String,String> map = StringUtil.strToMap(vo.getRunProfileConfig());
         if (map == null){
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目运行环境不存在");
         }
@@ -361,7 +364,13 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Override
     public void updateProjectDeploy(AutoDeployVo autoDeployVo) {
-        ProjectDo projectDo = new ProjectDo();
+        ProjectDoExample example = new ProjectDoExample();
+        example.createCriteria().andProjectCodeEqualTo(autoDeployVo.getProjectCode());
+        List<ProjectDo> projectDoList = mapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(projectDoList)){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
+        }
+        ProjectDo projectDo = projectDoList.get(0);
         projectDo.setId(autoDeployVo.getId().longValue());
         String projectCode = autoDeployVo.getProjectCode();
         if (AUTO_DEPLOY0.equals(autoDeployVo.getAutoDeploy())){
@@ -401,6 +410,18 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         RunProfileListVo runProfileListVo = new RunProfileListVo();
         runProfileListVo.setIps(list);
         return runProfileListVo;
+    }
+
+    @Override
+    public String getProjectStatus(String projectCode) {
+        ProjectDoExample example = new ProjectDoExample();
+        example.createCriteria().andProjectCodeEqualTo(projectCode);
+        List<ProjectDo> projectDoList = mapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(projectDoList)){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
+        }
+        ProjectDo projectDo = projectDoList.get(0);
+        return projectDo.getProjectStatus();
     }
 
 

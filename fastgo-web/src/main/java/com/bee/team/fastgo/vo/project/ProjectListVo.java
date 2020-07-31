@@ -34,4 +34,7 @@ public class ProjectListVo implements Serializable {
     @ApiModelProperty(value = "自动部署", required = true, example = "0")
     private Integer autoDeploy;
 
+    @ApiModelProperty(value = "访问地址", required = true, example = "172.22.5.22:9999")
+    private String accessAddr;
+
 }

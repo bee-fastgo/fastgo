@@ -113,4 +113,14 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      */
 
     RunProfileListVo findRunProfile();
+
+    /**
+     * @param projectCode
+     * @return {@link String}
+     * @author hs
+     * @date 2020/7/30
+     * @desc 获取项目状态
+     */
+
+    String getProjectStatus(String projectCode);
 }

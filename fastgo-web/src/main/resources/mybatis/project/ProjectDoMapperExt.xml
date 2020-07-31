@@ -70,4 +70,13 @@
         where pp.projectCode = #{projectCode} and pp.branchName = #{branchName}
     </select>
 
+    <!--查询项目运行环境-->
+    <select id="findProjectAccessAddr" parameterType="java.lang.String" resultType="com.bee.team.fastgo.vo.project.ProjectBranchAndAccessAddrVo">
+        select pr.runProfileConfig,pp.branchName from t_project_profile pp
+        inner join t_project p on p.projectCode = pp.projectCode
+        inner join t_profile_runprofile_relation pr on pp.profileCode = pr.profileCode
+        where p.projectCode = #{projectCode}
+    </select>
+
+
 </mapper>
