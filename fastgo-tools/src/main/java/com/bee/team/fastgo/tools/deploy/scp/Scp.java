@@ -167,8 +167,6 @@ public class Scp {
                 "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n"
                 + "RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
                 "RUN sed -i \"s/deb.debian.org/mirrors.aliyun.com/g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/security.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/httpredir.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list" +
                 "COPY ./dist  /usr/share/nginx/html/\n" +
                 "COPY default.conf /etc/nginx/conf.d/default.conf\n" +
                 "EXPOSE " + projectPort + "\n'";
@@ -185,8 +183,6 @@ public class Scp {
                 "RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone\n"
                 + "RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
                 "RUN sed -i \"s/deb.debian.org/mirrors.aliyun.com/g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/security.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/httpredir.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list" +
                 "\n" +
                 "ADD " + projectName + " /" + projectName + "\n" +
                 "\n" +
