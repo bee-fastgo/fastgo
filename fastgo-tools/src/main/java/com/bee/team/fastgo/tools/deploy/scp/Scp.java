@@ -91,12 +91,14 @@ public class Scp {
             // 构建Docker
             String step4 = "echo " + getDockerFile(projectName) + " >> " + remotePath + "/Dockerfile";
             invokeCmd(conn.openSession(), step4);
-            // 部署
+            // 构建docker
             String step5 = "docker build -t " + projectName + " .";
+            invokeCmd(conn.openSession(), step5);
+            // 部署
             String step6 = "docker stop " + projectName + "Docker";
             String step7 = "docker rm " + projectName + "Docker";
             String step8 = "docker   run --name=" + projectName + "Docker -d -p " + port + ":" + port + " " + projectName;
-            invokeCmd(conn.openSession(), step5 + "\n" + step6 + "\n" + step7 + "\n" + step8);
+            invokeCmd(conn.openSession(), step6 + "\n" + step7 + "\n" + step8);
             System.out.println(DateUtils.getCurrentTime() + "部署完成");
         } finally {
             if (conn != null) {
@@ -136,15 +138,18 @@ public class Scp {
             // 构建Docker
             String step3 = "cd  " + remotePath + "\n" + "echo " + getVueDockerFile(projectPort) + " >> " + remotePath + "/Dockerfile";
             invokeCmd(conn.openSession(), step3);
-            // 部署
+            // 构建docker
             String step5 = "docker build -t " + projectName + " .";
+            invokeCmd(conn.openSession(), step5);
+
+            // 部署
             String step6 = "docker stop " + projectName + "Docker";
             String step7 = "docker rm " + projectName + "Docker";
             //-v /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
             //-v /data/nginx/log:/var/log/nginx
             //-v /data/nginx/html:/usr/share/nginx/html
-            String step8 = "docker   run --name=" + projectName + "Docker -d -p " + projectPort + ":" + projectPort + " -v "+ remotePath + "/default.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -v "+remotePath+"/dist:/usr/share/nginx/html " + projectName;
-            invokeCmd(conn.openSession(), step5 + "\n" + step6 + "\n" + step7 + "\n" + step8);
+            String step8 = "docker   run --name=" + projectName + "Docker -d -p " + projectPort + ":" + projectPort + " -v " + remotePath + "/default.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -v " + remotePath + "/dist:/usr/share/nginx/html " + projectName;
+            invokeCmd(conn.openSession(), step6 + "\n" + step7 + "\n" + step8);
             System.out.println(DateUtils.getCurrentTime() + "部署完成");
         } finally {
             if (conn != null) {
@@ -160,10 +165,10 @@ public class Scp {
                 "MAINTAINER fastgo\n" +
                 "\n" +
                 "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n"
-                +"RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
+                + "RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
                 "RUN sed -i \"s/deb.debian.org/mirrors.aliyun.com/g\" /etc/apt/sources.list\n" +
                 "RUN sed -i \"s/security.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/httpredir.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list"+
+                "RUN sed -i \"s/httpredir.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list" +
                 "COPY ./dist  /usr/share/nginx/html/\n" +
                 "COPY default.conf /etc/nginx/conf.d/default.conf\n" +
                 "EXPOSE " + projectPort + "\n'";
@@ -178,10 +183,10 @@ public class Scp {
                 "\n" +
                 "ENV TZ=PRC\n" +
                 "RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone\n"
-                +"RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
+                + "RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
                 "RUN sed -i \"s/deb.debian.org/mirrors.aliyun.com/g\" /etc/apt/sources.list\n" +
                 "RUN sed -i \"s/security.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/httpredir.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list"+
+                "RUN sed -i \"s/httpredir.debian.org/mirrors.aliyun.com\\/debian-security/g\" /etc/apt/sources.list" +
                 "\n" +
                 "ADD " + projectName + " /" + projectName + "\n" +
                 "\n" +
