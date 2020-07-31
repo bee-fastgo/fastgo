@@ -72,30 +72,30 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         //参数校验
         checkParam(reqCreateSoftwareDTO);
 
-        if (SoftwareEnum.MYSQL.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        if (SoftwareEnum.MYSQL.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installMysql(reqCreateSoftwareDTO);
         }
-        else if (SoftwareEnum.REDIS.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        else if (SoftwareEnum.REDIS.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installRedis(reqCreateSoftwareDTO);
         }
-        else if (SoftwareEnum.KAFKA.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        else if (SoftwareEnum.KAFKA.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installKafka(reqCreateSoftwareDTO);
         }
-        else if (SoftwareEnum.MONGODB.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        else if (SoftwareEnum.MONGODB.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installMongodb(reqCreateSoftwareDTO);
         }
-        else if (SoftwareEnum.CASSANDRA.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        else if (SoftwareEnum.CASSANDRA.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installCassandra(reqCreateSoftwareDTO);
         }else if (SoftwareEnum.ELASTICSEARCH.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installElasticsearch(reqCreateSoftwareDTO);
         }
-        else if (SoftwareEnum.FLUME.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        else if (SoftwareEnum.FLUME.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installFlume(reqCreateSoftwareDTO);
         }
-        else if (SoftwareEnum.ZOOKEEPER.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        else if (SoftwareEnum.ZOOKEEPER.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installZookeeper(reqCreateSoftwareDTO);
         }
-        else if (SoftwareEnum.DOCKER.name().equals(reqCreateSoftwareDTO.getSoftwareName())){
+        else if (SoftwareEnum.DOCKER.name().toLowerCase().equals(reqCreateSoftwareDTO.getSoftwareName())){
             return installDocker(reqCreateSoftwareDTO);
         }
         else {
