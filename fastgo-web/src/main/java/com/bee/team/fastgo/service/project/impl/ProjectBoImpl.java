@@ -168,8 +168,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/backEnd/deployBackProject",AUTO_DEPLOY1);
-        projectPublisher.publish(projectEvent);
+        /*ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/backEnd/deployBackProject",AUTO_DEPLOY1);
+        projectPublisher.publish(projectEvent);*/
     }
 
     @Override
@@ -261,8 +261,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         mapper.insertSelective(projectDo);
         //事件添加webhook
-        ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
-        projectPublisher.publish(projectEvent);
+        /*ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
+        projectPublisher.publish(projectEvent);*/
     }
 
     @Override
