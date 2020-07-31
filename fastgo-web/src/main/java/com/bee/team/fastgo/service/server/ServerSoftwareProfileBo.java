@@ -82,4 +82,15 @@ public interface ServerSoftwareProfileBo extends LavaBo<ServerSoftwareProfileDo,
      * @desc
      */
     void updateSoftwareConfigBySoftwareCode(String softwareCode, String softwareConfig);
+
+    /**
+     * 通过软件名+版本+ip+port+dbName获取对应的mysql配置
+      * @param ip
+     * @param port
+     * @param dataSourceName
+     * @author jgz
+     * @date 2020/7/31
+     * @desc
+     */
+    ServerSoftwareProfileDo getMysqlProfileBySoftwareNameAndVersionIpAndPortAndDataSourceName(String softwareName,String version,String ip, String port, String dataSourceName);
 }

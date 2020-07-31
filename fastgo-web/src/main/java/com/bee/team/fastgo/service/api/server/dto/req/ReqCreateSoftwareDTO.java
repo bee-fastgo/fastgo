@@ -1,6 +1,7 @@
 package com.bee.team.fastgo.service.api.server.dto.req;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author jgz
@@ -28,6 +29,19 @@ public class ReqCreateSoftwareDTO implements Serializable {
      * 版本
      */
     private String version;
+
+    /**
+     * 软件配置
+     */
+    private Map<String,String> config;
+
+    public Map<String, String> getConfig() {
+        return config;
+    }
+
+    public void setConfig(Map<String, String> config) {
+        this.config = config;
+    }
 
     public String getProfileCode() {
         return profileCode;

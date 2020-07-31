@@ -1,5 +1,7 @@
 package com.bee.team.fastgo.service.server.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.exception.sever.ScriptException;
@@ -133,6 +135,25 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
     @Override
     public void updateSoftwareConfigBySoftwareCode(String softwareCode, String softwareConfig) {
 
+    }
+
+    @Override
+    public ServerSoftwareProfileDo getMysqlProfileBySoftwareNameAndVersionIpAndPortAndDataSourceName(String softwareName, String version, String ip, String port, String dataSourceName) {
+        ServerSoftwareProfileDoExample serverSoftwareProfileDoExample = new ServerSoftwareProfileDoExample();
+        serverSoftwareProfileDoExample.createCriteria().andSoftwareNameEqualTo(softwareName)
+                .andVersionEqualTo(version)
+                .andServerIpEqualTo(ip);
+
+        List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = selectByExample(serverSoftwareProfileDoExample);
+        if (CollectionUtils.isEmpty(serverSoftwareProfileDoList)){
+            return null;
+        }
+        ServerSoftwareProfileDo serverSoftwareProfileDo = serverSoftwareProfileDoList.get(0);
+        JSONObject jsonObject = JSON.parseObject(serverSoftwareProfileDo.getSoftwareConfig());
+        if (!ip.equals(jsonObject.get("ip")) || !port.equals(jsonObject.get("port")) || !dataSourceName.equals(jsonObject.get("dataSourceName"))){
+           return null;
+        }
+        return serverSoftwareProfileDo;
     }
 
 
