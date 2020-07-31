@@ -34,10 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
@@ -185,12 +182,16 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
         String version = reqCreateSoftwareDTO.getVersion();
         String downloadUrl = serverSourceDo.getSourceDownUrl();
-        List<String> strings = Arrays.asList(softwareName, version, downloadUrl,config.get("dataSourceName"));
+        List<String> list = new ArrayList<>();
+        list.add(softwareName);
+        list.add(version);
+        list.add(downloadUrl);
+        list.add(config.get("dataSourceName"));
         if(StringUtils.isNotEmpty(config.get("sqlUrl"))){
-            strings.add(config.get("sqlUrl"));
+            list.add(config.get("sqlUrl"));
         }
 
-        String param = StringUtils.join(strings, ",");
+        String param = StringUtils.join(list, ",");
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
@@ -229,7 +230,12 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
         String version = reqCreateSoftwareDTO.getVersion();
         String downloadUrl = serverSourceDo.getSourceDownUrl();
-        String param = StringUtils.join(Arrays.asList(softwareName, version, downloadUrl,config.get("zookeeperCluster")), ",");
+        List<String> list = new ArrayList<>();
+        list.add(softwareName);
+        list.add(version);
+        list.add(downloadUrl);
+        list.add(config.get("zookeeperCluster"));
+        String param = StringUtils.join(list, ",");
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
@@ -277,7 +283,11 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
         String version = reqCreateSoftwareDTO.getVersion();
         String downloadUrl = serverSourceDo.getSourceDownUrl();
-        String param = StringUtils.join(Arrays.asList(softwareName, version, downloadUrl), ",");
+        List<String> list = new ArrayList<>();
+        list.add(softwareName);
+        list.add(version);
+        list.add(downloadUrl);
+        String param = StringUtils.join(list, ",");
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
@@ -310,7 +320,11 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
         String version = reqCreateSoftwareDTO.getVersion();
         String downloadUrl = serverSourceDo.getSourceDownUrl();
-        String param = StringUtils.join(Arrays.asList(softwareName, version, downloadUrl), ",");
+        List<String> list = new ArrayList<>();
+        list.add(softwareName);
+        list.add(version);
+        list.add(downloadUrl);
+        String param = StringUtils.join(list, ",");
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
@@ -343,7 +357,11 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
         String version = reqCreateSoftwareDTO.getVersion();
         String downloadUrl = serverSourceDo.getSourceDownUrl();
-        String param = StringUtils.join(Arrays.asList(softwareName, version, downloadUrl), ",");
+        List<String> list = new ArrayList<>();
+        list.add(softwareName);
+        list.add(version);
+        list.add(downloadUrl);
+        String param = StringUtils.join(list, ",");
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
@@ -376,17 +394,16 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
         String version = reqCreateSoftwareDTO.getVersion();
         String downloadUrl = serverSourceDo.getSourceDownUrl();
-        String param = StringUtils.join(Arrays.asList(softwareName, version, downloadUrl), ",");
+        List<String> list = new ArrayList<>();
+        list.add(softwareName);
+        list.add(version);
+        list.add(downloadUrl);
+        String param = StringUtils.join(list, ",");
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
         return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
-
-
-
-
-
 
 
     /**
