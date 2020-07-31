@@ -250,6 +250,12 @@ public class ProjectDaoImpl implements ProjectDao {
             }
             //批量新增项目环境，软件环境关联表
             profileSoftwareRelationDoMapperExt.batchInsertProfileSoftware(dos);
+        }else if (CollectionUtils.isEmpty(softwareInfoVoList)){
+            if (PROJECT_STATUS6.equals(flag)){
+                flag = PROJECT_STATUS2;
+            }else if (PROJECT_STATUS1.equals(flag)){
+                flag = PROJECT_STATUS1;
+            }
         }
 
         //4.项目环境，配置中心关联信息

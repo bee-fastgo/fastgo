@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +77,9 @@ public class ProjectController {
     @ApiOperation(value = "后台项目新增")
     @ValidHandler(key = "insertBackProjectVo", value = InsertBackProjectVo.class, isReqBody = false)
     public ResBody<Void> addBackProject(@RequestBody InsertBackProjectVo insertBackProjectVo) {
+        if (CollectionUtils.isEmpty(insertBackProjectVo.getSoftwareInfoVos())){
+            throw new GlobalException(RES_PARAM_IS_EMPTY,"软件环境不能为空");
+        }
         projectBo.addBackProjectInfo(insertBackProjectVo);
         return new ResBody().buildSuccessResBody();
     }
