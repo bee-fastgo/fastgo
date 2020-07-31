@@ -182,9 +182,7 @@ public class Scp {
                 "ENV PARAMS=\"\"\n" +
                 "\n" +
                 "ENV TZ=PRC\n" +
-                "RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone\n"
-                + "RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/deb.debian.org/mirrors.aliyun.com/g\" /etc/apt/sources.list\n" +
+                "RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone\n" +
                 "\n" +
                 "ADD " + projectName + " /" + projectName + "\n" +
                 "\n" +
