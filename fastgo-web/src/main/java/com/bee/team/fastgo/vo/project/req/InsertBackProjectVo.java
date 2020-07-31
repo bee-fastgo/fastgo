@@ -45,4 +45,7 @@ public class InsertBackProjectVo implements Serializable {
     @ApiModelProperty(value = "是否生成simple框架：0-不生成，1-生成", example = "0")
     private Integer isConfirm;
 
+    @ApiModelProperty(value = "软件配置必须信息", example = "{'mysql':{'dataSourceName':'test','sql':'xxxx'},'kafka':{'ip':'172.xx.xx.xx'}}")
+    private String config;
+
 }
