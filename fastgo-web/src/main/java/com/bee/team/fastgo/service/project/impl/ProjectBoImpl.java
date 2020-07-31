@@ -104,7 +104,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         pager.setTotal(count);
         pager.setPageNo(queryProjectListVo.getPageNum());
         pager.setLimit(queryProjectListVo.getPageSize());
-        if (count > 1){
+        if (count > 0){
             map.put("start",pager.getStart());
             map.put("limit",pager.getLimit());
             List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
