@@ -27,6 +27,7 @@ public class MavenUtil {
         request.setJavaHome(new File(PropertyConfigurer.getProperty("java.home")));
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File(PropertyConfigurer.getProperty("maven.home")));
+        InvocationResult execute = invoker.execute(request);
         if (invoker.execute(request).getExitCode() != 0) {
             return false;
         }

@@ -48,4 +48,9 @@ public class DeployDTO {
      */
     String simpleServiceUrl;
 
+    /**
+     * 部署日志Id
+     */
+    String deployLogId;
+
 }
