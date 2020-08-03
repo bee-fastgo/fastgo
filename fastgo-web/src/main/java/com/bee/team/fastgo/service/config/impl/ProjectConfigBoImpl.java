@@ -4,10 +4,7 @@ import com.bee.team.fastgo.config.common.MongoCommonValue;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.mapper.ProjectDoMapperExt;
 import com.bee.team.fastgo.service.config.ProjectConfigBo;
-import com.bee.team.fastgo.vo.config.req.FindProjectConfigVo;
-import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
-import com.bee.team.fastgo.vo.config.req.SoftReqVo;
-import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
+import com.bee.team.fastgo.vo.config.req.*;
 import com.mongodb.client.result.UpdateResult;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.exception.GlobalException;
@@ -21,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.bee.team.fastgo.exception.config.ProjectConfigException.REMOVE_PROJECT_FAILED;
 import static com.bee.team.fastgo.exception.config.ProjectConfigException.UPDATE_PROJECT_FAILED;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
@@ -149,5 +147,19 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
             queryMap.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, configCode);
         }
         return configProjectBo.getOneProjectConfigToJSON(queryMap);
+    }
+
+    @Override
+    public void delOneDataConfig(DelOneDataReqVo delOneDataReqVo) {
+        // 设置要移除的key
+        String key = delOneDataReqVo.getSoftName();
+        if (!StringUtils.isEmpty(delOneDataReqVo.getKey())) {
+            // 如果delOneDataReqVo.getKey()是空的，表示要删除的是软件信息，不为空表示删除某个软件的某个配置项
+            key = key + delOneDataReqVo.getKey().replace(".", "-");
+        }
+        UpdateResult result = configProjectBo.removeOneDataByCondition(delOneDataReqVo.getProjectCode(), key);
+        if (result.getModifiedCount() < 1) {
+            throw new GlobalException(REMOVE_PROJECT_FAILED);
+        }
     }
 }

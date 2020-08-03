@@ -9,6 +9,7 @@ import com.bee.team.fastgo.project.model.GitlabProjectHook;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -28,6 +29,12 @@ public class ProjectListen {
 
     private static final Logger logger = LogManager.getLogger(ProjectListen.class);
 
+    @Value("${gitlab.url}")
+    private String gitlabUrl;
+
+    @Value("${gitlab.privateToken}")
+    private String privateToken;
+
     @Autowired
     private ProjectDoMapperExt projectDoMapperExt;
 
@@ -38,7 +45,7 @@ public class ProjectListen {
             String projectCode = projectEvent.getProjectCode();
             String url = projectEvent.getUrl();
             System.out.println(">>>>>>>>>>>>>>>>>>"+projectCode+">>>>>>>>>>"+url);
-            GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
+            GitlabAPI gitlabAPI = new GitlabAPI(gitlabUrl,privateToken);
             try{
                 ProjectDoExample example = new ProjectDoExample();
                 example.createCriteria().andProjectCodeEqualTo(projectCode);
@@ -58,7 +65,7 @@ public class ProjectListen {
             }
         }else if (AUTO_DEPLOY0.equals(projectEvent.getType())){
             String projectCode = projectEvent.getProjectCode();
-            GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
+            GitlabAPI gitlabAPI = new GitlabAPI(gitlabUrl,privateToken);
             try{
                 ProjectDoExample example = new ProjectDoExample();
                 example.createCriteria().andProjectCodeEqualTo(projectCode);

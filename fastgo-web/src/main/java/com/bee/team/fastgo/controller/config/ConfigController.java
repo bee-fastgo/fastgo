@@ -81,6 +81,14 @@ public class ConfigController {
         return projectConfigBo.getOneProjectConfigToJSON(projectCode, branch);
     }
 
+    @RequestMapping(value = "/DelOneProjectData", method = RequestMethod.POST)
+    @ApiOperation(value = "删除一个配置项，如果选择软件则会删除该软件的所有配置信息")
+    @ValidHandler(key = "delOneDataReqVo", value = DelOneDataReqVo.class, isReqBody = false)
+    public ResBody DelOneProjectData(@RequestBody DelOneDataReqVo delOneDataReqVo) {
+        projectConfigBo.delOneDataConfig(delOneDataReqVo);
+        return new ResBody().buildSuccessResBody();
+    }
+
 
     /*
     二、模板库管理

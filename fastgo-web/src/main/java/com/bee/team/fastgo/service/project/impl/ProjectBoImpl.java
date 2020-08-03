@@ -35,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Value("${frontTemplate}")
     private String frontTemplate;
 
-
+    @Value("${gitlab.privateToken}")
+    private String privateToken;
 
     @Autowired
     public void setBaseMapper(ProjectDoMapperExt mapper) {
@@ -154,7 +154,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
            //创建新的gitlab后台项目
             GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
             try {
-                GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,null,null,null);
+                GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,privateToken);
                 gitlabProjectDo = gitlabAPI.createNewProject(insertBackProjectVo.getProjectName(),insertBackProjectVo.getProjectDesc());
                 if (ObjectUtils.isEmpty(gitlabProjectDo)){
                     throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
@@ -238,7 +238,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             //创建新的gitlab后台项目
             GitlabProjectDo gitlabProjectDo;
             try {
-                GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,null,null,null);
+                GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,privateToken);
                 gitlabProjectDo = gitlabAPI.createNewProject(insertFrontProjectVo.getProjectName(),insertFrontProjectVo.getProjectDesc());
                 if (ObjectUtils.isEmpty(gitlabProjectDo)){
                     throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
@@ -339,7 +339,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
-        GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,null,null,null);
+        GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,privateToken);
         //获取项目gtilab id
         try{
             List<GitlabProjectDo> gitlibProjects = gitlabAPI.getAllProject();

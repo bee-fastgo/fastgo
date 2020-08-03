@@ -172,11 +172,12 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                 Map<String, Object> tempMap = (Map<String, Object>) configTemplateBo.findTemplateByCondition(map, Map.class);
 
                 // 过滤name、id和code
-                tempMap.remove(MongoCommonValue.TEMPLATE_NAME);
                 tempMap.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
                 tempMap.remove(MongoCommonValue.TEMPLATE_CODE);
+                tempMap.remove(MongoCommonValue.TEMPLATE_DESCRIPTION);
+
                 // 转移到修改的map中
-                update.set(e, tempMap);
+                update.set(e, softConfig(e, (Map<String, Object>) updateMap.get(e), tempMap).get(e));
 
                 // 清除已经修改的软件数据软件数据
                 updateMap.remove(e);
@@ -250,8 +251,11 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
             case "redis":
                 map.put("redis", redisConfig(project, template));
                 break;
+            case "kafka":
+                map.put("kafka", kafkaConfig(project, template));
+                break;
             default:
-                map.putAll(project);
+                map.put(templateName,project);
         }
         return map;
     }

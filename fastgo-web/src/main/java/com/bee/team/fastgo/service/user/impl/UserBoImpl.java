@@ -7,6 +7,7 @@ import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.model.UserDoExample;
 import com.bee.team.fastgo.service.user.UserBo;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
+import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.Md5Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -66,5 +67,8 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
         insert(userDo);
     }
 
-
+    @Override
+    public ResPageDTO ListUsers(Integer pageNum, Integer pageSize, String name) {
+        return null;
+    }
 }
