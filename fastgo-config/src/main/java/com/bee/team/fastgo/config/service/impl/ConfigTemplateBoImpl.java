@@ -15,11 +15,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_EXIST;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
@@ -38,6 +36,13 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "参数不能为空");
             // 抛出异常
         }
+        map.get(MongoCommonValue.TEMPLATE_NAME);
+        Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put(MongoCommonValue.TEMPLATE_NAME, map.get(MongoCommonValue.TEMPLATE_NAME).toString());
+        if (countTemplateByCondition(queryMap) > 0) {
+            throw new GlobalException(RES_DATA_EXIST, "该模板已存在，请检查");
+        }
+
         map.put(MongoCommonValue.TEMPLATE_CODE, RandomUtils.getRandomStr(16));
         return template.insert(map, MongoCollectionValue.CONFIG_TEMPLATE);
     }
