@@ -69,7 +69,7 @@ public class ServerSourceBoImpl extends AbstractLavaBoImpl<ServerSourceDo, Serve
         }
         ServerSourceDoExample example = new ServerSourceDoExample();
         example.createCriteria().andIsDeletedEqualTo("n")
-                .andSourceNameEqualTo(sourceName)
+                .andSoftwareNameEqualTo(sourceName)
                 .andSourceVersionEqualTo(sourceVersion);
         List<ServerSourceDo> list = selectByExample(example);
         if (CollectionUtils.isEmpty(list)) {

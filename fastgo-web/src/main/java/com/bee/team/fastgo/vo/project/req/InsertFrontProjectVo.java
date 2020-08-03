@@ -40,13 +40,6 @@ public class InsertFrontProjectVo implements Serializable {
     @NotNull(message = "运行服务器ip不能为空")
     private String runServerIp;
 
-    @ApiModelProperty(value = "项目环境名称", example = "测试环境")
-    @NotBlank(message = "项目环境名称不能为空")
-    private String profileName;
-
-    @ApiModelProperty(value = "软件环境list", example = "[{'softwareServerIp':'127.11.11.13','softwareName':'nginx','version':'5.0.0'}]")
-    private List<SoftwareInfoVo> softwareInfoVos;
-
     @ApiModelProperty(value = "是否生成vue框架：0-不生成，1-生成", example = "1")
     private Integer isConfirm;
 

@@ -1,6 +1,8 @@
 package com.bee.team.fastgo.controller.project;
 
+import com.bee.team.fastgo.job.core.util.IpUtil;
 import com.bee.team.fastgo.service.project.ProjectBo;
+import com.bee.team.fastgo.utils.FileUploadUtil;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
@@ -8,14 +10,20 @@ import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import com.spring.simple.development.support.exception.GlobalException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
@@ -30,6 +38,15 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_P
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
+
+    @Value("${mysql.fileAddr}")
+    private String fileAddr;
+
+    @Value("${server.file.static.path}")
+    private String mapPath;
+
+    @Value("${server.port}")
+    private String port;
 
     @Autowired
     private ProjectBo projectBo;
@@ -60,6 +77,9 @@ public class ProjectController {
     @ApiOperation(value = "后台项目新增")
     @ValidHandler(key = "insertBackProjectVo", value = InsertBackProjectVo.class, isReqBody = false)
     public ResBody<Void> addBackProject(@RequestBody InsertBackProjectVo insertBackProjectVo) {
+        if (CollectionUtils.isEmpty(insertBackProjectVo.getSoftwareInfoVos())){
+            throw new GlobalException(RES_PARAM_IS_EMPTY,"软件环境不能为空");
+        }
         projectBo.addBackProjectInfo(insertBackProjectVo);
         return new ResBody().buildSuccessResBody();
     }
@@ -230,6 +250,26 @@ public class ProjectController {
         }
         String status = projectBo.getProjectStatus(projectCode);
         return new ResBody().buildSuccessResBody(status);
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ApiOperation(value = "sql文件上传")
+    @ApiImplicitParam(name = "file", value = "文件", dataTypeClass = String.class)
+    public ResBody uploadFile(MultipartFile file, HttpServletRequest request) throws IOException {
+        if (file.isEmpty()) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "上传的文件为空");
+        }
+        //定义要上传文件 的存放路径
+        String localPath = fileAddr;
+        //获得文件名字
+        String fileName = file.getOriginalFilename();
+        if (FileUploadUtil.upload(file, localPath, fileName)) {
+            // 得到去掉了uri的路径
+            String url = request.getScheme() + "://" + IpUtil.getIp() + ":" + port + request.getContextPath() + mapPath + fileName;
+            System.out.println(url);
+            return new ResBody().buildSuccessResBody(url);
+        }
+        return ResBody.buildFailResBody();
     }
 
 }

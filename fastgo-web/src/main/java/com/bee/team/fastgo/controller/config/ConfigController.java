@@ -3,6 +3,7 @@ package com.bee.team.fastgo.controller.config;
 import com.bee.team.fastgo.service.config.ProjectConfigBo;
 import com.bee.team.fastgo.service.config.TemplateBo;
 import com.bee.team.fastgo.vo.config.req.*;
+import com.spring.simple.development.core.annotation.base.NoLogin;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
@@ -70,6 +71,7 @@ public class ConfigController {
         return new ResBody().buildSuccessResBody();
     }
 
+    @NoLogin
     @RequestMapping(value = "/getProjectConfigJson", method = RequestMethod.GET)
     @ApiOperation(value = "获取JSON格式的配置信息")
     @ApiImplicitParams({

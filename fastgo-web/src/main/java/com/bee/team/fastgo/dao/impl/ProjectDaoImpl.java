@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.dao.impl;
 
+import com.bee.team.fastgo.common.SoftwareEnum;
 import com.bee.team.fastgo.config.service.ConfigProjectBo;
 import com.bee.team.fastgo.constant.ProjectConstant;
 import com.bee.team.fastgo.dao.ProjectDao;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bee.team.fastgo.constant.ProjectConstant.*;
-import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
+import static com.spring.simple.development.support.exception.ResponseCode.*;
 
 @Component
 public class ProjectDaoImpl implements ProjectDao {
@@ -180,8 +181,7 @@ public class ProjectDaoImpl implements ProjectDao {
         //1.项目，项目环境关联信息
         ProjectProfileDo projectProfileDo = baseSupport.objectCopy(insertBackProjectProfileVo,ProjectProfileDo.class);
         //定义项目环境code（项目名_PROFILE）
-        String profileName = insertBackProjectProfileVo.getProfileName();
-        String projectProfileCode = profileName.toUpperCase() + "_" + "profile".toUpperCase();
+        String projectProfileCode = StringUtil.getRandomUUID();
         projectProfileDo.setProjectCode(insertBackProjectProfileVo.getProjectCode());
         projectProfileDo.setProfileCode(projectProfileCode);
         if (StringUtils.isEmpty(projectProfileDo.getBranchName())){
@@ -212,38 +212,51 @@ public class ProjectDaoImpl implements ProjectDao {
 
         //3.项目环境，软件环境关联信息
         List<SoftwareInfoVo> softwareInfoVoList = insertBackProjectProfileVo.getSoftwareInfoVos();
-        if (CollectionUtils.isEmpty(softwareInfoVoList)){
+        if (CollectionUtils.isEmpty(softwareInfoVoList) && !StringUtils.isEmpty(insertBackProjectProfileVo.getProfileName())){
             throw new GlobalException(RES_PARAM_IS_EMPTY,"软件环境不能为空");
         }
-        List<ProfileSoftwareRelationDo> dos = new ArrayList<>();
-        for (SoftwareInfoVo softwareInfoVo : softwareInfoVoList){
-            ProfileSoftwareRelationDo psDo = baseSupport.objectCopy(softwareInfoVo,ProfileSoftwareRelationDo.class);
-            psDo.setPrifileCode(projectProfileCode);
-            psDo.setRunServerIp(softwareInfoVo.getSoftwareServerIp());
+        if (!CollectionUtils.isEmpty(softwareInfoVoList)){
+            List<ProfileSoftwareRelationDo> dos = new ArrayList<>();
+            for (SoftwareInfoVo softwareInfoVo : softwareInfoVoList){
+                ProfileSoftwareRelationDo psDo = baseSupport.objectCopy(softwareInfoVo,ProfileSoftwareRelationDo.class);
+                psDo.setPrifileCode(projectProfileCode);
+                psDo.setRunServerIp(softwareInfoVo.getSoftwareServerIp());
 
-            //获取软件元配置信息
-            ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
-            dto.setIp(psDo.getRunServerIp());
-            dto.setSoftwareName(softwareInfoVo.getSoftwareName());
-            dto.setVersion(softwareInfoVo.getVersion());
-            dto.setProfileCode(projectProfileCode);
-            ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);
-            psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
-            psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
-            //修改项目状态
-            if (HAS_PROFILE1.toString().equals(softwareDTO.getConfigFlag())){
-                if (PROJECT_STATUS6.equals(flag)){
-                    flag = PROJECT_STATUS2;
-                }else if (PROJECT_STATUS1.equals(flag)){
-                    flag = PROJECT_STATUS5;
+                //获取软件元配置信息
+                ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
+                dto.setIp(psDo.getRunServerIp());
+                dto.setSoftwareName(softwareInfoVo.getSoftwareName());
+                dto.setVersion(softwareInfoVo.getVersion());
+                dto.setProfileCode(projectProfileCode);
+                //数据库配置
+                if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name().toLowerCase())){
+                    Map<String,String> mysqlMap = mysqlConfigCheck(softwareInfoVo,insertBackProjectProfileVo);
+                    dto.setConfig(mysqlMap);
                 }
+                ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);
+                psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
+                psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
+                //修改项目状态
+                if (HAS_PROFILE1.toString().equals(softwareDTO.getConfigFlag())){
+                    if (PROJECT_STATUS6.equals(flag)){
+                        flag = PROJECT_STATUS2;
+                    }else if (PROJECT_STATUS1.equals(flag)){
+                        flag = PROJECT_STATUS5;
+                    }
+                }
+                dos.add(psDo);
+                //添加元配置到项目信息中
+                map.put(softwareInfoVo.getSoftwareName(),StringUtil.strToMap(psDo.getSoftwareConfig()));
             }
-            dos.add(psDo);
-            //添加元配置到项目信息中
-            map.put(softwareInfoVo.getSoftwareName(),StringUtil.strToMap(psDo.getSoftwareConfig()));
+            //批量新增项目环境，软件环境关联表
+            profileSoftwareRelationDoMapperExt.batchInsertProfileSoftware(dos);
+        }else if (CollectionUtils.isEmpty(softwareInfoVoList)){
+            if (PROJECT_STATUS6.equals(flag)){
+                flag = PROJECT_STATUS2;
+            }else if (PROJECT_STATUS1.equals(flag)){
+                flag = PROJECT_STATUS1;
+            }
         }
-        //批量新增项目环境，软件环境关联表
-        profileSoftwareRelationDoMapperExt.batchInsertProfileSoftware(dos);
 
         //4.项目环境，配置中心关联信息
         String configCode = configProjectBo.insertProject(map);
@@ -252,5 +265,25 @@ public class ProjectDaoImpl implements ProjectDao {
         pcDo.setProfileCode(projectProfileCode);
         profileConfigRelationDoMapperExt.insertSelective(pcDo);
         return flag;
+    }
+
+    //检验mysql必备配置
+    private Map<String,String> mysqlConfigCheck(SoftwareInfoVo softwareInfoVo,InsertBackProjectProfileVo vo) {
+        //软件必需配置信息
+        Map<String,String> configMap = StringUtil.strToMap(vo.getConfig());
+        if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name().toLowerCase())){
+            if (configMap.containsKey(SoftwareEnum.MYSQL.name().toLowerCase())){
+                Map<String,String> mysqlMap = StringUtil.strToMap(configMap.get(SoftwareEnum.MYSQL.name().toLowerCase()));
+                if (mysqlMap.containsKey("dataSourceName")){
+                    if (StringUtils.isEmpty(mysqlMap.get("dataSourceName"))){
+                        throw new GlobalException(RES_ILLEGAL_OPERATION,"数据库库名未传递");
+                    }
+                    return mysqlMap;
+                }
+            }else {
+                throw new GlobalException(RES_ILLEGAL_OPERATION,"数据库必需配置未传递");
+            }
+        }
+        return null;
     }
 }
