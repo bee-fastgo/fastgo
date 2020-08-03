@@ -104,6 +104,7 @@ public class DeployJobFileAppender {
         }
 
         // read file
+        Boolean isEnd = false;
         StringBuffer logContentBuffer = new StringBuffer();
         int toLineNum = 0;
         LineNumberReader reader = null;
@@ -117,6 +118,9 @@ public class DeployJobFileAppender {
                 toLineNum = reader.getLineNumber();
                 if (toLineNum >= fromLineNum) {
                     logContentBuffer.append(line).append("\n");
+                }
+                if(line.contains("部署完成")){
+                    isEnd = true;
                 }
             }
         } catch (IOException e) {
@@ -132,7 +136,7 @@ public class DeployJobFileAppender {
         }
 
         // result
-        DeployLogResult deployLogResult = new DeployLogResult(fromLineNum, toLineNum, logContentBuffer.toString(), false);
+        DeployLogResult deployLogResult = new DeployLogResult(fromLineNum, toLineNum, logContentBuffer.toString(), isEnd);
         return deployLogResult;
 
 		/*
