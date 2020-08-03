@@ -5,6 +5,7 @@ import com.bee.team.fastgo.project.constant.TokenType;
 import com.bee.team.fastgo.project.model.GitlabBranch;
 import com.bee.team.fastgo.project.model.GitlabProjectDo;
 import com.bee.team.fastgo.project.model.GitlabProjectHook;
+import com.bee.team.fastgo.project.model.GitlabUser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,17 @@ public class GitlabAPI {
     private  String hostUrl;
 
     private  String apiToken;
-    private  TokenType tokenType;
-    private AuthMethod authMethod;
+    //默认请求方式
+    private  TokenType tokenType = TokenType.PRIVATE_TOKEN;
+    private AuthMethod authMethod = AuthMethod.URL_PARAMETER;
     private String userAgent = GitlabAPI.class.getCanonicalName() + "/" + System.getProperty("java.version");
 
     public GitlabAPI(){};
+
+    public GitlabAPI(String hostUrl, String apiToken) {
+        this.hostUrl = hostUrl.endsWith("/") ? hostUrl.replaceAll("/$", "") : hostUrl;
+        this.apiToken = apiToken;
+    }
 
     public GitlabAPI(String hostUrl, String apiToken, TokenType tokenType, AuthMethod method) {
         this.hostUrl = hostUrl.endsWith("/") ? hostUrl.replaceAll("/$", "") : hostUrl;
@@ -121,7 +128,7 @@ public class GitlabAPI {
      */
     public GitlabProjectDo getProject(Integer id) throws IOException {
         String tailUrl = "projects/" + id;
-        return getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabProjectDo.class);
+        return getRequest().execute(tailUrl,GitlabProjectDo.class);
     }
 
     /**
@@ -133,7 +140,7 @@ public class GitlabAPI {
      */
     public GitlabProjectDo getProject(String projectName,String nameSpace) throws IOException {
         String tailUrl = "projects/"+nameSpace+"%2F"+projectName;
-        return getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabProjectDo.class);
+        return getRequest().execute(tailUrl,GitlabProjectDo.class);
     }
 
     /**
@@ -141,7 +148,7 @@ public class GitlabAPI {
      */
     public List<GitlabProjectDo> getAllProject() throws IOException {
         String tailUrl = "projects";
-        return getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).getAll(tailUrl, GitlabProjectDo[].class);
+        return getRequest().getAll(tailUrl, GitlabProjectDo[].class);
     }
 
     /**
@@ -152,7 +159,7 @@ public class GitlabAPI {
      */
     public GitlabProjectDo createNewProject(String projectName,String projectDesc) throws IOException {
         String tailUrl = "projects";
-        return postRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).addData("name",projectName).addData("description",projectDesc).execute(tailUrl,GitlabProjectDo.class);
+        return postRequest().addData("name",projectName).addData("description",projectDesc).execute(tailUrl,GitlabProjectDo.class);
     }
 
     /**
@@ -165,7 +172,7 @@ public class GitlabAPI {
      */
     public GitlabProjectDo getAllPipelines(Integer id,String ref) throws IOException {
         String tailUrl = "projects/" + id + "/pipelines";
-        return getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).addData("ref",ref).execute(tailUrl,GitlabProjectDo.class);
+        return getRequest().addData("ref",ref).execute(tailUrl,GitlabProjectDo.class);
     }
 
     /**
@@ -176,7 +183,7 @@ public class GitlabAPI {
      */
     public GitlabProjectHook addWebhook(Integer id,String url) throws IOException {
         String tailUrl = "projects/"+ id + "/hooks";
-        return postRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).addData("url",url).execute(tailUrl,GitlabProjectHook.class);
+        return postRequest().addData("url",url).execute(tailUrl,GitlabProjectHook.class);
     }
 
     /**
@@ -187,7 +194,7 @@ public class GitlabAPI {
      */
     public List<GitlabProjectHook> getAllWebhook(Integer id) throws IOException {
         String tailUrl = "projects/"+ id + "/hooks";
-        GitlabProjectHook[] gitlabProjectHooks = getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabProjectHook[].class);
+        GitlabProjectHook[] gitlabProjectHooks = getRequest().execute(tailUrl,GitlabProjectHook[].class);
         return Arrays.asList(gitlabProjectHooks);
     }
 
@@ -199,7 +206,7 @@ public class GitlabAPI {
      */
     public GitlabProjectHook deleteWebhook(Integer id,Integer hookId) throws IOException {
         String tailUrl = "projects/"+ id + "/hooks/"+hookId;
-        return deleteRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabProjectHook.class);
+        return deleteRequest().execute(tailUrl,GitlabProjectHook.class);
     }
 
     /**
@@ -212,8 +219,47 @@ public class GitlabAPI {
 
     public List<GitlabBranch> queryAllBranchInfo(Integer id) throws IOException {
         String tailUrl = "projects/"+ id + "/repository/branches";
-        GitlabBranch[] branches = getRequest().authenticate("n5_nL3oQUj_3wAZaQKC6",TokenType.PRIVATE_TOKEN,AuthMethod.URL_PARAMETER).execute(tailUrl,GitlabBranch[].class);
+        GitlabBranch[] branches = getRequest().execute(tailUrl,GitlabBranch[].class);
         return Arrays.asList(branches);
+    }
+
+    /**
+     * @param
+     * @return {@link GitlabUser}
+     * @author hs
+     * @date 2020/8/3
+     * @desc 新建用户
+     */
+    public GitlabUser createUser(String name,String email,String username,String password) throws IOException {
+        String tailUrl = "/users";
+        GitlabUser gitlabUser = postRequest().addData("email",email).addData("username",username).addData("name",name).addData("password",password).execute(tailUrl,GitlabUser.class);
+        return gitlabUser;
+    }
+
+    /**
+     * @param
+     * @return {@link GitlabUser}
+     * @author hs
+     * @date 2020/8/3
+     * @desc 锁定gitlab账号
+     */
+    /*public GitlabUser updateUserStatus(String name) throws IOException {
+        String tailUrl = "/users";
+        GitlabUser gitlabUser = getRequest().addData("email",email).addData("username",username).addData("name",name).addData("password",password).execute(tailUrl,GitlabUser.class);
+        return gitlabUser;
+    }*/
+
+    /**
+     * @param
+     * @return {@link GitlabUser}
+     * @author hs
+     * @date 2020/8/3
+     * @desc 修改gitlab用户信息
+     */
+    public GitlabUser deleteUser(String id) throws IOException {
+        String tailUrl = "/users/" + id;
+        GitlabUser gitlabUser = deleteRequest().execute(tailUrl,GitlabUser.class);
+        return gitlabUser;
     }
 
 
@@ -221,11 +267,14 @@ public class GitlabAPI {
 
 
     public static void main(String[] args) throws IOException {
-        GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242",null,null,null);
+        GitlabAPI gitlabAPI = new GitlabAPI("http://172.22.5.242","n5_nL3oQUj_3wAZaQKC6");
         //List<GitlabProjectDo> list = gitlabAPI.getAllProject();
         //GitlabProjectDo gitlabProjectDo = gitlabAPI.createNewProject("hsFirst","hs the first project");
-        GitlabProjectHook gitlabBranches = gitlabAPI.deleteWebhook(75,37);
-        System.out.println(gitlabBranches);
+        GitlabProjectHook gitlabProjectHook = gitlabAPI.deleteWebhook(136,66);
+        //GitlabProjectDo gitlabProjectDo = gitlabAPI.getProject(136);
+        List<GitlabProjectHook> gitlabProjectHookList = gitlabAPI.getAllWebhook(136);
+        //GitlabUser gitlabUser = gitlabAPI.createUser("test","15871341469@163.com","test001","123456");
+        System.out.println(gitlabProjectHook);
     }
 
 }
