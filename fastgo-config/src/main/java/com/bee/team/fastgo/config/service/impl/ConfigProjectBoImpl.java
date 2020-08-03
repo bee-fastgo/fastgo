@@ -47,10 +47,20 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
             // 抛出异常
             throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数不能为空");
         }
+
+        Map<String, Object> returnMap = new HashMap<>();
+
+        // 基础配置
+        returnMap.put(MongoCommonValue.PROJECT_BASE_KEY, baseConfig((Map<String, Object>) map.get(MongoCommonValue.PROJECT_BASE_KEY)));
+        map.remove(MongoCommonValue.PROJECT_BASE_KEY);
+
+        // swagger配置
+        returnMap.put("swagger", swaggerConfig());
+
         // 获取所有的模板集合
         List<Map<String, Object>> list = configTemplateBo.findAllTemplateList(Map.class);
-        Map<String, Object> returnMap = new HashMap<>();
-        returnMap.put(MongoCommonValue.PROJECT_BASE_KEY, baseConfig((Map<String, Object>) map.get(MongoCommonValue.PROJECT_BASE_KEY)));
+
+        // 遍历模板，如果新增的配置中包含模板中的软件，就将模板的信息新增到项目中，并且修改用户自定义的参数
         for (Map e : list) {
             // 如果包含模板中的name，就将模板的数据添加到map中
             if (map.containsKey(e.get(MongoCommonValue.TEMPLATE_NAME))) {
@@ -58,18 +68,17 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                 // 过滤name、id和code
                 e.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
                 e.remove(MongoCommonValue.TEMPLATE_CODE);
+                e.remove(MongoCommonValue.TEMPLATE_DESCRIPTION);
+                String softName = e.get(MongoCommonValue.TEMPLATE_NAME).toString();
                 // 定制mysql配置
-                if ("mysql".equals(e.get(MongoCommonValue.TEMPLATE_NAME).toString())) {
-                    returnMap.put("mysql", mysqlConfig(map1, e));
-                    continue;
-                }
-                // 定制redis
-                if ("redis".equals(e.get(MongoCommonValue.TEMPLATE_NAME).toString())) {
-                    returnMap.put("redis", redisConfig(map1, e));
-                    continue;
-                }
+                returnMap.putAll(softConfig(softName, map1, e));
+                map.remove(softName);
             }
+        }
 
+        // 如果包含其他配置信息，直接添加到项目配置中
+        if (!map.isEmpty()) {
+            returnMap.putAll(map);
         }
 
         // 添加成功获取返回的基础base配置
@@ -106,9 +115,12 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
 
     @Override
     public String getOneProjectConfigToJSON(Map map) {
+        if (map.isEmpty()) {
+            return null;
+        }
+
         // 根据条件获取配置信息
         Map<String, Object> configMap = (Map<String, Object>) this.getOneProjectConfigInfo(map, Map.class);
-
         // 过滤id
         configMap.remove(MongoCommonValue.CONFIG_PROJECT_ID);
 
@@ -138,21 +150,20 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         // 修改条件，相当于mysql where子句
         Criteria criteria = new Criteria();
         List<Object> list = Arrays.asList(queryMap.keySet().toArray());
-        list.stream().forEach(e -> criteria.and(e.toString()).is(queryMap.get(e)));
+        list.forEach(e -> criteria.and(e.toString()).is(queryMap.get(e)));
         Query query = new Query(criteria);
 
         // 要修改的键值对,相当于set语句
         Update update = new Update();
-        List<Object> listSet = Arrays.asList(updateMap.keySet().toArray());
-        listSet.stream().forEach(e -> update.set(e.toString(), updateMap.get(e)));
         // 获取要修改的所有软件名
+        List<Object> listSet = Arrays.asList(updateMap.keySet().toArray());
         List<String> newSofts = listSet.stream().map(e -> e.toString().substring(0, e.toString().indexOf("."))).collect(Collectors.toList());
 
         // 获取原本项目的所有软件名
         List<Object> oldSofts = Arrays.asList(template.findOne(query, Map.class, MongoCollectionValue.CONFIG_PROJECT).keySet().toArray());
 
         // 如果有新增的软件，就将模板中该软件的配置信息取出来作为该软件的配置信息
-        newSofts.stream().forEach(e -> {
+        for (String e : newSofts) {
             // 如果不包含就增加基础配置
             if (!oldSofts.contains(e)) {
                 // 根据软件名查询模板信息
@@ -164,12 +175,17 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                 tempMap.remove(MongoCommonValue.TEMPLATE_NAME);
                 tempMap.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
                 tempMap.remove(MongoCommonValue.TEMPLATE_CODE);
-
                 // 转移到修改的map中
                 update.set(e, tempMap);
 
+                // 清除已经修改的软件数据软件数据
+                updateMap.remove(e);
+                listSet.remove(e);
             }
-        });
+        }
+
+        // 修改已存在的软件配置
+        listSet.forEach(e -> update.set(e.toString(), updateMap.get(e)));
 
         // 修改指定的值，如果数据不存在键就添加该键值对
         return template.updateFirst(query, update, MongoCollectionValue.CONFIG_PROJECT);
@@ -224,32 +240,24 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         return template.count(query, MongoCollectionValue.CONFIG_PROJECT);
     }
 
-    private Map<String, Object> mysqlConfig(Map<String, Object> project, Map<String, Object> template) {
-        // project 项目里面的软件配置，template 软件的模板
-        // 定制mysql的项目配置
+    private Map<String, Object> softConfig(String templateName, Map<String, Object> project, Map<String, Object> template) {
+        // 软件定制，根据不同的软件进行定制
         Map<String, Object> map = new HashMap<>();
-        template.remove(MongoCommonValue.TEMPLATE_NAME);
-        map.put("spring.simple.datasource.url", ("jdbc:mysql://" + project.get("ip") + ":" + project.get("port") + "/" + project.get("dataSourceName") + "?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&serverTimezone=CTT"));
-        map.put("spring.simple.datasource.username", project.get("userName"));
-        map.put("spring.simple.datasource.password", project.get("password"));
-        map.putAll(template);
+        switch (templateName) {
+            case "mysql":
+                map.put("mysql", mysqlConfig(project, template));
+                break;
+            case "redis":
+                map.put("redis", redisConfig(project, template));
+                break;
+            default:
+                map.putAll(project);
+        }
         return map;
-    }
-
-    private Map<String, Object> redisConfig(Map<String, Object> project, Map<String, Object> template) {
-        // project 项目里软件的基础配置
-        // 定制redis配置
-        Map<String, Object> map = new HashMap<>();
-        template.remove(MongoCommonValue.TEMPLATE_NAME);
-        map.put("spring.simple.redisHost", project.get("ip"));
-        map.put("spring.simple.redisPort", project.get("port"));
-        map.put("spring.simple.redisPwd", project.get("password"));
-        return map;
-
     }
 
     private Map<String, Object> baseConfig(Map<String, Object> project) {
-        // 定制mysql的项目配置
+        // 定制基础的项目配置
         Map<String, Object> map = new HashMap<>();
         project.put("server.port", project.get("port"));
         project.remove("port");
@@ -257,4 +265,35 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         return project;
     }
 
+    private Map<String, Object> mysqlConfig(Map<String, Object> project, Map<String, Object> template) {
+        // project 项目里面的软件配置，template 软件的模板
+        // 定制mysql的项目配置
+        template.remove(MongoCommonValue.TEMPLATE_NAME);
+        template.replace("spring.simple.datasource.url", ("jdbc:mysql://" + project.get("ip") + ":" + project.get("port") + "/" + project.get("dataSourceName") + "?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&serverTimezone=CTT"));
+        template.replace("spring.simple.datasource.username", project.get("userName"));
+        template.replace("spring.simple.datasource.password", project.get("password"));
+        return template;
+    }
+
+    private Map<String, Object> redisConfig(Map<String, Object> project, Map<String, Object> template) {
+        // project 项目里软件的基础配置
+        // 定制redis配置
+        template.remove(MongoCommonValue.TEMPLATE_NAME);
+        template.replace("spring.simple.redisHost", project.get("ip"));
+        template.replace("spring.simple.redisPort", project.get("port"));
+        template.replace("spring.simple.redisPwd", project.get("password"));
+        return template;
+    }
+
+    private Map<String, Object> swaggerConfig() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("spring.simple.swagger.is_enable", "true");
+        return map;
+    }
+
+    private Map<String, Object> kafkaConfig(Map<String, Object> project, Map<String, Object> template) {
+        template.remove(MongoCommonValue.TEMPLATE_NAME);
+        template.replace("spring.simple.kafka.bootstrap.servers", project.get("ip") + ":" + project.get("port"));
+        return template;
+    }
 }
