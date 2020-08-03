@@ -27,15 +27,13 @@ public class MavenUtil {
         request.setJavaHome(new File(PropertyConfigurer.getProperty("java.home")));
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File(PropertyConfigurer.getProperty("maven.home")));
-
-        PrintStream out = new PrintStream(new FileOutputStream(new File(DeployHandler.logPathThreadLocal.get())), true);
-        InvokerLogger invokerLogger = new PrintStreamLogger(out,1);
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(DeployHandler.logPathThreadLocal.get()));
+        PrintStream out = new PrintStream(fileOutputStream, true);
+        InvokerLogger invokerLogger = new PrintStreamLogger(out, 3);
         invoker.setLogger(invokerLogger);
         if (invoker.execute(request).getExitCode() != 0) {
             return false;
         }
-        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(), out.toString());
-
         return true;
     }
 }
