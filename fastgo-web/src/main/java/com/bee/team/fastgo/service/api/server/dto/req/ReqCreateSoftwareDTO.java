@@ -11,6 +11,12 @@ import java.util.Map;
 public class ReqCreateSoftwareDTO implements Serializable {
 
     /**
+     * 创建环境的类型
+     * 0 创建项目时创建 1 手动创建
+     */
+    private String createEnvType = "0";
+
+    /**
      * 项目环境code
      */
     private String profileCode;
@@ -34,6 +40,14 @@ public class ReqCreateSoftwareDTO implements Serializable {
      * 软件配置
      */
     private Map<String,String> config;
+
+    public String getCreateEnvType() {
+        return createEnvType;
+    }
+
+    public void setCreateEnvType(String createEnvType) {
+        this.createEnvType = createEnvType;
+    }
 
     public Map<String, String> getConfig() {
         return config;
