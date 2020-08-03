@@ -30,4 +30,9 @@ public class SimpleDeployDTO {
      * 项目端口
      */
     String projectPort;
+
+    /**
+     * 部署日志Id
+     */
+    String deployLogId;
 }
