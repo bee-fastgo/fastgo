@@ -162,7 +162,7 @@ public class Scp {
 
     public static String getVueDockerFile(String projectPort) {
         String dockerFile = "'# Base Image设置基础镜像\n" +
-                "FROM scratch\n" +
+                "FROM nginx\n" +
                 "\n" +
                 "MAINTAINER fastgo\n" +
                 "\n" +
@@ -174,7 +174,7 @@ public class Scp {
     }
 
     public static String getDockerFile(String projectName) {
-        String dockerFile = "'FROM scratch\n" +
+        String dockerFile = "'FROM openjdk:8-jre-slim\n" +
                 "MAINTAINER fastgo\n" +
                 "\n" +
                 "ENV PARAMS=\"\"\n" +
