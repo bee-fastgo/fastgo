@@ -235,7 +235,7 @@ public class Scp {
         DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),DateUtils.getCurrentTime()+"执行命令：" + cmd);
         session.execCommand(cmd);
         //显示执行命令后的信息
-        System.out.println("Here is some information about the remote host:");
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"Here is some information about the remote host:");
         InputStream stdout = new StreamGobbler(session.getStdout());
         BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
         while (true) {
@@ -245,7 +245,8 @@ public class Scp {
             }
             DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),line);
         }
-        System.out.println("ExitCode: " + session.getExitStatus());
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"ExitCode: " + session.getExitStatus());
+
         //关闭远程连接
         session.close();
         DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),DateUtils.getCurrentTime() + "执行命令：" + cmd + "完成");
