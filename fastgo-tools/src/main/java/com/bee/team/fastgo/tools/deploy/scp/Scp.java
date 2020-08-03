@@ -86,21 +86,22 @@ public class Scp {
             }
             // 解压
             String step3 = "cd  " + remotePath + "\n" + "tar -zxvf  " + remotePath + "/" + projectName + "-spring-simple.tar.gz";
-            invokeCmd(conn.openSession(), step3);
+            //invokeCmd(conn.openSession(), step3);
 
             // 构建Docker
             String step4 = "echo " + getDockerFile(projectName) + " >> " + remotePath + "/Dockerfile";
-            invokeCmd(conn.openSession(), step4);
+            //invokeCmd(conn.openSession(), step4);
             // 构建docker
             String step5 = "cd  " + remotePath + "\n" + "docker build -t " + projectName + " .";
-            invokeCmd(conn.openSession(), step5);
+            //invokeCmd(conn.openSession(), step5);
             // 部署
             String step6 = "cd  " + remotePath + "\n" + "docker stop " + projectName + "Docker";
             String step7 = "cd  " + remotePath + "\n" + "docker rm " + projectName + "Docker";
             String step8 = "cd  " + remotePath + "\n" + "docker   run --name=" + projectName + "Docker -d -p " + port + ":" + port + " " + projectName;
-            invokeCmd(conn.openSession(), step6);
-            invokeCmd(conn.openSession(), step7);
-            invokeCmd(conn.openSession(), step8);
+            //invokeCmd(conn.openSession(), step6);
+            //invokeCmd(conn.openSession(), step7);
+            //invokeCmd(conn.openSession(), step8);
+            invokeCmd(conn.openSession(), step3+"\n"+step4+"\n"+step5+"\n"+step6 + "\n" + step7 + "\n" + step8);
             System.out.println(DateUtils.getCurrentTime() + "部署完成");
         } finally {
             if (conn != null) {
@@ -133,16 +134,16 @@ public class Scp {
             }
             // 解压
             String step1 = "cd  " + remotePath + "\n" + "tar -zxvf  dist.tar.gz";
-            invokeCmd(conn.openSession(), step1);
+            //invokeCmd(conn.openSession(), step1);
             // 构建Nginx.conf
             String step2 = "cd  " + remotePath + "\n" + "echo " + getNginxConfig(dataServerIp, projectPort, remotePath, serviceUrl) + " >> " + remotePath + "/default.conf";
-            invokeCmd(conn.openSession(), step2);
+            //invokeCmd(conn.openSession(), step2);
             // 构建Docker
             String step3 = "cd  " + remotePath + "\n" + "echo " + getVueDockerFile(projectPort) + " >> " + remotePath + "/Dockerfile";
-            invokeCmd(conn.openSession(), step3);
+            //invokeCmd(conn.openSession(), step3);
             // 构建docker
             String step5 = "docker build -t " + projectName + " .";
-            invokeCmd(conn.openSession(), step5);
+            //invokeCmd(conn.openSession(), step5);
 
             // 部署
             String step6 = "docker stop " + projectName + "Docker";
@@ -151,7 +152,7 @@ public class Scp {
             //-v /data/nginx/log:/var/log/nginx
             //-v /data/nginx/html:/usr/share/nginx/html
             String step8 = "docker   run --name=" + projectName + "Docker -d -p " + projectPort + ":" + projectPort + " -v " + remotePath + "/default.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -v " + remotePath + "/dist:/usr/share/nginx/html " + projectName;
-            invokeCmd(conn.openSession(), step6 + "\n" + step7 + "\n" + step8);
+            invokeCmd(conn.openSession(), step1+"\n"+step2+"\n"+step3+"\n"+step5+"\n"+step6 + "\n" + step7 + "\n" + step8);
             System.out.println(DateUtils.getCurrentTime() + "部署完成");
         } finally {
             if (conn != null) {
@@ -162,7 +163,7 @@ public class Scp {
 
     public static String getVueDockerFile(String projectPort) {
         String dockerFile = "'# Base Image设置基础镜像\n" +
-                "FROM scratch\n" +
+                "FROM nginx\n" +
                 "\n" +
                 "MAINTAINER fastgo\n" +
                 "\n" +
@@ -174,7 +175,7 @@ public class Scp {
     }
 
     public static String getDockerFile(String projectName) {
-        String dockerFile = "'FROM scratch\n" +
+        String dockerFile = "'FROM openjdk:8-jre-slim\n" +
                 "MAINTAINER fastgo\n" +
                 "\n" +
                 "ENV PARAMS=\"\"\n" +
