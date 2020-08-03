@@ -132,26 +132,26 @@ public class Scp {
                 throw new IOException("Authentication failed.文件scp到数据服务器时发生异常");
             }
             // 解压
-            String step1 = "cd  " + remotePath + "\n" + "tar -zxvf  dist.tar.gz && ";
+            String step1 = "cd  " + remotePath + "\n" + "tar -zxvf  dist.tar.gz";
             //invokeCmd(conn.openSession(), step1);
             // 构建Nginx.conf
-            String step2 = "cd  " + remotePath + "\n" + "echo " + getNginxConfig(dataServerIp, projectPort, remotePath, serviceUrl) + " >> " + remotePath + "/default.conf  && ";
+            String step2 = "cd  " + remotePath + "\n" + "echo " + getNginxConfig(dataServerIp, projectPort, remotePath, serviceUrl) + " >> " + remotePath + "/default.conf";
             //invokeCmd(conn.openSession(), step2);
             // 构建Docker
-            String step3 = "cd  " + remotePath + "\n" + "echo " + getVueDockerFile(projectPort) + " >> " + remotePath + "/Dockerfile  && ";
+            String step3 = "cd  " + remotePath + "\n" + "echo " + getVueDockerFile(projectPort) + " >> " + remotePath + "/Dockerfile";
             //invokeCmd(conn.openSession(), step3);
             // 构建docker
-            String step4 = "docker build -t " + projectName + " .  && ";
+            String step5 = "docker build -t " + projectName + " .";
             //invokeCmd(conn.openSession(), step5);
 
             // 部署
-            String step5 = "docker stop " + projectName + "Docker  && ";
-            String step6 = "docker rm " + projectName + "Docker  && ";
+            String step6 = "docker stop " + projectName + "Docker";
+            String step7 = "docker rm " + projectName + "Docker";
             //-v /data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
             //-v /data/nginx/log:/var/log/nginx
             //-v /data/nginx/html:/usr/share/nginx/html
-            String step7 = "docker   run --name=" + projectName + "Docker -d -p " + projectPort + ":" + projectPort + " -v " + remotePath + "/default.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -v " + remotePath + "/dist:/usr/share/nginx/html " + projectName;
-            invokeCmd(conn.openSession(), step1 + step2 + step3 + step4 + step5 + step6 + step7);
+            String step8 = "docker   run --name=" + projectName + "Docker -d -p " + projectPort + ":" + projectPort + " -v " + remotePath + "/default.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -v " + remotePath + "/dist:/usr/share/nginx/html " + projectName;
+            invokeCmd(conn.openSession(), step1+"\n"+step2+"\n"+step3+"\n"+step5+"\n"+step6 + "\n" + step7 + "\n" + step8);
             System.out.println(DateUtils.getCurrentTime() + "部署完成");
         } finally {
             if (conn != null) {
@@ -166,7 +166,7 @@ public class Scp {
                 "\n" +
                 "MAINTAINER fastgo\n" +
                 "\n" +
-                "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n" +
+                "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n"+
                 "COPY ./dist  /usr/share/nginx/html/\n" +
                 "COPY default.conf /etc/nginx/conf.d/default.conf\n" +
                 "EXPOSE " + projectPort + "\n'";
