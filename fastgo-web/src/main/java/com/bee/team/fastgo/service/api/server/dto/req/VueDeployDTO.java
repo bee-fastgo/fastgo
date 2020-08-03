@@ -35,4 +35,8 @@ public class VueDeployDTO {
      * simple服务器地址
      */
     String serviceUrl;
+    /**
+     * 部署日志Id
+     */
+    String deployLogId;
 }

@@ -39,6 +39,7 @@ public class DeployServiceImpl implements DeployService {
             deployDTO.setServicePort(serverDo.getSshPort());
             deployDTO.setServiceUserName(serverDo.getSshUser());
             deployDTO.setServiceUserPassword(serverDo.getSshPassword());
+            deployDTO.setDeployLogId(simpleDeployDTO.getDeployLogId());
             DeployHandler.deploy(deployDTO);
         } catch (Exception e) {
             logger.error("simple部署失败", e);
@@ -55,6 +56,7 @@ public class DeployServiceImpl implements DeployService {
             deployDTO.setServiceUserName(serverDo.getSshUser());
             deployDTO.setServiceUserPassword(serverDo.getSshPassword());
             deployDTO.setSimpleServiceUrl(vueDeployDTO.getServiceUrl());
+            deployDTO.setDeployLogId(vueDeployDTO.getDeployLogId());
             DeployHandler.deployVue(deployDTO);
         } catch (Exception e) {
             logger.error("vue部署失败", e);
