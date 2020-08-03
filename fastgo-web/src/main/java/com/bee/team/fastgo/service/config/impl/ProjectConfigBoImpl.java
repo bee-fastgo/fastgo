@@ -143,10 +143,11 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
         projectMap.put("projectCode", projectCode);
         projectMap.put("branchName", branchName);
         String configCode = projectDoMapperExt.findProjectConfigCode(projectMap);
-
         // 封装查询条件 按 配置中心的唯一标识 configCode查询
         Map<String, Object> queryMap = new HashMap<>();
-        queryMap.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, configCode);
+        if (!StringUtils.isEmpty(configCode)) {
+            queryMap.put(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE, configCode);
+        }
         return configProjectBo.getOneProjectConfigToJSON(queryMap);
     }
 }
