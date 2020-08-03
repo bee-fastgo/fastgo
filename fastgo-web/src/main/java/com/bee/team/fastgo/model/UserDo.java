@@ -6,8 +6,8 @@ import lombok.Data;
 /**
  * @description MyBatis Generator 自动创建,对应数据表为：t_user
  *
- * @author liko
- * @date   2020/07/23
+ * @author xqx
+ * @date   2020/08/03
  */
 @Data
 public class UserDo extends LavaDo {
@@ -21,8 +21,13 @@ public class UserDo extends LavaDo {
      */
     private String userPassword;
 
+    /**
+     * 角色id
+     */
+    private Long roleId;
+
     @Override
     public String getBoQualifiedIntfName() {
-        return "com.bee.team.fastgo.service.user.UserBo";
+        return "com.bee.team.fastgo.service.server.UserBo";
     }
 }

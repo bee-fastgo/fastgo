@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.service.config;
 
+import com.bee.team.fastgo.vo.config.req.DelOneDataReqVo;
 import com.bee.team.fastgo.vo.config.req.FindProjectConfigVo;
 import com.bee.team.fastgo.vo.config.req.ListProjectConfigsReqVo;
 import com.bee.team.fastgo.vo.config.req.UpdateProjectConfigReqVo;
@@ -57,4 +58,14 @@ public interface ProjectConfigBo {
      */
     String getOneProjectConfigToJSON(String projectCode, String branchName);
 
+    /**
+     * 删除项目里面的一个配置项
+     *
+     * @param delOneDataReqVo
+     * @return
+     * @author xqx
+     * @date 2020/8/3
+     * @desc 删除项目里面的一个配置项
+     */
+    void delOneDataConfig(DelOneDataReqVo delOneDataReqVo);
 }

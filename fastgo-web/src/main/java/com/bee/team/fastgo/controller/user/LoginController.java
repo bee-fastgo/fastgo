@@ -1,4 +1,4 @@
-package com.bee.team.fastgo.controller;
+package com.bee.team.fastgo.controller.user;
 
 import com.bee.team.fastgo.common.CommonLoginValue;
 import com.bee.team.fastgo.service.user.UserBo;
