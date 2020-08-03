@@ -112,7 +112,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(ProjectListVo.getProjectCode());
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
                     Map runMap = StringUtil.strToMap(ProjectBranchAndAccessAddrVo.getRunProfileConfig());
-                    ProjectBranchAndAccessAddrVo.setAccessAddr(runMap.get("ip")+":"+runMap.get("port"));
+                    ProjectBranchAndAccessAddrVo.setAccessAddr("http://"+runMap.get("ip")+":"+runMap.get("port"));
                     return ProjectBranchAndAccessAddrVo;
                 }).collect(Collectors.toList());
                 ProjectListVo.setAccessAddrs(projectBranchAndAccessAddrVos);
@@ -206,7 +206,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(ProjectListVo.getProjectCode());
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
                     Map runMap = StringUtil.strToMap(ProjectBranchAndAccessAddrVo.getRunProfileConfig());
-                    ProjectBranchAndAccessAddrVo.setAccessAddr(runMap.get("ip")+":"+runMap.get("port"));
+                    ProjectBranchAndAccessAddrVo.setAccessAddr("http://"+runMap.get("ip")+":"+runMap.get("port"));
                     return ProjectBranchAndAccessAddrVo;
                 }).collect(Collectors.toList());
                 ProjectListVo.setAccessAddrs(projectBranchAndAccessAddrVos);
