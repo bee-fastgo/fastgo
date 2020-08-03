@@ -101,7 +101,7 @@ public class Scp {
             //invokeCmd(conn.openSession(), step6);
             //invokeCmd(conn.openSession(), step7);
             //invokeCmd(conn.openSession(), step8);
-            invokeCmd(conn.openSession(), step3+"\n"+step5+"\n"+step6 + "\n" + step7 + "\n" + step8);
+            invokeCmd(conn.openSession(), step3+"\n"+step4+"\n"+step5+"\n"+step6 + "\n" + step7 + "\n" + step8);
             System.out.println(DateUtils.getCurrentTime() + "部署完成");
         } finally {
             if (conn != null) {
