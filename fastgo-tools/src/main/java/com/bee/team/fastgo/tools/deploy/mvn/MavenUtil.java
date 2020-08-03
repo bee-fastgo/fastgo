@@ -24,7 +24,9 @@ public class MavenUtil {
         cmds.add("install");
         cmds.add("-U");
         request.setGoals(cmds);
+        request.setDebug(false);
         request.setJavaHome(new File(PropertyConfigurer.getProperty("java.home")));
+        request.setInputStream(new FileInputStream(new File(DeployHandler.logPathThreadLocal.get())));
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File(PropertyConfigurer.getProperty("maven.home")));
         FileOutputStream fileOutputStream = new FileOutputStream(new File(DeployHandler.logPathThreadLocal.get()));
