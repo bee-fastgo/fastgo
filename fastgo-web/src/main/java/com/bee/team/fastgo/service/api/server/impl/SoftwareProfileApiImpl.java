@@ -103,6 +103,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
     /**
      * 执行安装脚本
+     * @param createEnvType 创建环境的类型
       * @param script 脚本
      * @param param 脚本参数
      * @param config 软件配置
@@ -111,17 +112,19 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
      * @author jgz
      * @date 2020/7/31
      */
-    private ResCreateSoftwareDTO execInstallScript(String script,String param,String config,ReqCreateSoftwareDTO reqCreateSoftwareDTO){
+    private ResCreateSoftwareDTO execInstallScript(String createEnvType,String script,String param,String config,ReqCreateSoftwareDTO reqCreateSoftwareDTO){
         // 执行脚本
         String selectId = SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, script, param, -1, reqCreateSoftwareDTO.getIp());
         JobHandler.jobMap.put(selectId, this);
 
         // 保存至缓存
-        SoftwareInstallInfo softwareInstallInfo = new SoftwareInstallInfo();
-        softwareInstallInfo.setSelectId(selectId);
-        softwareInstallInfo.setProfileCode(reqCreateSoftwareDTO.getProfileCode());
-        softwareInstallInfo.setSoftwareName(reqCreateSoftwareDTO.getSoftwareName());
-        copyOnWriteArrayList.add(softwareInstallInfo);
+        if (CommonConstant.CODE0.equals(createEnvType)) {
+            SoftwareInstallInfo softwareInstallInfo = new SoftwareInstallInfo();
+            softwareInstallInfo.setSelectId(selectId);
+            softwareInstallInfo.setProfileCode(reqCreateSoftwareDTO.getProfileCode());
+            softwareInstallInfo.setSoftwareName(reqCreateSoftwareDTO.getSoftwareName());
+            copyOnWriteArrayList.add(softwareInstallInfo);
+        }
 
         // 4.将该软件的信息保存到数据库
         ServerSoftwareProfileDo serverSoftwareProfileDo = new ServerSoftwareProfileDo();
@@ -150,7 +153,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
      */
     private ResCreateSoftwareDTO installMysql(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
         Map<String, String> config = reqCreateSoftwareDTO.getConfig();
-        if(StringUtils.isEmpty(config.get("dataSourceName"))){
+        if(CommonConstant.CODE0.equals(reqCreateSoftwareDTO.getCreateEnvType()) && StringUtils.isEmpty(config.get("dataSourceName"))){
             throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"创建失败,未指定数据库名");
         }
         // 通过软件名+版本+ip+端口+数据库名 查询是否存在该mysql配置?
@@ -159,7 +162,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
                 reqCreateSoftwareDTO.getVersion(),
                 reqCreateSoftwareDTO.getIp(),
                 StringUtils.isEmpty(config.get("port")) ? "3306" : config.get("port"),
-                config.get("dataSourceName"));
+                CommonConstant.CODE0.equals(reqCreateSoftwareDTO.getCreateEnvType()) ? config.get("dataSourceName"): "demo");
         //存在直接返回
         if(ssp != null){
             ResCreateSoftwareDTO resCreateSoftwareDTO = new ResCreateSoftwareDTO();
@@ -177,7 +180,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         //构建软件环境的配置
         JSONObject jsonObject = JSON.parseObject(serverSourceDo.getSourceConfig());
         jsonObject.replace("ip", reqCreateSoftwareDTO.getIp());
-        jsonObject.replace("dataSourceName", config.get("dataSourceName"));
+        jsonObject.replace("dataSourceName", CommonConstant.CODE0.equals(reqCreateSoftwareDTO.getCreateEnvType()) ? config.get("dataSourceName"): "demo");
 
         //构建脚本参数
         String softwareName = reqCreateSoftwareDTO.getSoftwareName();
@@ -187,7 +190,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         list.add(softwareName);
         list.add(version);
         list.add(downloadUrl);
-        list.add(config.get("dataSourceName"));
+        list.add(CommonConstant.CODE0.equals(reqCreateSoftwareDTO.getCreateEnvType()) ? config.get("dataSourceName"): "demo");
         if(StringUtils.isNotEmpty(config.get("sqlUrl"))){
             list.add(config.get("sqlUrl"));
         }
@@ -212,7 +215,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
                 e.printStackTrace();
             }
         }).start();
-        return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
+        return  execInstallScript(reqCreateSoftwareDTO.getCreateEnvType(),serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
 
 
@@ -256,12 +259,12 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
-        return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
+        return  execInstallScript(reqCreateSoftwareDTO.getCreateEnvType(),serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
 
     private ResCreateSoftwareDTO installDocker(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
         //TODO docker install
-        throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"docker 安装暂未实现");
+        throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"docker已默认安装");
     }
 
     private ResCreateSoftwareDTO installElasticsearch(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
@@ -308,7 +311,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
-        return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
+        return  execInstallScript(reqCreateSoftwareDTO.getCreateEnvType(),serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
 
     private ResCreateSoftwareDTO installRedis(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
@@ -345,7 +348,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
-        return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
+        return  execInstallScript(reqCreateSoftwareDTO.getCreateEnvType(),serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
 
     private ResCreateSoftwareDTO installZookeeper(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
@@ -382,7 +385,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
-        return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
+        return  execInstallScript(reqCreateSoftwareDTO.getCreateEnvType(),serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
 
     private ResCreateSoftwareDTO installCassandra(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
@@ -419,7 +422,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
 
         //获取脚本并执行
         ServerScriptDo serverScriptDo = serverScriptBo.getScriptBySoftwareNameAndVersionAndType(softwareName,version, ScriptTypeConstant.INSTALL);
-        return  execInstallScript(serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
+        return  execInstallScript(reqCreateSoftwareDTO.getCreateEnvType(),serverScriptDo.getScript(),param,jsonObject.toJSONString(),reqCreateSoftwareDTO);
     }
 
 
@@ -449,17 +452,18 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
                     projectBo.updateProjectStatus(updateProjectStatusVo);
                 }
             }
-            else {
-                // TODO 通知项目模块环境创建失败 保留项(暂不实现)
-                //移除列表中所有该项目相关的东西
-                copyOnWriteArrayList.removeIf(softwareInstallInfo -> softwareInstallInfo.getProfileCode().equals(String.valueOf(first.get().getProfileCode())));
-            }
+//            else {
+//                // TODO 通知项目模块环境创建失败 保留项(暂不实现)
+//                //移除列表中所有该项目相关的东西
+//                copyOnWriteArrayList.removeIf(softwareInstallInfo -> softwareInstallInfo.getProfileCode().equals(String.valueOf(first.get().getProfileCode())));
+//            }
         }
     }
 
 
     private void checkParam(ReqCreateSoftwareDTO reqCreateSoftwareDTO){
-        if(StringUtils.isEmpty(reqCreateSoftwareDTO.getProfileCode())){
+
+        if(CommonConstant.CODE0.equals(reqCreateSoftwareDTO.getCreateEnvType()) && StringUtils.isEmpty(reqCreateSoftwareDTO.getProfileCode())){
             throw new GlobalException(ScriptException.SCRIPT_ABNORMAL,"传入的profileCode为空");
         }
         if(StringUtils.isEmpty(reqCreateSoftwareDTO.getIp())) {

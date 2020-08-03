@@ -9,6 +9,8 @@ import com.bee.team.fastgo.mapper.ProfileSoftwareRelationDoMapperExt;
 import com.bee.team.fastgo.mapper.ServerSoftwareProfileDoMapperExt;
 import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.service.api.server.ScriptApi;
+import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
+import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqExecInstallScriptDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqExecUnInstallScriptDTO;
 import com.bee.team.fastgo.service.server.ServerBo;
@@ -22,10 +24,12 @@ import com.github.pagehelper.PageInfo;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
+import com.spring.simple.development.support.constant.CommonConstant;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.utils.RandomUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +55,9 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
     private ScriptApi scriptApi;
 
     @Autowired
+    private SoftwareProfileApi softwareProfileApi;
+
+    @Autowired
     @NoApiMethod
     public void setBaseMapper(ServerSoftwareProfileDoMapperExt mapper) {
         setMapper(mapper);
@@ -74,18 +81,15 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
             throw new GlobalException(ScriptException.ENV_ABNORMAL, "该服务器不处于托管中");
         }
 
-        ServerSoftwareProfileDo serverSoftwareProfileDo = baseSupport.objectCopy(reqAddEnvironmentVo, ServerSoftwareProfileDo.class);
-        serverSoftwareProfileDo.setSoftwareCode(RandomUtil.randomAll(16));
-        serverSoftwareProfileDo.setSoftwareConfig(serverSourceDo.getSourceConfig());
-        saveServerSoftwareProfile(serverSoftwareProfileDo);
+        //安装脚本
+        ReqCreateSoftwareDTO reqCreateSoftwareDTO = new ReqCreateSoftwareDTO();
+        reqCreateSoftwareDTO.setCreateEnvType(CommonConstant.CODE1);
+        reqCreateSoftwareDTO.setIp(reqAddEnvironmentVo.getServerIp());
+        reqCreateSoftwareDTO.setSoftwareName(reqAddEnvironmentVo.getSoftwareName());
+        reqCreateSoftwareDTO.setVersion(reqAddEnvironmentVo.getVersion());
+        reqCreateSoftwareDTO.setConfig(reqAddEnvironmentVo.getConfig());
+        softwareProfileApi.createSoftwareEnvironment(reqCreateSoftwareDTO);
 
-        // 执行创建环境脚本
-        ReqExecInstallScriptDTO reqExecInstallScriptDTO = new ReqExecInstallScriptDTO();
-        reqExecInstallScriptDTO.setIp(reqAddEnvironmentVo.getServerIp());
-        reqExecInstallScriptDTO.setSoftwareName(reqAddEnvironmentVo.getSoftwareName());
-        reqExecInstallScriptDTO.setVersion(reqAddEnvironmentVo.getVersion());
-        reqExecInstallScriptDTO.setSoftwareDownloadUrl(serverSourceDo.getSourceDownUrl());
-        scriptApi.execInstallScript(reqExecInstallScriptDTO);
     }
 
     @Override
