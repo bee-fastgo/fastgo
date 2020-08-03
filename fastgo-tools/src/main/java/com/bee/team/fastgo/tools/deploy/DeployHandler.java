@@ -124,7 +124,7 @@ public class DeployHandler {
             cmd = "cd " + System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "\n  npm run build";
             scriptFileName = System.getProperties().getProperty("user.dir").substring(0, 2) + projectPath + "/" + "vueBuild.bat";
         } else {
-            cmd = "cd " + projectPath + "\n  npm run build:prod";
+            cmd = "cd " + projectPath + "\n  npm run build";
             scriptFileName = projectPath + "/" + "vueBuild.sh";
         }
         System.out.println("执行项目打包命令：" + cmd);
