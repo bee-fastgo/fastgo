@@ -166,9 +166,7 @@ public class Scp {
                 "\n" +
                 "MAINTAINER fastgo\n" +
                 "\n" +
-                "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n"
-                + "RUN sed -i \"s/archive.ubuntu./mirrors.aliyun./g\" /etc/apt/sources.list\n" +
-                "RUN sed -i \"s/deb.debian.org/mirrors.aliyun.com/g\" /etc/apt/sources.list\n" +
+                "# 将文件中的内容复制到 /usr/share/nginx/html/ 这个目录下面\n"+
                 "COPY ./dist  /usr/share/nginx/html/\n" +
                 "COPY default.conf /etc/nginx/conf.d/default.conf\n" +
                 "EXPOSE " + projectPort + "\n'";
