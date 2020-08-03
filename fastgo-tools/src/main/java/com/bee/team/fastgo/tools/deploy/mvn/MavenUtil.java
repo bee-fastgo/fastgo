@@ -1,11 +1,11 @@
 package com.bee.team.fastgo.tools.deploy.mvn;
 
+import com.bee.team.fastgo.tools.deploy.DeployHandler;
+import com.bee.team.fastgo.tools.log.DeployJobFileAppender;
 import com.spring.simple.development.support.properties.PropertyConfigurer;
 import org.apache.maven.shared.invoker.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  **/
 public class MavenUtil {
 
-    public Boolean cleanAndInstall(String projectPath) throws MavenInvocationException {
+    public Boolean cleanAndInstall(String projectPath) throws MavenInvocationException, IOException {
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile(new File(projectPath + "/" + "pom.xml"));
         List<String> cmds = new ArrayList<>();
@@ -27,10 +27,15 @@ public class MavenUtil {
         request.setJavaHome(new File(PropertyConfigurer.getProperty("java.home")));
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File(PropertyConfigurer.getProperty("maven.home")));
-        InvocationResult execute = invoker.execute(request);
+
+        PrintStream out = new PrintStream(new FileOutputStream(new File(DeployHandler.logPathThreadLocal.get())), true);
+        InvokerLogger invokerLogger = new PrintStreamLogger(out,1);
+        invoker.setLogger(invokerLogger);
         if (invoker.execute(request).getExitCode() != 0) {
             return false;
         }
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(), out.toString());
+
         return true;
     }
 }

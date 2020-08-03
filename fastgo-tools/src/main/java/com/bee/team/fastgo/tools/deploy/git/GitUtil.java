@@ -1,8 +1,11 @@
 package com.bee.team.fastgo.tools.deploy.git;
 
+import com.bee.team.fastgo.tools.deploy.DeployHandler;
+import com.bee.team.fastgo.tools.log.DeployJobFileAppender;
 import com.spring.simple.development.support.properties.PropertyConfigurer;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
@@ -67,7 +70,8 @@ public class GitUtil {
             Git git = new Git(repo);
             PullCommand pullCmd = git.pull();
             pullCmd.setCredentialsProvider(credential);
-            pullCmd.call();
+            PullResult call = pullCmd.call();
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(), call.toString());
         } finally {
             if (repo != null) {
                 repo.close();
