@@ -29,8 +29,8 @@ public class MavenUtil {
         request.setInputStream(new FileInputStream(new File(DeployHandler.logPathThreadLocal.get())));
         InvocationOutputHandler invocationOutputHandler = new InvocationOutputHandler() {
             @Override
-            public void consumeLine(String line) throws IOException {
-                System.out.println(line);
+            public void consumeLine(String line){
+                DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(), line);
             }
         };
         request.setOutputHandler(invocationOutputHandler);
