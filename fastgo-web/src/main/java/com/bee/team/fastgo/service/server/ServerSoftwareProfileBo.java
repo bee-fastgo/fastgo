@@ -8,6 +8,8 @@ import com.bee.team.fastgo.vo.server.ReqAddEnvironmentVo;
 import com.bee.team.fastgo.vo.server.ResSoftwareEnvironmentVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
+import java.util.List;
+
 public interface ServerSoftwareProfileBo extends LavaBo<ServerSoftwareProfileDo, ServerSoftwareProfileDoExample> {
 
     /**
@@ -96,4 +98,14 @@ public interface ServerSoftwareProfileBo extends LavaBo<ServerSoftwareProfileDo,
      * @desc
      */
     ServerSoftwareProfileDo getMysqlProfileBySoftwareNameAndVersionIpAndPortAndDataSourceName(String softwareName,String version,String ip, String port, String dataSourceName);
+
+    /**
+     * 获取所有的软件环境配置
+      * @param
+     * @return {@link List< ServerSoftwareProfileDo>}
+     * @author jgz
+     * @date 2020/8/4
+     * @desc
+     */
+    List<ServerSoftwareProfileDo> getAll();
 }

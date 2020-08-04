@@ -158,6 +158,12 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
         return null;
     }
 
+    @Override
+    public List<ServerSoftwareProfileDo> getAll() {
+        ServerSoftwareProfileDoExample serverSoftwareProfileDoExample = new ServerSoftwareProfileDoExample();
+        return  selectByExample(serverSoftwareProfileDoExample);
+    }
+
 
     @Override
     public ServerSoftwareProfileDo getServerSoftwareProfileByServerIpAndSoftwareNameAndVersion(String ip, String softwareName, String version) {
