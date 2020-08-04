@@ -21,5 +21,5 @@ public class UserInfoResVo {
     private List<ListPermissionResVo> permissionResVos;
 
     @ApiModelProperty(value = "菜单列表")
-    private List<MenuListResVo> menuListResVos;
+    private List<UserMenuResVo> userMenuResVos;
 }

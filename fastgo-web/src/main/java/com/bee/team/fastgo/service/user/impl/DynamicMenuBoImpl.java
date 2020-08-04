@@ -8,6 +8,7 @@ import com.bee.team.fastgo.service.user.DynamicMenuBo;
 import com.bee.team.fastgo.vo.user.AddMenuReqVo;
 import com.bee.team.fastgo.vo.user.MenuListResVo;
 import com.bee.team.fastgo.vo.user.UpdateMenuReqVo;
+import com.bee.team.fastgo.vo.user.UserMenuResVo;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +49,11 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
         resPageDTO.setPageSize(pageSize);
         resPageDTO.setList(null);
         resPageDTO.setTotalCount(0);
+        DynamicMenuDoExample example = new DynamicMenuDoExample();
+        example.setOrderByClause("orderNumber desc");
 
         // 获取所有的菜单信息
-        List<DynamicMenuDo> list = selectByExample(new DynamicMenuDoExample());
+        List<DynamicMenuDo> list = selectByExample(example);
 
         // 封装数据
         if (!CollectionUtils.isEmpty(list)) {
@@ -67,7 +71,7 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
     }
 
     @Override
-    public List<MenuListResVo> getUserBindMenus(List<Long> permissionIds) {
+    public List<UserMenuResVo> getUserBindMenus(List<Long> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds)) {
             return null;
         }
@@ -75,7 +79,47 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
         example.createCriteria().andPermissionIdIn(permissionIds);
         example.setOrderByClause("orderNumber desc");
         List<DynamicMenuDo> list = selectByExample(example);
-        return baseSupport.listCopy(list, MenuListResVo.class);
+        List<UserMenuResVo> userMenuResVos = baseSupport.listCopy(list, UserMenuResVo.class);
+        for (UserMenuResVo userMenuResVo : userMenuResVos) {
+            userMenuResVo.setTitle(userMenuResVo.getMenuName());
+            userMenuResVo.setPath(userMenuResVo.getMenuUrl());
+            if (StringUtils.isEmpty(userMenuResVo.getMenuUrl()) || StringUtils.isEmpty(userMenuResVo.getMenuUrl().substring(1))) {
+                userMenuResVo.setName("");
+            } else if (userMenuResVo.getMenuUrl().substring(0, 1).equals("/")) {
+                userMenuResVo.setName(userMenuResVo.getMenuUrl().substring(1).substring(0, 1).toUpperCase() + userMenuResVo.getMenuUrl().substring(2));
+            } else {
+                userMenuResVo.setName(userMenuResVo.getMenuUrl().substring(0, 1).toUpperCase() + userMenuResVo.getMenuUrl().substring(1));
+            }
+        }
+
+        // 获取根
+        List<UserMenuResVo> rootMenus = userMenuResVos.stream().filter(e -> ObjectUtils.isEmpty(e.getParentMenuId())).collect(Collectors.toList());
+
+        // 设置路由
+        List<UserMenuResVo> menuComponents = new ArrayList<>();
+        rootMenus.forEach(e -> {
+            e.setComponent("Layout");
+            menuComponents.add(setComponent(e, userMenuResVos));
+        });
+        return menuComponents;
+    }
+
+    private UserMenuResVo setComponent(UserMenuResVo rootMenu, List<UserMenuResVo> userMenuResVos) {
+        for (UserMenuResVo userMenuResVo : userMenuResVos) {
+            if (ObjectUtils.isEmpty(userMenuResVo.getParentMenuId())) {
+                continue;
+            }
+            if (userMenuResVo.getParentMenuId().equals(rootMenu.getId())) {
+                if (rootMenu.getComponent().equals("Layout")) {
+                    userMenuResVo.setComponent(rootMenu.getPath() + "/" + userMenuResVo.getPath());
+                } else {
+                    userMenuResVo.setComponent(rootMenu.getComponent() + "/" + userMenuResVo.getPath());
+                }
+                rootMenu.addChildren(userMenuResVo);
+                setComponent(userMenuResVo, userMenuResVos);
+            }
+        }
+        return rootMenu;
     }
 
     @Override

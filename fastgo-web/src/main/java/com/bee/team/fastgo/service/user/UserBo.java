@@ -24,7 +24,7 @@ public interface UserBo extends LavaBo<UserDo, UserDoExample> {
      * @Param userName 用户名
      * @Param password 密码
      **/
-    UserInfoResVo login(HttpServletRequest request, String userName, String password);
+    void login(HttpServletRequest request, String userName, String password);
 
     /**
      * 添加用户
@@ -35,8 +35,9 @@ public interface UserBo extends LavaBo<UserDo, UserDoExample> {
      * @Date 15:49 2020/7/23
      * @Param userName 用户名
      * @Param password 密码
+     * @Param roleId
      **/
-    void insertUser(String userName, String password);
+    void insertUser(String userName, String password, Long roleId);
 
     /**
      * 获取用户列表, 可模糊查询
@@ -62,4 +63,15 @@ public interface UserBo extends LavaBo<UserDo, UserDoExample> {
      * @desc 修改角色信息
      */
     void updateRole(Long id, Long roleId);
+
+    /**
+     * 获取用户的动态菜单和动态权限信息
+     *
+     * @param request
+     * @return {@link UserInfoResVo}
+     * @author xqx
+     * @date 2020/8/4
+     * @desc 获取用户的动态菜单和动态权限信息
+     */
+    UserInfoResVo getUser(HttpServletRequest request);
 }

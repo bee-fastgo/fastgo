@@ -17,18 +17,15 @@ import java.util.List;
 @ApiModel(value = "menuListResVo", description = "菜单列表信息类")
 public class MenuListResVo {
     @ApiModelProperty(value = "id", example = "1", required = true)
-    @NotNull(message = "id不能为空")
     private Long id;
 
     @ApiModelProperty(value = "菜单名", example = "用户管理", required = true)
-    @NotNull(message = "菜单名不能为空")
     private String menuName;
 
     @ApiModelProperty(value = "菜单URL", example = "/user")
     private String menuUrl;
 
     @ApiModelProperty(value = "排序", example = "100", required = true)
-    @NotNull(message = "排序不能为空")
     private Integer orderNumber;
 
     @ApiModelProperty(value = "图标", example = "img")
@@ -39,9 +36,6 @@ public class MenuListResVo {
 
     @ApiModelProperty(value = "父菜单", example = "1")
     private Long parentMenuId;
-
-    @ApiModelProperty(value = "路由")
-    private String component;
 
     @ApiModelProperty(value = "子菜单")
     private List<MenuListResVo> children = new ArrayList<>();

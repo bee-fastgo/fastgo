@@ -23,4 +23,8 @@ public class AddUserReqVo {
     @ApiModelProperty(value = "密码", example = "123456", required = true)
     @NotNull(message = "密码不能为空")
     private String password;
+
+    @ApiModelProperty(value = "角色id", example = "1", required = true)
+    @NotNull(message = "角色id不能为空")
+    private Long roleId;
 }

@@ -52,7 +52,7 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
     }
 
     @Override
-    public UserInfoResVo login(HttpServletRequest request, String userName, String password) {
+    public void login(HttpServletRequest request, String userName, String password) {
         UserDoExample example = new UserDoExample();
         example.createCriteria().andUserNameEqualTo(userName).andIsDeletedEqualTo("n");
         List<UserDo> list = selectByExample(example);
@@ -73,18 +73,10 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
 
         // 获取用户绑定的id列表
         List<Long> permissionIds = userRolePermissionBo.listRolePermissions(userDo.getRoleId());
-
-        // 登录成功返回用户的动态权限信息，菜单信息，个人信息
-        UserInfoResVo userInfoResVo = new UserInfoResVo();
-        userInfoResVo.setUserName(userDo.getUserName());
-        userInfoResVo.setPermissionResVos(userPermissionBo.getUserBindPermissionList(permissionIds));
-        userInfoResVo.setMenuListResVos(dynamicMenuBo.getUserBindMenus(permissionIds));
-        return userInfoResVo;
-
     }
 
     @Override
-    public void insertUser(String userName, String password) {
+    public void insertUser(String userName, String password, Long roleId) {
         UserDoExample example = new UserDoExample();
         example.createCriteria().andUserNameEqualTo(userName).andIsDeletedEqualTo("n");
         List<UserDo> list = selectByExample(example);
@@ -94,6 +86,7 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
         UserDo userDo = new UserDo();
         userDo.setUserName(userName);
         userDo.setUserPassword(Md5Utils.getTwoMD5Str(password));
+        userDo.setRoleId(roleId);
 
         insert(userDo);
     }
@@ -134,5 +127,35 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
         userDo.setRoleId(roleId);
 
         update(userDo);
+    }
+
+    @Override
+    public UserInfoResVo getUser(HttpServletRequest request) {
+        // 获取用户的基本信息
+        HttpSession session = request.getSession();
+        UserDo userDo = (UserDo) session.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY);
+        if (ObjectUtils.isEmpty(userDo)) {
+            throw new GlobalException(SYS_NO_LOGIN, "未登录");
+        }
+        userDo.setUserPassword(null);
+        UserInfoResVo userInfoResVo = new UserInfoResVo();
+        userInfoResVo.setUserName(userDo.getUserName());
+
+        // 设置动态菜单
+        userInfoResVo.setUserMenuResVos(null);
+
+        // 设置动态权限
+        userInfoResVo.setPermissionResVos(null);
+        if (!ObjectUtils.isEmpty(userDo.getRoleId())) {
+            // 获取用户绑定的权限id
+            List<Long> permissionIds = userRolePermissionBo.listRolePermissions(userDo.getRoleId());
+
+            // 设置动态菜单
+            userInfoResVo.setUserMenuResVos(dynamicMenuBo.getUserBindMenus(permissionIds));
+
+            // 设置动态权限
+            userInfoResVo.setPermissionResVos(userPermissionBo.getUserBindPermissionList(permissionIds));
+        }
+        return userInfoResVo;
     }
 }

@@ -6,6 +6,7 @@ import com.bee.team.fastgo.model.DynamicMenuDoExample;
 import com.bee.team.fastgo.vo.user.AddMenuReqVo;
 import com.bee.team.fastgo.vo.user.MenuListResVo;
 import com.bee.team.fastgo.vo.user.UpdateMenuReqVo;
+import com.bee.team.fastgo.vo.user.UserMenuResVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
 import java.util.List;
@@ -32,12 +33,12 @@ public interface DynamicMenuBo extends LavaBo<DynamicMenuDo, DynamicMenuDoExampl
      * 根据权限id获取用户绑定的菜单列表
      *
      * @param permissionIds
-     * @return {@link List< MenuListResVo>}
+     * @return {@link List< UserMenuResVo>}
      * @author xqx
      * @date 2020/8/4
      * @desc 根据权限id获取用户绑定的菜单列表
      */
-    List<MenuListResVo> getUserBindMenus(List<Long> permissionIds);
+    List<UserMenuResVo> getUserBindMenus(List<Long> permissionIds);
 
     /**
      * 添加菜单
