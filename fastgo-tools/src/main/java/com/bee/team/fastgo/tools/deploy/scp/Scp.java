@@ -250,7 +250,5 @@ public class Scp {
         //关闭远程连接
         session.close();
         DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),DateUtils.getCurrentTime() + "执行命令：" + cmd + "完成");
-
-
     }
 }

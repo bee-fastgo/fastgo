@@ -112,7 +112,7 @@ public class DeployHandler {
             cmd = "cd " + projectPath + "\n npm install -registry=https://registry.npm.taobao.org --unsafe-perm=true --allow-root";
             scriptFileName = projectPath + "/" + "vueInstall.sh";
         }
-        System.out.println("执行项目编译命令：" + cmd);
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"执行项目编译命令：" + cmd);
         File scriptFile = new File(scriptFileName);
         if (scriptFile.exists()) {
             scriptFile.delete();
@@ -128,10 +128,10 @@ public class DeployHandler {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(line + "\n");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),line);
         }
         in.close();
-        System.out.println("项目编译执行结果：" + process.waitFor());
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"项目打包执行结果：" + "项目编译执行结果：" + process.waitFor());
     }
 
     /**
@@ -151,7 +151,7 @@ public class DeployHandler {
             cmd = "cd " + projectPath + "\n  npm run build";
             scriptFileName = projectPath + "/" + "vueBuild.sh";
         }
-        System.out.println("执行项目打包命令：" + cmd);
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"执行项目打包命令：" + cmd);
         File scriptFile = new File(scriptFileName);
         if (scriptFile.exists()) {
             scriptFile.delete();
@@ -167,10 +167,10 @@ public class DeployHandler {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(line + "\n");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),line);
         }
         in.close();
-        System.out.println("项目打包执行结果：" + process.waitFor());
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"项目打包执行结果：" + process.waitFor());
     }
 
     public static boolean isWindows() {
