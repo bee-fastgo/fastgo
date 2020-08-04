@@ -66,8 +66,6 @@ public class MonitorTimer {
     private ServerSoftwareProfileBo serverSoftwareProfileBo;
 
 
-    private List<SelectType> list = new CopyOnWriteArrayList<>();
-
     /**
      * 每分钟执行一次任务调度
      *
@@ -79,56 +77,12 @@ public class MonitorTimer {
     public void execute() {
         //软件环境监控
         List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = serverSoftwareProfileBo.getAll();
-        serverSoftwareProfileDoList.forEach(serverSoftwareProfileDo -> {
-            JSONObject jsonObject = JSON.parseObject(serverSoftwareProfileDo.getSoftwareConfig());
-            String selectId = SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, "#!/bin/bash\n" +
-                    "\n" +
-                    "if [[ -z $(lsof -i:" + jsonObject.get("port") + ") ]];then\n" +
-                    "        echo \"{\"ip\":\"" + jsonObject.get("ip") + "\",\"port\":\"" + jsonObject.get("port") + "\",\"name\":\"" + serverSoftwareProfileDo.getSoftwareName() + "\",\"status\":\"died\"}\"\n" +
-                    "else\n" +
-                    "        echo \"{\"ip\":\"" + jsonObject.get("ip") + "\",\"port\":\"" + jsonObject.get("port") + "\",\"name\":\"" + serverSoftwareProfileDo.getSoftwareName() + "\",\"status\":\"survive\"}\"\n" +
-                    "fi", null, -1, serverSoftwareProfileDo.getServerIp());
-            SelectType selectType = new SelectType();
-            selectType.setSelectId(selectId);
-            selectType.setType(MonitorTypeConstant.SOFTWARE);
-            list.add(selectType);
-        });
 
-//        //运行环境监控
-//        List<ServerRunProfileDo> serverRunProfileDoList = serverRunProfileBo.getListServerRunProfileDo();
-//        serverRunProfileDoList.forEach(serverRunProfileDo -> {
-//            JSONObject jsonObject = JSON.parseObject(serverRunProfileDo.getSoftwareConfig());
-//            String selectId = SimpleExecutorCmd.executorCmd(GlueTypeEnum.GLUE_SHELL, "#!/bin/bash\n" +
-//                    "\n" +
-//                    "if [[ -z $(docker ps | " + serverRunProfileDo.getSoftwareConfig() + "Docker) ]];then\n" +
-//                    "        echo \"{\"ip\":\"" + jsonObject.get("ip") + "\",\"port\":\"" + jsonObject.get("port") + "\",\"name\":\"" + serverRunProfileDo.getSoftwareName() + "\",\"status\":\"died\"}\"\n" +
-//                    "else\n" +
-//                    "        echo \"{\"ip\":\"" + jsonObject.get("ip") + "\",\"port\":\"" + jsonObject.get("port") + "\",\"name\":\"" + serverRunProfileDo.getSoftwareName() + "\",\"status\":\"survive\"}\"\n" +
-//                    "fi", null, -1, serverRunProfileDo.getServerIp());
-//            SelectType selectType = new SelectType();
-//            selectType.setSelectId(selectId);
-//            selectType.setType(MonitorTypeConstant.PROJECT);
-//            list.add(selectType);
-//        });
 
-        list.removeIf(selectType -> {
-            ServerExecutorLogDo serverExecutorLogDo = serverExecutorLogBo.getServerExecutorLogDoById(selectType.getSelectId());
-            String address = "http://" + serverExecutorLogDo.getExecutorAddress() + ":" + "9999/";
-            ExecutorBiz executorBiz = null;
-            try {
-                executorBiz = SimpleJobScheduler.getExecutorBiz(address);
-                ReturnT<LogResult> logResult = executorBiz.log(new LogParam(serverExecutorLogDo.getTriggerTime().getTime(), Long.parseLong(selectType.getSelectId()), 1));
-                //TODO 接入告警
-                LogResult content = logResult.getContent();
-                AlertInfoDo alertInfoDo = new AlertInfoDo();
-                alertInfoDo.setType(selectType.getType());
-                alertInfoDo.setInfo(content.getLogContent());
-                alertInfoBo.insertAlertInfo(alertInfoDo);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        });
+        //运行环境监控
+        List<ServerRunProfileDo> serverRunProfileDoList = serverRunProfileBo.getListServerRunProfileDo();
+
+
     }
 
     /**
@@ -169,30 +123,6 @@ public class MonitorTimer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-
-    public static class SelectType {
-
-        private String selectId;
-
-        private String type;
-
-        public String getSelectId() {
-            return selectId;
-        }
-
-        public void setSelectId(String selectId) {
-            this.selectId = selectId;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
         }
     }
 
