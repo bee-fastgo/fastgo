@@ -59,7 +59,7 @@ public class SeverListener {
             File file = new File("/data/fastgo/sources/init.tar.gz");
             if(file.exists()){
                 uploadFile(initServer.getIp(), initServer.getPort(),initServer.getUser(),initServer.getPassword(),file,"/root/data");
-                Scp.invokeCmd(conn.openSession(),"cd /root/data && tar -zxvf init.tar.gz && bash /root/data/init/install_jdk.sh http://" + IpUtil.getIp() + ":" + port);
+                Scp.invokeCmd(conn.openSession(),"cd /root/data && tar -zxvf init.tar.gz && bash /root/data/init/install_jdk.sh http://" + IpUtil.getIp() + ":" + port + " " + initServer.getIp());
             }
         }
         catch (IOException e) {

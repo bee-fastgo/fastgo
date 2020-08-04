@@ -1,6 +1,5 @@
 package com.bee.team.fastgo.service.server.impl;
 
-import ch.ethz.ssh2.Connection;
 import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.hander.InitServer;
 import com.bee.team.fastgo.hander.event.EventPublisher;
@@ -11,7 +10,6 @@ import com.bee.team.fastgo.mapper.ServerDoMapperExt;
 import com.bee.team.fastgo.model.ServerDo;
 import com.bee.team.fastgo.model.ServerDoExample;
 import com.bee.team.fastgo.service.server.ServerBo;
-import com.bee.team.fastgo.tools.deploy.scp.Scp;
 import com.bee.team.fastgo.vo.server.AddServerVo;
 import com.bee.team.fastgo.vo.server.ModifyServerVo;
 import com.bee.team.fastgo.vo.server.QueryServerVo;
@@ -23,17 +21,12 @@ import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.constant.CommonConstant;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.exception.ResponseCode;
-import com.spring.simple.development.support.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-
-import static com.spring.simple.development.support.exception.GlobalResponseCode.SERVICE_FAILED;
 
 /**
  * @author luke

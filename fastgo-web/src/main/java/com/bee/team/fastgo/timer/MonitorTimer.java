@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -67,23 +68,60 @@ public class MonitorTimer {
 
 
     /**
-     * 每分钟执行一次任务调度
+     * 每5分钟执行一次项目
      *
      * @author jgz
      * @date 2020/8/4
      * @desc
      */
-    @Scheduled(cron = "0 0/1 * * * ?")
-    public void execute() {
-        //软件环境监控
-        List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = serverSoftwareProfileBo.getAll();
-
+    @Scheduled(cron = "0 0/5 * * * ?")
+    public void projectMonitor() {
+        Socket socket = new Socket();
 
         //运行环境监控
         List<ServerRunProfileDo> serverRunProfileDoList = serverRunProfileBo.getListServerRunProfileDo();
-
+        serverRunProfileDoList.forEach(serverRunProfileDo -> {
+            JSONObject jsonObject = JSON.parseObject(serverRunProfileDo.getSoftwareConfig());
+            try {
+                SocketAddress add = new InetSocketAddress((String) jsonObject.get("ip"), Integer.parseInt((String) jsonObject.get("port")));
+                socket.connect(add);
+            } catch (IOException e) {
+                // 入库,告警 TODO
+            }finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
+
+    @Scheduled(cron = "0 0/5 * * * ?")
+    public void softwareMonitor() {
+        Socket socket = new Socket();
+        //软件环境监控
+        List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = serverSoftwareProfileBo.getAll();
+        serverSoftwareProfileDoList.forEach(serverSoftwareProfileDo -> {
+            JSONObject jsonObject = JSON.parseObject(serverSoftwareProfileDo.getSoftwareConfig());
+            SocketAddress add = new InetSocketAddress((String) jsonObject.get("ip"), Integer.parseInt((String) jsonObject.get("port")));
+            try {
+                socket.connect(add);
+            } catch (IOException e) {
+                // 入库,告警 TODO
+            }finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+
 
     /**
      * 服务是否存活
