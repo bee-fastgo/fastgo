@@ -55,7 +55,7 @@ public class ServerExecutorLogController {
             }
             return new ResBody().buildSuccessResBody(logResult);
         }
-        return new ResBody().buildSuccessResBody();
+        return new ResBody().buildSuccessResBody(logResult);
     }
 
     @ApiOperation(value = "查看日志")
