@@ -27,10 +27,11 @@ public class MavenUtil {
         request.setDebug(false);
         request.setJavaHome(new File(PropertyConfigurer.getProperty("java.home")));
         request.setInputStream(new FileInputStream(new File(DeployHandler.logPathThreadLocal.get())));
+        String logPath = DeployHandler.logPathThreadLocal.get();
         InvocationOutputHandler invocationOutputHandler = new InvocationOutputHandler() {
             @Override
             public void consumeLine(String line){
-                DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(), line);
+                DeployJobFileAppender.appendLog(logPath, line);
             }
         };
         request.setOutputHandler(invocationOutputHandler);
