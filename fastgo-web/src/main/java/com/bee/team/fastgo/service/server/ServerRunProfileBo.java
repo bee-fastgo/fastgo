@@ -9,6 +9,8 @@ import com.bee.team.fastgo.vo.server.QueryRunProfileVo;
 import com.bee.team.fastgo.vo.server.QueryServerVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
+import java.util.List;
+
 /**
  * @author luke
  * @desc 运行环境
@@ -45,4 +47,10 @@ public interface ServerRunProfileBo extends LavaBo<ServerRunProfileDo, ServerRun
      * @return
      */
     ResPageDTO queryPageServerRunProfileDo(QueryRunProfileVo queryRunProfileVo);
+
+    /**
+     * 获取所有的运行环境
+     * @return
+     */
+    List<ServerRunProfileDo> getListServerRunProfileDo();
 }
