@@ -27,6 +27,13 @@ public class MavenUtil {
         request.setDebug(false);
         request.setJavaHome(new File(PropertyConfigurer.getProperty("java.home")));
         request.setInputStream(new FileInputStream(new File(DeployHandler.logPathThreadLocal.get())));
+        InvocationOutputHandler invocationOutputHandler = new InvocationOutputHandler() {
+            @Override
+            public void consumeLine(String line) throws IOException {
+                System.out.println(line);
+            }
+        };
+        request.setOutputHandler(invocationOutputHandler);
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File(PropertyConfigurer.getProperty("maven.home")));
         FileOutputStream fileOutputStream = new FileOutputStream(new File(DeployHandler.logPathThreadLocal.get()));
