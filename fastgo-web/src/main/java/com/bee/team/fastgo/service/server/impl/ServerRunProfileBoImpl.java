@@ -120,6 +120,12 @@ public class ServerRunProfileBoImpl extends AbstractLavaBoImpl<ServerRunProfileD
         return baseSupport.pageCopy(new PageInfo(serverRunProfileDoList), ServerRunProfileVo.class);
     }
 
+    @Override
+    public List<ServerRunProfileDo> getListServerRunProfileDo() {
+        ServerRunProfileDoExample serverRunProfileDoExample = new ServerRunProfileDoExample();
+        return  this.mapper.selectByExample(serverRunProfileDoExample);
+    }
+
     /**
      * 端口是否占用
      *

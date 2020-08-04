@@ -53,9 +53,9 @@ public class ServerExecutorLogController {
             if (serverExecutorLogDo.getHandleCode() > 0) {
                 logResult.getContent().setEnd(true);
             }
-            return new ResBody().buildSuccessResBody(logResult.getContent());
+            return new ResBody().buildSuccessResBody(logResult);
         }
-        return new ResBody().buildSuccessResBody();
+        return new ResBody().buildSuccessResBody(logResult);
     }
 
     @ApiOperation(value = "查看日志")
