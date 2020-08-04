@@ -28,7 +28,9 @@ public class ReqAddEnvironmentVo {
     @NotNull(message = "版本号不能为空")
     private String version;
 
-    @ApiModelProperty(value = "配置,每一项都是key value形式(如果没有配置传空对象即可)", example = "", required = true)
+    @ApiModelProperty(value = "配置,每一项都是key value形式(如果没有配置传空对象即可)" +
+            "mysql:\"dataSourceName\"(可选:例demo1),\"sqlUrl\"(可选:例http://123.sql)" +
+            "kafka:\"zookeeperCluster\"(必传:例127.0.0.1:2181)", example = "", required = true)
     @NotNull(message = "配置为必传项")
     private Map<String,String> config;
 
