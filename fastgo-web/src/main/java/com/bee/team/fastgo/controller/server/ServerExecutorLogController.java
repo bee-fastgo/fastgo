@@ -44,7 +44,8 @@ public class ServerExecutorLogController {
         if (serverExecutorLogDo == null) {
             throw new GlobalException(ResponseCode.RES_DATA_NOT_EXIST, "任务不存在");
         }
-        ExecutorBiz executorBiz = SimpleJobScheduler.getExecutorBiz(serverExecutorLogDo.getExecutorAddress());
+        String address = "http://" + serverExecutorLogDo.getExecutorAddress() + ":" + "9999/";
+        ExecutorBiz executorBiz = SimpleJobScheduler.getExecutorBiz(address);
         ReturnT<LogResult> logResult = executorBiz.log(new LogParam(serverExecutorLogDo.getTriggerTime().getTime(), logId, fromLineNum));
 
         // is end
