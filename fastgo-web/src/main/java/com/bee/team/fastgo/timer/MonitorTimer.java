@@ -67,7 +67,7 @@ public class MonitorTimer {
      * @date 2020/8/4
      * @desc
      */
-        @Scheduled(cron = "0 0/1 0 * * ?")
+        @Scheduled(cron = "0 0/1 * * * ?")
         public void execute(){
         //软件环境监控
         List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = serverSoftwareProfileBo.getAll();
