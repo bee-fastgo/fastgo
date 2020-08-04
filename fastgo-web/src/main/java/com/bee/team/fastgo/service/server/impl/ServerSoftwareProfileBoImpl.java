@@ -11,7 +11,6 @@ import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.service.api.server.ScriptApi;
 import com.bee.team.fastgo.service.api.server.SoftwareProfileApi;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqCreateSoftwareDTO;
-import com.bee.team.fastgo.service.api.server.dto.req.ReqExecInstallScriptDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.ReqExecUnInstallScriptDTO;
 import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.service.server.ServerSoftwareProfileBo;
@@ -26,10 +25,8 @@ import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.constant.CommonConstant;
 import com.spring.simple.development.support.exception.GlobalException;
-import com.spring.simple.development.support.utils.RandomUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -152,12 +149,13 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
         if (CollectionUtils.isEmpty(serverSoftwareProfileDoList)){
             return null;
         }
-        ServerSoftwareProfileDo serverSoftwareProfileDo = serverSoftwareProfileDoList.get(0);
-        JSONObject jsonObject = JSON.parseObject(serverSoftwareProfileDo.getSoftwareConfig());
-        if (!ip.equals(jsonObject.get("ip")) || !port.equals(jsonObject.get("port")) || !dataSourceName.equals(jsonObject.get("dataSourceName"))){
-           return null;
+        for (ServerSoftwareProfileDo serverSoftwareProfileDo : serverSoftwareProfileDoList) {
+            JSONObject jsonObject = JSON.parseObject(serverSoftwareProfileDo.getSoftwareConfig());
+            if (ip.equals(jsonObject.get("ip")) && port.equals(jsonObject.get("port")) && dataSourceName.equals(jsonObject.get("dataSourceName"))){
+                return serverSoftwareProfileDo;
+            }
         }
-        return serverSoftwareProfileDo;
+        return null;
     }
 
 
@@ -198,5 +196,29 @@ public class ServerSoftwareProfileBoImpl extends AbstractLavaBoImpl<ServerSoftwa
         if (CollectionUtils.isNotEmpty(profileSoftwareRelationDos)) {
             throw new GlobalException(ScriptException.ENV_ABNORMAL, "该环境正在启用中");
         }
+
+        /*
+            假设是mysql在移除时需要查询该服务是否被其他项目占用(因为一个服务中可能有多个库被不同的应用使用)
+         */
+        ServerSoftwareProfileDo serverSoftwareProfileDo = getServerSoftwareProfileBySoftwareCode(softwareCode);
+        if(SoftwareEnum.MYSQL.name().toLowerCase().equals(serverSoftwareProfileDo.getSoftwareName())){
+            List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = getMysqlListByServerIpAndSoftwareNameAndVersion(serverSoftwareProfileDo.getServerIp(), serverSoftwareProfileDo.getSoftwareName(), serverSoftwareProfileDo.getVersion());
+            for (ServerSoftwareProfileDo softwareProfileDo : serverSoftwareProfileDoList) {
+                profileSoftwareRelationDoExample.clear();
+                profileSoftwareRelationDoExample.createCriteria().andSoftwareCodeEqualTo(softwareProfileDo.getSoftwareCode());
+                if (CollectionUtils.isNotEmpty(profileSoftwareRelationDoMapperExt.selectByExample(profileSoftwareRelationDoExample))) {
+                    throw new GlobalException(ScriptException.ENV_ABNORMAL, "该数据库正被其他应用占用");
+                }
+            }
+
+        }
+    }
+
+    private List<ServerSoftwareProfileDo> getMysqlListByServerIpAndSoftwareNameAndVersion(String ip, String softwareName, String version){
+        ServerSoftwareProfileDoExample serverSoftwareProfileDoExample = new ServerSoftwareProfileDoExample();
+        serverSoftwareProfileDoExample.createCriteria().andServerIpEqualTo(ip)
+                .andSoftwareNameEqualTo(softwareName)
+                .andVersionEqualTo(version);
+        return selectByExample(serverSoftwareProfileDoExample);
     }
 }
