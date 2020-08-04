@@ -1,7 +1,8 @@
-package com.bee.team.fastgo.controller.user;
+package com.bee.team.fastgo.controller.user;//package com.bee.team.fastgo.controller.user;
 
 import com.bee.team.fastgo.common.CommonLoginValue;
 import com.bee.team.fastgo.service.user.UserBo;
+import com.bee.team.fastgo.vo.user.UserInfoResVo;
 import com.bee.team.fastgo.vo.user.UserLoginReqVo;
 import com.spring.simple.development.core.annotation.base.NoLogin;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
@@ -36,8 +37,8 @@ public class LoginController {
     @ValidHandler(key = "userLoginReqVo", value = UserLoginReqVo.class, isReqBody = false)
     @NoLogin
     public ResBody userLogin(HttpServletRequest httpServletRequest, @RequestBody UserLoginReqVo userLoginReqVo) {
-        userBo.login(httpServletRequest, userLoginReqVo.getUserName(), userLoginReqVo.getPassword());
-        return new ResBody().buildSuccessResBody(userLoginReqVo.getUserName());
+        UserInfoResVo userInfoResVo = userBo.login(httpServletRequest, userLoginReqVo.getUserName(), userLoginReqVo.getPassword());
+        return new ResBody().buildSuccessResBody(userInfoResVo);
     }
 
     @RequestMapping(value = "/loginOut", method = RequestMethod.GET)
