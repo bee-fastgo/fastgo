@@ -50,7 +50,7 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
         resPageDTO.setList(null);
         resPageDTO.setTotalCount(0);
         DynamicMenuDoExample example = new DynamicMenuDoExample();
-        example.setOrderByClause("orderNumber desc");
+        example.setOrderByClause("orderNumber asc");
 
         // 获取所有的菜单信息
         List<DynamicMenuDo> list = selectByExample(example);
@@ -77,7 +77,7 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
         }
         DynamicMenuDoExample example = new DynamicMenuDoExample();
         example.createCriteria().andPermissionIdIn(permissionIds);
-        example.setOrderByClause("orderNumber desc");
+        example.setOrderByClause("orderNumber asc");
         List<DynamicMenuDo> list = selectByExample(example);
         List<UserMenuResVo> userMenuResVos = baseSupport.listCopy(list, UserMenuResVo.class);
         for (UserMenuResVo userMenuResVo : userMenuResVos) {
@@ -125,7 +125,9 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
     @Override
     public void insertMenu(AddMenuReqVo addMenuReqVo) {
         DynamicMenuDo dynamicMenuDo = baseSupport.objectCopy(addMenuReqVo, DynamicMenuDo.class);
-        dynamicMenuDo.setParentMenuId(Long.parseLong(addMenuReqVo.getParentMenuId()));
+        if (!StringUtils.isEmpty(dynamicMenuDo.getParentMenuId())) {
+            dynamicMenuDo.setParentMenuId(Long.parseLong(addMenuReqVo.getParentMenuId()));
+        }
         insert(dynamicMenuDo);
     }
 

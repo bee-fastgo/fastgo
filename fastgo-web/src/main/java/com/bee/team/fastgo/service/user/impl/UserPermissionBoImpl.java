@@ -13,6 +13,7 @@ import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.exception.GlobalException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -108,8 +109,9 @@ public class UserPermissionBoImpl extends AbstractLavaBoImpl<UserPermissionDo, U
         }
 
         UserPermissionDo permissionDo = baseSupport.objectCopy(addPermissionReqVo, UserPermissionDo.class);
-        permissionDo.setParentPermissionId(Long.parseLong(addPermissionReqVo.getParentPermissionId()));
-
+        if (!StringUtils.isEmpty(addPermissionReqVo.getParentPermissionId())) {
+            permissionDo.setParentPermissionId(Long.parseLong(addPermissionReqVo.getParentPermissionId()));
+        }
         int result = insert(permissionDo);
 
         // 如果添加成功就自定与admin角色进行绑定
