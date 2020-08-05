@@ -10,6 +10,7 @@ import com.bee.team.fastgo.project.gitlab.GitlabAPI;
 import com.bee.team.fastgo.project.model.GitlabUser;
 import com.bee.team.fastgo.service.project.GitlabUserBo;
 import com.bee.team.fastgo.utils.EmailUtil;
+import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
@@ -109,5 +110,10 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
         //添加项目分配用户事件
         ProjectAccessEvent projectAccessEvent = new ProjectAccessEvent(new Object(),gitlabUserGetProjectVo.getProjectId(),gitlabUserGetProjectVo.getUserIds(),PROJECT_ACCESS_TYPE2);
         publisher.publish(projectAccessEvent);
+    }
+
+    @Override
+    public List<GitlabUserInfoResVo> getGitlabUserInfo() {
+        return mapper.findGitlabUsersInfo();
     }
 }

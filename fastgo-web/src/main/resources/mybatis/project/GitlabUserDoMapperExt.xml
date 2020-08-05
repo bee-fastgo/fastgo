@@ -32,4 +32,8 @@
         </where>
     </update>
 
+    <select id="findGitlabUsersInfo" resultType="com.bee.team.fastgo.vo.project.GitlabUserInfoResVo">
+        select id,gitlabUserName,gitlabName,gitlabEmail,status from t_gitlab_user
+    </select>
+
 </mapper>
