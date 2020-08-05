@@ -1,6 +1,7 @@
 package com.bee.team.fastgo.model;
 
 import com.alibaba.lava.base.LavaExample;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -406,62 +407,62 @@ public class UserPermissionDoExample extends LavaExample {
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdEqualTo(String value) {
+        public Criteria andParentPermissionIdEqualTo(Long value) {
             addCriterion("parentPermissionId =", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdNotEqualTo(String value) {
+        public Criteria andParentPermissionIdNotEqualTo(Long value) {
             addCriterion("parentPermissionId <>", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdGreaterThan(String value) {
+        public Criteria andParentPermissionIdGreaterThan(Long value) {
             addCriterion("parentPermissionId >", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdGreaterThanOrEqualTo(String value) {
+        public Criteria andParentPermissionIdGreaterThanOrEqualTo(Long value) {
             addCriterion("parentPermissionId >=", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdLessThan(String value) {
+        public Criteria andParentPermissionIdLessThan(Long value) {
             addCriterion("parentPermissionId <", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdLessThanOrEqualTo(String value) {
+        public Criteria andParentPermissionIdLessThanOrEqualTo(Long value) {
             addCriterion("parentPermissionId <=", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdLike(String value) {
+        public Criteria andParentPermissionIdLike(Long value) {
             addCriterion("parentPermissionId like", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdNotLike(String value) {
+        public Criteria andParentPermissionIdNotLike(Long value) {
             addCriterion("parentPermissionId not like", value, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdIn(List<String> values) {
+        public Criteria andParentPermissionIdIn(List<Long> values) {
             addCriterion("parentPermissionId in", values, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdNotIn(List<String> values) {
+        public Criteria andParentPermissionIdNotIn(List<Long> values) {
             addCriterion("parentPermissionId not in", values, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdBetween(String value1, String value2) {
+        public Criteria andParentPermissionIdBetween(Long value1, Long value2) {
             addCriterion("parentPermissionId between", value1, value2, "parentPermissionId");
             return (Criteria) this;
         }
 
-        public Criteria andParentPermissionIdNotBetween(String value1, String value2) {
+        public Criteria andParentPermissionIdNotBetween(Long value1, Long value2) {
             addCriterion("parentPermissionId not between", value1, value2, "parentPermissionId");
             return (Criteria) this;
         }

@@ -4,7 +4,10 @@ import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.mapper.UserRoleDoMapperExt;
 import com.bee.team.fastgo.model.UserRoleDo;
 import com.bee.team.fastgo.model.UserRoleDoExample;
+import com.bee.team.fastgo.model.UserRolePermissionDo;
+import com.bee.team.fastgo.model.UserRolePermissionDoExample;
 import com.bee.team.fastgo.service.user.UserRoleBo;
+import com.bee.team.fastgo.service.user.UserRolePermissionBo;
 import com.bee.team.fastgo.vo.user.AddRoleReqVo;
 import com.bee.team.fastgo.vo.user.ListRoleResVo;
 import com.bee.team.fastgo.vo.user.UpdateRoleReqVo;
@@ -12,6 +15,7 @@ import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.exception.GlobalException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -20,8 +24,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_EXIST;
-import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
+import static com.spring.simple.development.support.exception.ResponseCode.*;
 
 /**
  * @author xqx
@@ -32,6 +35,9 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_D
 public class UserRoleBoImpl extends AbstractLavaBoImpl<UserRoleDo, UserRoleDoMapperExt, UserRoleDoExample> implements UserRoleBo {
     @Autowired
     private BaseSupport baseSupport;
+
+    @Autowired
+    private UserRolePermissionBo userRolePermissionBo;
 
     @Autowired
     @NoApiMethod
@@ -101,7 +107,39 @@ public class UserRoleBoImpl extends AbstractLavaBoImpl<UserRoleDo, UserRoleDoMap
         if (ObjectUtils.isEmpty(userRoleDo)) {
             throw new GlobalException(RES_DATA_NOT_EXIST, "角色信息不存在");
         }
+
+        if (StringUtils.equals(userRoleDo.getRoleName(), "admin")) {
+            throw new GlobalException(RES_ILLEGAL_OPERATION, "admin角色不能删除");
+        }
+
         userRoleDo.setIsDeleted("y");
         update(userRoleDo);
+
+        // 角色和权限解绑
+        // 获取所有的绑定关系列表
+        UserRolePermissionDoExample example = new UserRolePermissionDoExample();
+        example.createCriteria().andRoleIdEqualTo(id);
+        List<UserRolePermissionDo> list = userRolePermissionBo.getRolePermissionListByCondition(example);
+        // 解绑
+        if (!CollectionUtils.isEmpty(list)) {
+            userRolePermissionBo.delRolePermission(list);
+        }
+
     }
+
+    @Override
+    public UserRoleDo getRoleByCondition(UserRoleDoExample example) {
+        List<UserRoleDo> list = selectByExample(example);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
+    public List<UserRoleDo> getAllRoles() {
+        return selectByExample(new UserRoleDoExample());
+    }
+
+
 }

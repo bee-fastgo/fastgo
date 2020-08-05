@@ -1,6 +1,7 @@
 package com.bee.team.fastgo.model;
 
 import com.alibaba.lava.base.LavaExample;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -596,62 +597,62 @@ public class DynamicMenuDoExample extends LavaExample {
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdEqualTo(String value) {
+        public Criteria andParentMenuIdEqualTo(Long value) {
             addCriterion("parentMenuId =", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdNotEqualTo(String value) {
+        public Criteria andParentMenuIdNotEqualTo(Long value) {
             addCriterion("parentMenuId <>", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdGreaterThan(String value) {
+        public Criteria andParentMenuIdGreaterThan(Long value) {
             addCriterion("parentMenuId >", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdGreaterThanOrEqualTo(String value) {
+        public Criteria andParentMenuIdGreaterThanOrEqualTo(Long value) {
             addCriterion("parentMenuId >=", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdLessThan(String value) {
+        public Criteria andParentMenuIdLessThan(Long value) {
             addCriterion("parentMenuId <", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdLessThanOrEqualTo(String value) {
+        public Criteria andParentMenuIdLessThanOrEqualTo(Long value) {
             addCriterion("parentMenuId <=", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdLike(String value) {
+        public Criteria andParentMenuIdLike(Long value) {
             addCriterion("parentMenuId like", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdNotLike(String value) {
+        public Criteria andParentMenuIdNotLike(Long value) {
             addCriterion("parentMenuId not like", value, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdIn(List<String> values) {
+        public Criteria andParentMenuIdIn(List<Long> values) {
             addCriterion("parentMenuId in", values, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdNotIn(List<String> values) {
+        public Criteria andParentMenuIdNotIn(List<Long> values) {
             addCriterion("parentMenuId not in", values, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdBetween(String value1, String value2) {
+        public Criteria andParentMenuIdBetween(Long value1, Long value2) {
             addCriterion("parentMenuId between", value1, value2, "parentMenuId");
             return (Criteria) this;
         }
 
-        public Criteria andParentMenuIdNotBetween(String value1, String value2) {
+        public Criteria andParentMenuIdNotBetween(Long value1, Long value2) {
             addCriterion("parentMenuId not between", value1, value2, "parentMenuId");
             return (Criteria) this;
         }

@@ -11,7 +11,7 @@
     <result column="optimistic" jdbcType="BIGINT" property="optimistic" />
     <result column="permissionName" jdbcType="VARCHAR" property="permissionName" />
     <result column="permissionKey" jdbcType="VARCHAR" property="permissionKey" />
-    <result column="parentPermissionId" jdbcType="VARCHAR" property="parentPermissionId" />
+    <result column="parentPermissionId" jdbcType="BIGINT" property="parentPermissionId" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="GMT_CREATE" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
@@ -198,7 +198,7 @@
         permissionKey = #{record.permissionKey,jdbcType=VARCHAR},
       </if>
       <if test="record.parentPermissionId != null">
-        parentPermissionId = #{record.parentPermissionId,jdbcType=VARCHAR},
+        parentPermissionId = #{record.parentPermissionId,jdbcType=BIGINT},
       </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=VARCHAR},
@@ -234,7 +234,7 @@
       optimistic = #{record.optimistic,jdbcType=BIGINT},
       permissionName = #{record.permissionName,jdbcType=VARCHAR},
       permissionKey = #{record.permissionKey,jdbcType=VARCHAR},
-      parentPermissionId = #{record.parentPermissionId,jdbcType=VARCHAR},
+      parentPermissionId = #{record.parentPermissionId,jdbcType=BIGINT},
       description = #{record.description,jdbcType=VARCHAR},
       GMT_CREATE = #{record.gmtCreate,jdbcType=TIMESTAMP},
       CREATOR = #{record.creator,jdbcType=VARCHAR},
@@ -263,7 +263,7 @@
         permissionKey = #{permissionKey,jdbcType=VARCHAR},
       </if>
       <if test="parentPermissionId != null">
-        parentPermissionId = #{parentPermissionId,jdbcType=VARCHAR},
+        parentPermissionId = #{parentPermissionId,jdbcType=BIGINT},
       </if>
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
@@ -380,7 +380,7 @@
         #{permissionKey,jdbcType=VARCHAR},
       </if>
       <if test="parentPermissionId != null">
-        #{parentPermissionId,jdbcType=VARCHAR},
+        #{parentPermissionId,jdbcType=BIGINT},
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
@@ -487,7 +487,7 @@
         #{permissionKey,jdbcType=VARCHAR},
       </if>
       <if test="parentPermissionId != null">
-        #{parentPermissionId,jdbcType=VARCHAR},
+        #{parentPermissionId,jdbcType=BIGINT},
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},

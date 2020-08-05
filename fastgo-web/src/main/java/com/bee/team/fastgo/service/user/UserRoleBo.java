@@ -7,6 +7,8 @@ import com.bee.team.fastgo.vo.user.AddRoleReqVo;
 import com.bee.team.fastgo.vo.user.UpdateRoleReqVo;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 
+import java.util.List;
+
 /**
  * @author xqx
  * @date 2020/7/17
@@ -68,4 +70,27 @@ public interface UserRoleBo extends LavaBo<UserRoleDo, UserRoleDoExample> {
      * @desc 删除角色
      */
     void deleteRole(Long id);
+
+
+    /**
+     * 根据条件获取角色信息
+     *
+     * @param example
+     * @return {@link UserRoleDo}
+     * @author xqx
+     * @date 2020/8/5
+     * @desc 根据条件获取角色信息
+     */
+    UserRoleDo getRoleByCondition(UserRoleDoExample example);
+
+    /**
+     * 获取所有的角色信息
+     *
+     * @param
+     * @return {@link List< UserRoleDo>}
+     * @author xqx
+     * @date 2020/8/5
+     * @desc 获取所有的角色信息
+     */
+    List<UserRoleDo> getAllRoles();
 }
