@@ -32,7 +32,7 @@ public class ProjectListen {
     @Value("${gitlab.url}")
     private String gitlabUrl;
 
-    @Value("${gitlab.privateToken}")
+    @Value("${gitlab.normal.privateToken}")
     private String privateToken;
 
     @Autowired

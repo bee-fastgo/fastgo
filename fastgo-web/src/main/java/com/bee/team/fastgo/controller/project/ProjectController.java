@@ -1,11 +1,16 @@
 package com.bee.team.fastgo.controller.project;
 
+import com.bee.team.fastgo.common.CommonLoginValue;
 import com.bee.team.fastgo.job.core.util.IpUtil;
+import com.bee.team.fastgo.model.ProjectDeployLogDo;
+import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.service.project.ProjectBo;
+import com.bee.team.fastgo.service.project.ProjectDeployLogBo;
 import com.bee.team.fastgo.utils.FileUploadUtil;
 import com.bee.team.fastgo.vo.project.*;
 import com.bee.team.fastgo.vo.project.req.*;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
+import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import com.spring.simple.development.support.exception.GlobalException;
@@ -23,10 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
@@ -49,11 +54,17 @@ public class ProjectController {
     private String port;
 
     @Autowired
+    public BaseSupport baseSupport;
+
+    @Autowired
     private ProjectBo projectBo;
+
+    @Autowired
+    private ProjectDeployLogBo projectDeployLogBo;
 
     /**
      * @param queryProjectListVo
-     * @return {@link ResBody< ProjectListVo>}
+     * @return {@link ResBody<ProjectListVo>}
      * @author hs
      * @date 2020/7/25
      * @desc 后台项目列表
@@ -61,14 +72,16 @@ public class ProjectController {
     @RequestMapping(value = "/backEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目展示")
     @ValidHandler(key = "queryProjectListVo", value = QueryProjectListVo.class, isReqBody = false)
-    public ResBody<ProjectListVo> backPorjectList(@RequestBody QueryProjectListVo queryProjectListVo) {
-        ResPageDTO resPageDTO = projectBo.queryBackProjectInfo(queryProjectListVo);
+    public ResBody<ProjectListVo> backPorjectList(@RequestBody QueryProjectListVo queryProjectListVo, HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        UserDo userDo = (UserDo) httpSession.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY);
+        ResPageDTO resPageDTO = projectBo.queryBackProjectInfo(queryProjectListVo, userDo);
         return new ResBody().buildSuccessResBody(resPageDTO);
     }
 
     /**
      * @param insertBackProjectVo
-     * @return {@link ResBody< Void>}
+     * @return {@link ResBody<Void>}
      * @author hs
      * @date 2020/7/25
      * @desc 后台项目新增
@@ -77,8 +90,8 @@ public class ProjectController {
     @ApiOperation(value = "后台项目新增")
     @ValidHandler(key = "insertBackProjectVo", value = InsertBackProjectVo.class, isReqBody = false)
     public ResBody<Void> addBackProject(@RequestBody InsertBackProjectVo insertBackProjectVo) {
-        if (CollectionUtils.isEmpty(insertBackProjectVo.getSoftwareInfoVos())){
-            throw new GlobalException(RES_PARAM_IS_EMPTY,"软件环境不能为空");
+        if (CollectionUtils.isEmpty(insertBackProjectVo.getSoftwareInfoVos())) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "软件环境不能为空");
         }
         projectBo.addBackProjectInfo(insertBackProjectVo);
         return new ResBody().buildSuccessResBody();
@@ -109,9 +122,15 @@ public class ProjectController {
     @RequestMapping(value = "/backEnd/deployBackProject", method = RequestMethod.POST)
     @ApiOperation(value = "后台项目部署")
     @ValidHandler(key = "deployBackPorjectVo", value = DeployBackPorjectVo.class, isReqBody = false)
-    public ResBody<Void> deployBackProject(@RequestBody DeployBackPorjectVo deployBackPorjectVo) {
-        projectBo.execDeployBackProject(deployBackPorjectVo);
-        return new ResBody().buildSuccessResBody();
+    public ResBody<String> deployBackProject(@RequestBody DeployBackPorjectVo deployBackPorjectVo, HttpServletRequest request) {
+        //添加部署日志
+        HttpSession httpSession = request.getSession();
+        UserDo userDo = (UserDo) httpSession.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY);
+        ProjectDeployLogDo projectDeployLogDo = baseSupport.objectCopy(deployBackPorjectVo, ProjectDeployLogDo.class);
+        String deployId = projectDeployLogBo.addProjectDeployLog(projectDeployLogDo, userDo);
+        //执行部署
+        projectBo.execDeployBackProject(deployBackPorjectVo, deployId);
+        return new ResBody().buildSuccessResBody(deployId);
     }
 
     /**
@@ -125,9 +144,15 @@ public class ProjectController {
     @RequestMapping(value = "/frontEnd/deployFrontProject", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目部署")
     @ValidHandler(key = "deployBackPorjectVo", value = DeployBackPorjectVo.class, isReqBody = false)
-    public ResBody<Void> deployFrontProject(@RequestBody DeployFrontPorjectVo deployFrontPorjectVo) {
-        projectBo.execDeployFrontProject(deployFrontPorjectVo);
-        return new ResBody().buildSuccessResBody();
+    public ResBody<String> deployFrontProject(@RequestBody DeployFrontPorjectVo deployFrontPorjectVo, HttpServletRequest request) {
+        //添加部署日志
+        HttpSession httpSession = request.getSession();
+        UserDo userDo = (UserDo) httpSession.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY);
+        ProjectDeployLogDo projectDeployLogDo = baseSupport.objectCopy(deployFrontPorjectVo, ProjectDeployLogDo.class);
+        String deployId = projectDeployLogBo.addProjectDeployLog(projectDeployLogDo, userDo);
+        //执行部署
+        projectBo.execDeployFrontProject(deployFrontPorjectVo, deployId);
+        return new ResBody().buildSuccessResBody(deployId);
     }
 
     /**
@@ -145,9 +170,6 @@ public class ProjectController {
         return new ResBody().buildSuccessResBody(log);
     }
 
-    //6.后台项目服务监控信息
-
-
     /**
      * @param queryProjectListVo
      * @return {@link ResBody< ProjectListVo>}
@@ -158,8 +180,10 @@ public class ProjectController {
     @RequestMapping(value = "/frontEnd/projectList", method = RequestMethod.POST)
     @ApiOperation(value = "前台项目展示")
     @ValidHandler(key = "queryProjectListVo", value = QueryProjectListVo.class, isReqBody = false)
-    public ResBody<ProjectListVo> frontPorjectList(@RequestBody QueryProjectListVo queryProjectListVo) {
-        ResPageDTO resPageDTO = projectBo.queryFrontProjectInfo(queryProjectListVo);
+    public ResBody<ProjectListVo> frontPorjectList(@RequestBody QueryProjectListVo queryProjectListVo, HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        UserDo userDo = (UserDo) httpSession.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY);
+        ResPageDTO resPageDTO = projectBo.queryFrontProjectInfo(queryProjectListVo, userDo);
         return new ResBody().buildSuccessResBody(resPageDTO);
     }
 
@@ -245,8 +269,8 @@ public class ProjectController {
     @RequestMapping(value = "/getProjectStatus", method = RequestMethod.POST)
     @ApiOperation(value = "获取项目状态")
     public ResBody<String> getProjectStatus(@RequestBody String projectCode) {
-        if (StringUtils.isEmpty(projectCode)){
-            throw new GlobalException(RES_PARAM_IS_EMPTY,"项目code不能为空");
+        if (StringUtils.isEmpty(projectCode)) {
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "项目code不能为空");
         }
         String status = projectBo.getProjectStatus(projectCode);
         return new ResBody().buildSuccessResBody(status);
