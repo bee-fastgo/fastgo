@@ -7,6 +7,7 @@ import com.bee.team.fastgo.service.monitor.*;
 import com.bee.team.fastgo.vo.monitor.req.ServerMonitorLogReqVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerMonitorVo;
 import com.bee.team.fastgo.vo.monitor.res.ServerSystemInfoVo;
+import com.spring.simple.development.core.annotation.base.NoLogin;
 import com.spring.simple.development.core.annotation.base.ValidHandler;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import io.swagger.annotations.Api;
@@ -43,7 +44,7 @@ public class ServerMonitorController {
     @Autowired
     private ServerMemoryLogBo serverMemoryLogBo;
 
-
+    @NoLogin
     @ApiOperation(value = "获取服务器系统详细信息")
     @ApiImplicitParam(name = "serverIp", value = "服务器IP", dataTypeClass = String.class)
     @RequestMapping(value = "/getServerSystemInfo", method = RequestMethod.POST, consumes = "application/json")
@@ -51,7 +52,7 @@ public class ServerMonitorController {
         return new ResBody().buildSuccessResBody(serverSystemInfoBo.getServerSystemInfoDo(serverIp));
     }
 
-
+    @NoLogin
     @ApiOperation(value = "获取监控服务器各项指标状态")
     @ApiImplicitParam(name = "serverMonitorLogReqVo", value = "获取监控服务器各项指标状态请求参数类", dataTypeClass = ServerMonitorLogReqVo.class)
     @RequestMapping(value = "/getServerMonitorLog", method = RequestMethod.POST, consumes = "application/json")
@@ -65,7 +66,7 @@ public class ServerMonitorController {
         return new ResBody().buildSuccessResBody(serverMonitorVo);
     }
 
-
+    @NoLogin
     @ApiOperation(value = "添加服务器监控信息记录")
     @RequestMapping(value = "/saveServerMonitorInfo", method = RequestMethod.POST, consumes = "application/json")
     public ResBody saveServerMonitorInfo(@RequestBody String paramBean) {

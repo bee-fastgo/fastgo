@@ -4,6 +4,7 @@ package com.bee.team.fastgo.controller.server;
 import com.bee.team.fastgo.server.core.conf.SimpleJobAdminConfig;
 import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.service.server.ServerExecutorLogBo;
+import com.spring.simple.development.core.annotation.base.NoLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class JobApiController {
      * @param data
      * @return
      */
+    @NoLogin
     @RequestMapping("/{uri}")
     @ResponseBody
     public ReturnT<String> api(HttpServletRequest request, @PathVariable("uri") String uri, @RequestBody(required = false) String data) {
