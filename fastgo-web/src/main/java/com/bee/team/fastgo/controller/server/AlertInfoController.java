@@ -35,4 +35,5 @@ public class AlertInfoController {
         return new ResBody<ResAlertInfoVo>().buildSuccessResBody(alertInfoByPage);
     }
 
+
 }

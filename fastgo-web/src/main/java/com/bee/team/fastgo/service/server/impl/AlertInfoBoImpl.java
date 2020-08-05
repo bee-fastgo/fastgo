@@ -13,6 +13,7 @@ import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.support.utils.RandomUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,6 @@ public class AlertInfoBoImpl extends AbstractLavaBoImpl<AlertInfoDo, AlertInfoDo
     @Autowired
     private BaseSupport baseSupport;
 
-
     @Autowired
     @NoApiMethod
     public void setBaseMapper(AlertInfoDoMapperExt mapper) {
@@ -35,6 +35,9 @@ public class AlertInfoBoImpl extends AbstractLavaBoImpl<AlertInfoDo, AlertInfoDo
     @Override
     public ResPageDTO<ResAlertInfoVo> getAlertInfoByPage(QueryAlertInfoVo queryAlertInfoVo) {
         AlertInfoDoExample alertInfoDoExample = new AlertInfoDoExample();
+        if(StringUtils.isNotEmpty(queryAlertInfoVo.getType())){
+            alertInfoDoExample.createCriteria().andTypeEqualTo(queryAlertInfoVo.getType());
+        }
         int startNo = queryAlertInfoVo.getStartPage();
         int rowCount = queryAlertInfoVo.getPageSize();
         PageHelper.startPage(startNo, rowCount);
