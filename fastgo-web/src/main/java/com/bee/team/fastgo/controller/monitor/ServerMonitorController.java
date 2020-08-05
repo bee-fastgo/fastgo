@@ -2,6 +2,9 @@ package com.bee.team.fastgo.controller.monitor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bee.team.fastgo.common.MonitorTypeConstant;
+import com.bee.team.fastgo.hander.alert.AlertBody;
+import com.bee.team.fastgo.hander.alert.AlertHandler;
 import com.bee.team.fastgo.model.*;
 import com.bee.team.fastgo.service.monitor.*;
 import com.bee.team.fastgo.vo.monitor.req.ServerMonitorLogReqVo;
@@ -17,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @desc 服务器监控相关API
@@ -42,6 +48,9 @@ public class ServerMonitorController {
 
     @Autowired
     private ServerMemoryLogBo serverMemoryLogBo;
+
+    @Autowired
+    private AlertHandler alertHandler;
 
 
     @ApiOperation(value = "获取服务器系统详细信息")
@@ -75,13 +84,17 @@ public class ServerMonitorController {
         JSONObject sysLoadState = agentJsonObject.getJSONObject("sysLoadState");
         JSONObject systemInfo = agentJsonObject.getJSONObject("systemInfo");
         JSONObject netIoState = agentJsonObject.getJSONObject("netIoState");
+        Double cpuUse = null;
+        Double memUse = null;
         if (cpuState != null) {
             ServerCpuLogDo serverCpuLogDo = JSON.toJavaObject(cpuState, ServerCpuLogDo.class);
             serverCpuLogBo.saveCpuLog(serverCpuLogDo);
+            cpuUse = serverCpuLogDo.getCpuUse();
         }
         if (memState != null) {
             ServerMemoryLogDo serverMemoryLogDo = JSON.toJavaObject(memState, ServerMemoryLogDo.class);
             serverMemoryLogBo.saveMemoryLog(serverMemoryLogDo);
+            memUse = serverMemoryLogDo.getMemUsed() / serverMemoryLogDo.getMemTotal();
         }
         if (sysLoadState != null) {
             ServerLoadLogDo serverLoadLogDo = JSON.toJavaObject(sysLoadState, ServerLoadLogDo.class);
@@ -95,6 +108,27 @@ public class ServerMonitorController {
             ServerNetIOLogDo serverNetIOLogDo = JSON.toJavaObject(netIoState, ServerNetIOLogDo.class);
             serverNetIOLogBo.saveNetIOLog(serverNetIOLogDo);
         }
+
+        //集成告警
+        boolean alert = false;
+        if(cpuUse != null && cpuUse > 80 ){
+            alert = true;
+        }
+        if(memUse != null && memUse > 0.8){
+            alert = true;
+        }
+        if(alert){
+            AlertBody alertBody = new AlertBody();
+            alertBody.setType(MonitorTypeConstant.SERVER);
+            Map<String,String> info = new HashMap<>(3);
+            String ip = cpuState == null ? JSON.toJavaObject(memState, ServerMemoryLogDo.class).getServerIp() : JSON.toJavaObject(cpuState, ServerCpuLogDo.class).getServerIp();
+            info.put("ip",ip);
+            info.put("cpu",cpuUse == null ? "-%" : cpuUse + "%");
+            info.put("mem",memUse == null ? "-%" : (memUse * 100) + "%");
+            alertBody.setInfo(info);
+            alertHandler.alert(alertBody);
+        }
+
         return new ResBody().buildSuccessResBody();
     }
 }
