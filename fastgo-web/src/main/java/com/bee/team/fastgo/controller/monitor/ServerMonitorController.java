@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @desc 服务器监控相关API
  * @auth hjs
@@ -44,6 +48,10 @@ public class ServerMonitorController {
     @Autowired
     private ServerMemoryLogBo serverMemoryLogBo;
 
+    @Autowired
+    private AlertHandler alertHandler;
+
+
     @NoLogin
     @ApiOperation(value = "获取服务器系统详细信息")
     @ApiImplicitParam(name = "serverIp", value = "服务器IP", dataTypeClass = String.class)
@@ -66,7 +74,7 @@ public class ServerMonitorController {
         return new ResBody().buildSuccessResBody(serverMonitorVo);
     }
 
-    @NoLogin
+
     @ApiOperation(value = "添加服务器监控信息记录")
     @RequestMapping(value = "/saveServerMonitorInfo", method = RequestMethod.POST, consumes = "application/json")
     public ResBody saveServerMonitorInfo(@RequestBody String paramBean) {

@@ -23,7 +23,7 @@ public class AddPermissionReqVo {
     private String permissionKey;
 
     @ApiModelProperty(value = "父权限id(为空表示为根权限)", example = "1")
-    private Long parentPermissionId;
+    private String parentPermissionId;
 
     @ApiModelProperty(value = "描述", example = "添加权限", required = true)
     @NotNull(message = "描述不能为空")

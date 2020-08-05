@@ -124,7 +124,9 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
 
     @Override
     public void insertMenu(AddMenuReqVo addMenuReqVo) {
-        insert(baseSupport.objectCopy(addMenuReqVo, DynamicMenuDo.class));
+        DynamicMenuDo dynamicMenuDo = baseSupport.objectCopy(addMenuReqVo, DynamicMenuDo.class);
+        dynamicMenuDo.setParentMenuId(Long.getLong(addMenuReqVo.getParentMenuId()));
+        insert(dynamicMenuDo);
     }
 
     @Override

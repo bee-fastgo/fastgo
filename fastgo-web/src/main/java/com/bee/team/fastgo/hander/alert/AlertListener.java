@@ -34,7 +34,8 @@ public class AlertListener {
         AlertModel alertModel = (AlertModel) alertEvent.getSource();
         String msg = null;
         if (MonitorTypeConstant.SOFTWARE.equals(alertModel.getType())){
-            msg = " > **类型: " + alertModel.getKeyword() + ":" + alertModel.getType() + "**        \n" +
+            msg = " > **应用名: " + alertModel.getKeyword() + "**        \n"+
+                    "   **类型: " + ":" + alertModel.getType() + "**        \n" +
                     "   **检测时间: " + DateUtils.getStrMMDDYYYYFormateDate(new Date()) + "**        \n" +
                     "   **规则: " + alertModel.getRule() + "**        \n" +
                     "   **详情:**        \n" +
@@ -44,7 +45,8 @@ public class AlertListener {
                     " <font color=#FF0000 > status:" + alertModel.getInfo().get("status") + "</font>        \n";
 
         } else if (MonitorTypeConstant.PROJECT.equals(alertModel.getType())){
-           msg = " > **类型: " + alertModel.getKeyword() + ":" + alertModel.getType() + "**        \n" +
+           msg = " > **应用名: " + alertModel.getKeyword() + "**        \n"+
+                   "   **类型: " + ":" + alertModel.getType() + "**        \n" +
                    "   **检测时间: " + DateUtils.getStrMMDDYYYYFormateDate(new Date()) + "**        \n" +
                    "   **规则: " + alertModel.getRule() + "**        \n" +
                    "   **详情:**        \n" +
@@ -54,7 +56,8 @@ public class AlertListener {
                    " <font color=#FF0000 > status:" + alertModel.getInfo().get("status") + "</font>        \n";
         }
         else if (MonitorTypeConstant.SERVER.equals(alertModel.getType())){
-            msg = " > **类型: " + alertModel.getKeyword() + ":" + alertModel.getType() + "**        \n" +
+            msg = " > **应用名: " + alertModel.getKeyword() + "**        \n"+
+                    "   **类型: " + ":" + alertModel.getType() + "**        \n" +
                     "   **检测时间: " + DateUtils.getStrMMDDYYYYFormateDate(new Date()) + "**        \n" +
                     "   **规则: " + alertModel.getRule() + "**        \n" +
                     "   **详情:**        \n" +

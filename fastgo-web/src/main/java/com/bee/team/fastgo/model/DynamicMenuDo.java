@@ -44,7 +44,7 @@ public class DynamicMenuDo extends LavaDo {
     /**
      * 父菜单id
      */
-    private String parentMenuId;
+    private Long parentMenuId;
 
     @Override
     public String getBoQualifiedIntfName() {

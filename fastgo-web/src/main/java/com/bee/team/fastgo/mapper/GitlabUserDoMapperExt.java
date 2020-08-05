@@ -1,8 +1,6 @@
 package com.bee.team.fastgo.mapper;
 
-import com.alibaba.lava.base.LavaMapper;
-import com.bee.team.fastgo.model.GitlabUserDo;
-import com.bee.team.fastgo.model.GitlabUserDoExample;
+import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -42,4 +40,14 @@ public interface GitlabUserDoMapperExt extends com.alibaba.lava.base.LavaMapper<
      */
 
     void delUserProject(@Param("userIds") List<Integer> userIds, @Param("projectId") Integer projectId);
+
+    /**
+     * @param
+     * @return {@link List< UserInfoResVo>}
+     * @author hs
+     * @date 2020/8/4
+     * @desc 查询所有Gitlab用户信息
+     */
+
+    List<GitlabUserInfoResVo> findGitlabUsersInfo();
 }
