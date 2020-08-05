@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,29 +100,8 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
             throw new GlobalException(RES_DATA_NOT_EXIST, "项目不存在");
         }
 
-        // 提取所有的软件名
-        List<Object> softs = Arrays.asList(objectConfig.keySet().toArray());
-
-        // 判断是要修改的软件是否存在
-        list.stream().forEach(e -> {
-            if (!softs.contains(e.getSoftName())) {
-                throw new GlobalException(RES_DATA_NOT_EXIST, "软件不存在");
-            }
-        });
-
-        // 判断软件下面的key是否存在
-        list.stream().forEach(e -> {
-            softs.stream().forEach(soft -> {
-                Map<String, Object> map = (Map<String, Object>) objectConfig.get(soft);
-                if (!map.containsKey(e.getMapReqVo().getKey())) {
-                    throw new GlobalException(RES_DATA_NOT_EXIST, "配置项不存在");
-                }
-            });
-        });
-
-
         // 提出软件名和key值，作为要修改的新参数，并且把key值的.换成-，例如mysql.spring-datasource****
-        list.stream().forEach(e -> updateMap.put((e.getSoftName() + "." + e.getMapReqVo().getKey().replace(".", "-")), e.getMapReqVo().getValue()));
+        list.forEach(e -> updateMap.put((e.getSoftName() + "." + e.getMapReqVo().getKey().replace(".", "-")), e.getMapReqVo().getValue()));
         UpdateResult result = configProjectBo.updateOneProject(queryMap, updateMap);
 
         // 修改失败
