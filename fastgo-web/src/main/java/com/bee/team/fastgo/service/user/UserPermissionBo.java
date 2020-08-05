@@ -39,6 +39,18 @@ public interface UserPermissionBo extends LavaBo<UserPermissionDo, UserPermissio
      */
     List<ListPermissionResVo> getUserBindPermissionList(List<Long> permissionIds);
 
+
+    /**
+     * 获取所有的权限信息
+     *
+     * @param
+     * @return {@link List< ListPermissionResVo>}
+     * @author xqx
+     * @date 2020/8/5
+     * @desc 获取所有的权限信息
+     */
+    List<ListPermissionResVo> getAllPermissionList();
+
     /**
      * 添加权限信息
      *

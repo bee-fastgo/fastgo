@@ -84,6 +84,21 @@ public class UserPermissionBoImpl extends AbstractLavaBoImpl<UserPermissionDo, U
     }
 
     @Override
+    public List<ListPermissionResVo> getAllPermissionList() {
+        // 获取所有的权限信息
+        List<UserPermissionDo> list = selectByExample(new UserPermissionDoExample());
+        // 封装数据
+        if (!CollectionUtils.isEmpty(list)) {
+            List<ListPermissionResVo> listPermissionResVos = baseSupport.listCopy(list, ListPermissionResVo.class);
+            // 获取所有的根权限信息
+            List<ListPermissionResVo> rootPermissions = listPermissionResVos.stream().filter(e -> ObjectUtils.isEmpty(e.getParentPermissionId())).collect(Collectors.toList());
+            return getTree(rootPermissions, listPermissionResVos);
+            // 对根结果集进行分页，再将结果集遍历成树
+        }
+        return null;
+    }
+
+    @Override
     public void insertPermission(AddPermissionReqVo addPermissionReqVo) {
         // 权限key不能重复
         UserPermissionDoExample example = new UserPermissionDoExample();
