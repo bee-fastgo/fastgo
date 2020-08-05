@@ -22,23 +22,23 @@ import javax.servlet.http.HttpSession;
 /**
  * @author luke
  */
-//@SimpleInterceptor
+@SimpleInterceptor
 public class FastGoInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler) throws Exception {
-//        if (handler instanceof HandlerMethod) {
-//            HandlerMethod method = (HandlerMethod) handler;
-//            NoLogin noLogin = method.getMethodAnnotation(NoLogin.class);
-//            if (noLogin != null) {
-//                return true;
-//            }
-//        }
-//
-//        HttpSession session = httpServletRequest.getSession();
-//        if (ObjectUtils.isEmpty(session.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY))) {
-//            throw new GlobalException(GlobalResponseCode.SYS_NO_LOGIN);
-//        }
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod method = (HandlerMethod) handler;
+            NoLogin noLogin = method.getMethodAnnotation(NoLogin.class);
+            if (noLogin != null) {
+                return true;
+            }
+        }
+
+        HttpSession session = httpServletRequest.getSession();
+        if (ObjectUtils.isEmpty(session.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY))) {
+            throw new GlobalException(GlobalResponseCode.SYS_NO_LOGIN);
+        }
         return true;
     }
 

@@ -3,11 +3,12 @@ package com.bee.team.fastgo.timer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.team.fastgo.common.MonitorTypeConstant;
-import com.bee.team.fastgo.model.AlertInfoDo;
+import com.bee.team.fastgo.hander.alert.AlertBody;
+import com.bee.team.fastgo.hander.alert.AlertHandler;
+import com.bee.team.fastgo.hander.event.EventPublisher;
 import com.bee.team.fastgo.model.ServerDo;
 import com.bee.team.fastgo.model.ServerRunProfileDo;
 import com.bee.team.fastgo.model.ServerSoftwareProfileDo;
-import com.bee.team.fastgo.service.server.AlertInfoBo;
 import com.bee.team.fastgo.service.server.ServerBo;
 import com.bee.team.fastgo.service.server.ServerRunProfileBo;
 import com.bee.team.fastgo.service.server.ServerSoftwareProfileBo;
@@ -26,7 +27,6 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class MonitorTimer {
     private ServerBo serverBo;
 
     @Autowired
-    private AlertInfoBo alertInfoBo;
+    private AlertHandler alertHandler;
 
     @Autowired
     private ServerRunProfileBo serverRunProfileBo;
@@ -71,7 +71,7 @@ public class MonitorTimer {
      * @date 2020/8/4
      * @desc
      */
-    @Scheduled(cron = "0 0/2 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void projectMonitor() {
 
         //运行环境监控
@@ -80,13 +80,22 @@ public class MonitorTimer {
             JSONObject jsonObject = JSON.parseObject(serverRunProfileDo.getSoftwareConfig());
             //如果无法连接
             if(!isHostConnectable((String) jsonObject.get("ip"), Integer.parseInt((String) jsonObject.get("port")))){
-                //入库并且执行告警 TODO
+                AlertBody alertBody = new AlertBody();
+                alertBody.setType(MonitorTypeConstant.PROJECT);
+                Map<String,String> info = new HashMap<>(4);
+                info.put("ip", (String) jsonObject.get("ip"));
+                info.put("port",(String) jsonObject.get("port"));
+                info.put("name",serverRunProfileDo.getSoftwareName());
+                info.put("status","death");
+                alertBody.setInfo(info);
+                //告警并入库
+                alertHandler.alert(alertBody);
             }
         });
 
     }
 
-    @Scheduled(cron = "0 0/2 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void softwareMonitor() {
         //软件环境监控
         List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = serverSoftwareProfileBo.getAll();
@@ -94,25 +103,19 @@ public class MonitorTimer {
             JSONObject jsonObject = JSON.parseObject(serverSoftwareProfileDo.getSoftwareConfig());
             //如果无法连接
             if(!isHostConnectable((String) jsonObject.get("ip"), Integer.parseInt((String) jsonObject.get("port")))){
-                //入库
-                AlertInfoDo alertInfoDo = new AlertInfoDo();
-                alertInfoDo.setAlertTime(new Date());
-                alertInfoDo.setType(MonitorTypeConstant.SOFTWARE);
-                Map<String,String> info = new HashMap<>(5);
+                AlertBody alertBody = new AlertBody();
+                alertBody.setType(MonitorTypeConstant.SOFTWARE);
+                Map<String,String> info = new HashMap<>(4);
                 info.put("ip", (String) jsonObject.get("ip"));
                 info.put("port",(String) jsonObject.get("port"));
                 info.put("name",serverSoftwareProfileDo.getSoftwareName());
                 info.put("status","death");
-                alertInfoDo.setInfo(JSON.toJSONString(info));
-                alertInfoBo.insertAlertInfo(alertInfoDo);
-                //告警 TODO
-
+                alertBody.setInfo(info);
+                //告警并入库
+                alertHandler.alert(alertBody);
             }
         });
     }
-
-
-
 
     /**
      * 服务是否存活

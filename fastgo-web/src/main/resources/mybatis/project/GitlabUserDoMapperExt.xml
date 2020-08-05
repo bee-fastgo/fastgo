@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bee.team.fastgo.mapper.GitlabUserDoMapperExt">
+
+    <!--查询用户信息列表-->
+    <select id="findUsersInfo" resultType="com.bee.team.fastgo.vo.project.UserInfoResVo">
+        select id,userName from t_user
+    </select>
+
+    <!--批量添加项目用户关联记录-->
+    <insert id="insertUserProject">
+        insert into t_user_project(`gmt_create`, `creator`, `gmt_modified`, `modifier`, `is_deleted`,`userId`,`projectId`) values
+        <foreach collection="maps" item="map" separator=",">
+            (now(),
+            'system',
+            now(),
+            'system',
+            'n',
+            userId = #{userId},
+            projectId = #{projectId})
+        </foreach>
+    </insert>
+
+    <!--批量移除项目用户关联记录-->
+    <update id="delUserProject">
+        update t_user_project set is_deleted = 'y'
+        <where>
+            projectId = #{projectId}
+            <foreach collection="userIds" item="id" open="and userId in (" close=")" separator=",">
+                #{userId}
+            </foreach>
+        </where>
+    </update>
+
+</mapper>
