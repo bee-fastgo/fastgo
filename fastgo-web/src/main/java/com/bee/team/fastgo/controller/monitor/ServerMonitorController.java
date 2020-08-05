@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,10 +112,10 @@ public class ServerMonitorController {
 
         //集成告警
         boolean alert = false;
-        if(cpuUse != null && cpuUse > 80 ){
+        if(cpuUse != null && cpuUse > 80){
             alert = true;
         }
-        if(memUse != null && memUse > 0.8){
+        if(memUse != null && memUse > 0.4){
             alert = true;
         }
         if(alert){
@@ -123,8 +124,9 @@ public class ServerMonitorController {
             Map<String,String> info = new HashMap<>(3);
             String ip = cpuState == null ? JSON.toJavaObject(memState, ServerMemoryLogDo.class).getServerIp() : JSON.toJavaObject(cpuState, ServerCpuLogDo.class).getServerIp();
             info.put("ip",ip);
-            info.put("cpu",cpuUse == null ? "-%" : cpuUse + "%");
-            info.put("mem",memUse == null ? "-%" : (memUse * 100) + "%");
+            DecimalFormat decimalFormat = new DecimalFormat("######0.00");
+            info.put("cpu",cpuUse == null ? "-%" : decimalFormat.format(cpuUse) + "%");
+            info.put("mem",memUse == null ? "-%" : decimalFormat.format(memUse * 100) + "%");
             alertBody.setInfo(info);
             alertHandler.alert(alertBody);
         }
