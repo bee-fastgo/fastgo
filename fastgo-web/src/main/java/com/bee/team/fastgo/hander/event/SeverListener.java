@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 
 import static com.spring.simple.development.support.exception.GlobalResponseCode.SERVICE_FAILED;
 
@@ -72,7 +71,7 @@ public class SeverListener {
         }
     }
 
-    public static void uploadFile(String dataServerIp, int port, String user, String password, File localFile, String remoteTargetDirectory) {
+    private void uploadFile(String dataServerIp, int port, String user, String password, File localFile, String remoteTargetDirectory) {
         Connection conn = null;
         try {
             conn = new Connection(dataServerIp, port);
