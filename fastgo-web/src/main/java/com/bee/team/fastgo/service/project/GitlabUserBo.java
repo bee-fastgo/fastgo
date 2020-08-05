@@ -4,6 +4,7 @@ import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.GitlabUserDo;
 import com.bee.team.fastgo.model.GitlabUserDoExample;
 import com.bee.team.fastgo.model.UserDo;
+import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
@@ -49,4 +50,13 @@ public interface GitlabUserBo extends com.alibaba.lava.base.LavaBo<com.bee.team.
      * @desc gitlab用户移除项目
      */
     void gitlabUserRemoveProject(GitlabUserGetProjectVo gitlabUserGetProjectVo);
+
+    /**
+     * @param
+     * @return {@link List< GitlabUserInfoVo>}
+     * @author hs
+     * @date 2020/8/4
+     * @desc 获取所有gitlab用户信息
+     */
+    List<GitlabUserInfoResVo> getGitlabUserInfo();
 }

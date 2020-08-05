@@ -3,6 +3,7 @@ package com.bee.team.fastgo.controller.project;
 import com.bee.team.fastgo.common.CommonLoginValue;
 import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.service.project.GitlabUserBo;
+import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
@@ -61,6 +62,13 @@ public class GitlabUserController {
     public ResBody<List<UserInfoResVo>> getUsersInfo(){
         List<UserInfoResVo> userInfoResVoList = gitlabUserBo.getUserInfo();
         return new ResBody().buildSuccessResBody(userInfoResVoList);
+    }
+
+    @RequestMapping(value = "/getGitlabUserInfo", method = RequestMethod.POST)
+    @ApiOperation(value = "获取gitlab用户信息")
+    public ResBody<List<GitlabUserInfoResVo>> getGitlabUsersInfo(){
+        List<GitlabUserInfoResVo> gitlabUserInfoResVoList = gitlabUserBo.getGitlabUserInfo();
+        return new ResBody().buildSuccessResBody(gitlabUserInfoResVoList);
     }
 
 }
