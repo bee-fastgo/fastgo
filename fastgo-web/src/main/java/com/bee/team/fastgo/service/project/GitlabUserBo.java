@@ -3,6 +3,7 @@ package com.bee.team.fastgo.service.project;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.GitlabUserDo;
 import com.bee.team.fastgo.model.GitlabUserDoExample;
+import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
@@ -28,7 +29,7 @@ public interface GitlabUserBo extends com.alibaba.lava.base.LavaBo<com.bee.team.
      * @desc 新增gitlab用户
      */
 
-    void addGitlabUser(GitlabUserInfoVo gitlabUserInfoVo);
+    void addGitlabUser(GitlabUserInfoVo gitlabUserInfoVo, UserDo userDo);
 
     /**
      * @param gitlabUserGetProjectVo

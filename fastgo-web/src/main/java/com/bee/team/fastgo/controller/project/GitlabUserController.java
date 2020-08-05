@@ -1,5 +1,7 @@
 package com.bee.team.fastgo.controller.project;
 
+import com.bee.team.fastgo.common.CommonLoginValue;
+import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.service.project.GitlabUserBo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -31,8 +35,10 @@ public class GitlabUserController {
 
     @RequestMapping(value = "/addGitlabUser", method = RequestMethod.POST)
     @ApiOperation(value = "添加新的gitlab用户")
-    public ResBody<Void> addGitlabUser(@RequestBody GitlabUserInfoVo gitlabUserInfoVo){
-        gitlabUserBo.addGitlabUser(gitlabUserInfoVo);
+    public ResBody<Void> addGitlabUser(@RequestBody GitlabUserInfoVo gitlabUserInfoVo, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        UserDo userDo = (UserDo) session.getAttribute(CommonLoginValue.SESSION_LOGIN_KEY);
+        gitlabUserBo.addGitlabUser(gitlabUserInfoVo,userDo);
         return new ResBody().buildSuccessResBody();
     }
 

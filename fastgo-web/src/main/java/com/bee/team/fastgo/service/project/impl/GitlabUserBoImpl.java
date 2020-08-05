@@ -5,6 +5,7 @@ import com.bee.team.fastgo.context.ProjectAccessEvent;
 import com.bee.team.fastgo.context.ProjectPublisher;
 import com.bee.team.fastgo.mapper.GitlabUserDoMapperExt;
 import com.bee.team.fastgo.model.GitlabUserDo;
+import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.project.gitlab.GitlabAPI;
 import com.bee.team.fastgo.project.model.GitlabUser;
 import com.bee.team.fastgo.service.project.GitlabUserBo;
@@ -58,7 +59,7 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
     }
 
     @Override
-    public void addGitlabUser(GitlabUserInfoVo gitlabUserInfoVo) {
+    public void addGitlabUser(GitlabUserInfoVo gitlabUserInfoVo,UserDo userDo) {
         GitlabAPI gitlabAPI = new GitlabAPI(gitlabUrl,privateToken);
         try{
             GitlabUser gitlibUser = gitlabAPI.createUser(gitlabUserInfoVo.getName(),gitlabUserInfoVo.getEmail(),gitlabUserInfoVo.getUsername(),gitlabUserInfoVo.getPassword());
@@ -68,9 +69,13 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
             //调用邮箱工具类
             EmailUtil.sendEmail(gitlabUserInfoVo.getEmail(),"新建gitlab用户",EmailUtil.contentTemplate(gitlabUserInfoVo.getName(),gitlabUserInfoVo.getUsername()));
             //添加gitlab用户
-            GitlabUserDo gitlabUserDo = baseSupport.objectCopy(gitlibUser,GitlabUserDo.class);
+            GitlabUserDo gitlabUserDo = new GitlabUserDo();
+            gitlabUserDo.setGitlabEmail(gitlibUser.getEmail());
+            gitlabUserDo.setGitlabUserName(gitlibUser.getUsername());
+            gitlabUserDo.setGitlabName(gitlibUser.getName());
             gitlabUserDo.setGitlabPassword(Md5Utils.getMD5Str(gitlabUserInfoVo.getPassword()));
             gitlabUserDo.setGitlabUserId(gitlibUser.getId());
+            gitlabUserDo.setUserId(userDo.getId().intValue());
             gitlabUserDo.setId(null);
             mapper.insertSelective(gitlabUserDo);
         }catch (Exception e){
