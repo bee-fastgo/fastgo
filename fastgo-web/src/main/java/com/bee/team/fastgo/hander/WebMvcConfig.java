@@ -29,11 +29,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(pathPatterns).addResourceLocations("file:" + fileRootPath);
     }
-    @Override
-    public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(new FastGoInterceptor()).addPathPatterns("/**").excludePathPatterns(pathPatterns);
-    }
-
     @Bean(name="multipartResolver")
     public MultipartResolver multipartResolver(){
         return new CommonsMultipartResolver();

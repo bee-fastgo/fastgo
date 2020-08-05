@@ -10,6 +10,7 @@ import com.spring.simple.development.core.annotation.base.NoLogin;
 import com.spring.simple.development.core.annotation.base.SimpleInterceptor;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.exception.GlobalResponseCode;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpSession;
 /**
  * @author luke
  */
-@SimpleInterceptor
+@Component
 public class FastGoInterceptor implements HandlerInterceptor {
 
     @Override
