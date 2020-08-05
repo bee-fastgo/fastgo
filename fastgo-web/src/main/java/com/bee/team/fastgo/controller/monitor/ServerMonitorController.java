@@ -117,7 +117,7 @@ public class ServerMonitorController {
         if(cpuUse != null && cpuUse > 80){
             alert = true;
         }
-        if(memUse != null && memUse > 0.4){
+        if(memUse != null && memUse > 0.8){
             alert = true;
         }
         if(alert){
