@@ -93,7 +93,7 @@ public class UserPermissionBoImpl extends AbstractLavaBoImpl<UserPermissionDo, U
         }
 
         UserPermissionDo permissionDo = baseSupport.objectCopy(addPermissionReqVo, UserPermissionDo.class);
-        permissionDo.setParentPermissionId(Long.getLong(addPermissionReqVo.getParentPermissionId()));
+        permissionDo.setParentPermissionId(Long.parseLong(addPermissionReqVo.getParentPermissionId()));
 
         int result = insert(permissionDo);
 
