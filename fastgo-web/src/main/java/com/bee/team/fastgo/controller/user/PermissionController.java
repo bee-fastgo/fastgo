@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
 /**
@@ -64,6 +66,12 @@ public class PermissionController {
         }
         userPermissionBo.deletePermission(id);
         return new ResBody().buildSuccessResBody();
+    }
+
+    @RequestMapping(value = "/getAllPermissionList", method = RequestMethod.GET)
+    @ApiOperation(value = "获取所有的权限信息")
+    public ResBody getAllPermissionList(HttpServletRequest request) {
+        return new ResBody().buildSuccessResBody(userPermissionBo.getAllPermissionList());
     }
 
 }
