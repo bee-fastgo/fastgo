@@ -29,7 +29,7 @@ public class UserPermissionDo extends LavaDo {
     /**
      * 父权限id
      */
-    private String parentPermissionId;
+    private Long parentPermissionId;
 
     /**
      * 描述
