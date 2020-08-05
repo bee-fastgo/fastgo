@@ -3,6 +3,7 @@ package com.bee.team.fastgo.service.project;
 import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.model.ProjectDoExample;
+import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.vo.project.RunProfileListVo;
 import com.bee.team.fastgo.vo.project.SofrwateProfileListVo;
 import com.bee.team.fastgo.vo.project.req.*;
@@ -21,7 +22,7 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * 查询后台项目信息
      * @return
      */
-    ResPageDTO queryBackProjectInfo(QueryProjectListVo queryProjectListVo);
+    ResPageDTO queryBackProjectInfo(QueryProjectListVo queryProjectListVo,UserDo userDo);
 
     /**
      * 新增后台项目
@@ -46,7 +47,7 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * 查询前台项目信息
      * @return
      */
-    ResPageDTO queryFrontProjectInfo(QueryProjectListVo queryProjectListVo);
+    ResPageDTO queryFrontProjectInfo(QueryProjectListVo queryProjectListVo,UserDo userDo);
 
     /**
      * 添加前台项目
@@ -59,7 +60,7 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @param deployBackPorjectVo
      * @return
      */
-    void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo);
+    void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo,String deployId);
 
     /**
      * 修改项目状态接口
@@ -83,7 +84,7 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      * @date 2020/7/28
      * @desc 部署前台项目
      */
-    void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo);
+    void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo,String deployId);
 
     /**
      * @param autoDeployVo

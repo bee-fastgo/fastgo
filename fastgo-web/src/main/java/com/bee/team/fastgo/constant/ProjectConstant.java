@@ -57,4 +57,15 @@ public class ProjectConstant {
     public static final Integer HAS_PROFILE0 = 0;
     public static final Integer HAS_PROFILE1 = 1;
 
+    /**
+     * 项目访问请求权限： 1-添加 1-移除
+     */
+    public static final Integer PROJECT_ACCESS_TYPE1 = 1;
+    public static final Integer PROJECT_ACCESS_TYPE2 = 2;
+
+    /**
+     * 系统管理员
+     */
+    public static final String ADMIN_USER = "admin";
+
 }

@@ -70,4 +70,25 @@ public class UserRolePermissionBoImpl extends AbstractLavaBoImpl<UserRolePermiss
             insert(userRolePermissionDo);
         });
     }
+
+    @Override
+    public void addRolePermission(Long roleId, Long permissionId) {
+        UserRolePermissionDo userRolePermissionDo = new UserRolePermissionDo();
+        userRolePermissionDo.setRoleId(roleId);
+        userRolePermissionDo.setPermissionId(permissionId);
+        insert(userRolePermissionDo);
+    }
+
+    @Override
+    public List<UserRolePermissionDo> getRolePermissionListByCondition(UserRolePermissionDoExample example) {
+        return selectByExample(example);
+    }
+
+    @Override
+    public void delRolePermission(List<UserRolePermissionDo> list) {
+        list.forEach(e -> {
+            e.setIsDeleted("y");
+            update(e);
+        });
+    }
 }

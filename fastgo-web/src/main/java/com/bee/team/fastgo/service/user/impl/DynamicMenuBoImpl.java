@@ -138,8 +138,22 @@ public class DynamicMenuBoImpl extends AbstractLavaBoImpl<DynamicMenuDo, Dynamic
         if (ObjectUtils.isEmpty(dynamicMenuDo)) {
             throw new GlobalException(RES_DATA_NOT_EXIST, "菜单信息不存在");
         }
+        // 删除子集
+        updateChildren(dynamicMenuDo);
+    }
+
+    private void updateChildren(DynamicMenuDo dynamicMenuDo) {
+        // 删除当前菜单
         dynamicMenuDo.setIsDeleted("y");
         update(dynamicMenuDo);
+
+        // 搜索子集
+        DynamicMenuDoExample example = new DynamicMenuDoExample();
+        example.createCriteria().andParentMenuIdEqualTo(dynamicMenuDo.getId());
+        List<DynamicMenuDo> list = selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(e -> updateChildren(e));
+        }
     }
 
     private List<MenuListResVo> getTree(List<MenuListResVo> rootMenus, List<MenuListResVo> listResVos) {

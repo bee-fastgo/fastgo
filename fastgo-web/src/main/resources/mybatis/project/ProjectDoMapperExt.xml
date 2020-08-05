@@ -4,49 +4,77 @@
 
     <!--查询后台项目条数-->
     <select id="queryBackProjectTotal" parameterType="map" resultType="java.lang.Integer">
-        select count(1) from t_project where projectType = '2'
+        select count(1) from t_project p
+        <if test="userId!=null and userId!=''">
+            inner join t_user_project up on p.id = up.id
+        </if>
+        where p.projectType = '2'
+        <if test="userId!=null and userId!=''">
+            and up.userId = #{userId} and up.is_deleted = 'n'
+        </if>
         <if test="projectName!=null and projectName!=''">
-            and projectName like #{projectName}
+            and p.projectName like #{projectName}
         </if>
         <if test="projectStatus!=null and projectStatus!=''">
-            and projectStatus = #{projectStatus}
+            and p.projectStatus = #{projectStatus}
         </if>
     </select>
 
     <!--查询前台项目条数-->
     <select id="queryFrontProjectTotal" parameterType="map" resultType="java.lang.Integer">
-        select count(1) from t_project where projectType = '1'
+        select count(1) from t_project p
+        <if test="userId!=null and userId!=''">
+            inner join t_user_project up on p.id = up.id
+        </if>
+        where p.projectType = '1'
+        <if test="userId!=null and userId!=''">
+            and up.userId = #{userId} and up.is_deleted = 'n'
+        </if>
         <if test="projectName!=null and projectName!=''">
-            and projectName like #{projectName}
+            and p.projectName like #{projectName}
         </if>
         <if test="projectStatus!=null and projectStatus!=''">
-            and projectStatus = #{projectStatus}
+            and p.projectStatus = #{projectStatus}
         </if>
     </select>
 
     <!--查询后台项目列表-->
     <select id="findBackPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
-        select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project where projectType = '2'
+        select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project p
+        <if test="userId!=null and userId!=''">
+            inner join t_user_project up on p.id = up.id
+        </if>
+        where p.projectType = '2'
+        <if test="userId!=null and userId!=''">
+            and up.userId = #{userId} and up.is_deleted = 'n'
+        </if>
         <if test="projectName!=null and projectName!=''">
-            and projectName like #{projectName}
+            and p.projectName like #{projectName}
         </if>
         <if test="projectStatus!=null and projectStatus!=''">
-            and projectStatus = #{projectStatus}
+            and p.projectStatus = #{projectStatus}
         </if>
-        order By gmt_create desc
+        order By p.gmt_create desc
         limit #{start},#{limit}
     </select>
 
     <!--查询前台项目列表-->
     <select id="findFrontPorjectList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectListVo">
-        select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project where projectType = '1'
+        select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project p
+        <if test="userId!=null and userId!=''">
+            inner join t_user_project up on p.id = up.id
+        </if>
+        where p.projectType = '1'
+        <if test="userId!=null and userId!=''">
+            and up.userId = #{userId} and up.is_deleted = 'n'
+        </if>
         <if test="projectName!=null and projectName!=''">
-            and projectName like #{projectName}
+            and p.projectName like #{projectName}
         </if>
         <if test="projectStatus!=null and projectStatus!=''">
-            and projectStatus = #{projectStatus}
+            and p.projectStatus = #{projectStatus}
         </if>
-        order By gmt_create desc
+        order By p.gmt_create desc
         limit #{start},#{limit}
     </select>
 

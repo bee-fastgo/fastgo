@@ -14,7 +14,7 @@
         <result column="orderNumber" jdbcType="INTEGER" property="orderNumber"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>
         <result column="permissionId" jdbcType="BIGINT" property="permissionId"/>
-        <result column="parentMenuId" jdbcType="VARCHAR" property="parentMenuId"/>
+        <result column="parentMenuId" jdbcType="BIGINT" property="parentMenuId"/>
         <result column="GMT_CREATE" jdbcType="TIMESTAMP" property="gmtCreate"/>
         <result column="CREATOR" jdbcType="VARCHAR" property="creator"/>
         <result column="GMT_MODIFIED" jdbcType="TIMESTAMP" property="gmtModified"/>
@@ -213,7 +213,7 @@
                 permissionId = #{record.permissionId,jdbcType=BIGINT},
             </if>
             <if test="record.parentMenuId != null">
-                parentMenuId = #{record.parentMenuId,jdbcType=VARCHAR},
+                parentMenuId = #{record.parentMenuId,jdbcType=BIGINT},
             </if>
             <if test="record.gmtCreate != null">
                 GMT_CREATE = #{record.gmtCreate,jdbcType=TIMESTAMP},
@@ -249,7 +249,7 @@
         orderNumber = #{record.orderNumber,jdbcType=INTEGER},
         icon = #{record.icon,jdbcType=VARCHAR},
         permissionId = #{record.permissionId,jdbcType=BIGINT},
-        parentMenuId = #{record.parentMenuId,jdbcType=VARCHAR},
+        parentMenuId = #{record.parentMenuId,jdbcType=BIGINT},
         GMT_CREATE = #{record.gmtCreate,jdbcType=TIMESTAMP},
         CREATOR = #{record.creator,jdbcType=VARCHAR},
         GMT_MODIFIED = #{record.gmtModified,jdbcType=TIMESTAMP},
@@ -286,7 +286,7 @@
                 permissionId = #{permissionId,jdbcType=BIGINT},
             </if>
             <if test="parentMenuId != null">
-                parentMenuId = #{parentMenuId,jdbcType=VARCHAR},
+                parentMenuId = #{parentMenuId,jdbcType=BIGINT},
             </if>
             <if test="gmtCreate != null">
                 GMT_CREATE = #{gmtCreate,jdbcType=TIMESTAMP},
@@ -416,7 +416,7 @@
                 #{permissionId,jdbcType=BIGINT},
             </if>
             <if test="parentMenuId != null">
-                #{parentMenuId,jdbcType=VARCHAR},
+                #{parentMenuId,jdbcType=BIGINT},
             </if>
             <if test="gmtCreate != null">
                 #{gmtCreate,jdbcType=TIMESTAMP},
@@ -535,7 +535,7 @@
                 #{permissionId,jdbcType=BIGINT},
             </if>
             <if test="parentMenuId != null">
-                #{parentMenuId,jdbcType=VARCHAR},
+                #{parentMenuId,jdbcType=BIGINT},
             </if>
             <if test="gmtCreate != null">
                 #{gmtCreate,jdbcType=TIMESTAMP},

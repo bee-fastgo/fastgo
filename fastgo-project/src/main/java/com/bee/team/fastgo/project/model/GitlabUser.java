@@ -1,5 +1,6 @@
 package com.bee.team.fastgo.project.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -7,17 +8,16 @@ import java.util.List;
 @Data
 public class GitlabUser {
 
-    private Integer _id;
-    private String _username;
-    private String _email;
-    private String _name;
-    private String _skype;
-    private String _linkedin;
-    private String _twitter;
-    private String _provider;
-    private String _state;
-    private boolean _blocked;
-    private List<GitlabUserIdentity> _identities;
+    private Integer id;
+    private String username;
+    private String email;
+    private String name;
+    private String skype;
+    private String linkedin;
+    private String twitter;
+    private String provider;
+    private String state;
+    private boolean blocked;
 
 
 }
