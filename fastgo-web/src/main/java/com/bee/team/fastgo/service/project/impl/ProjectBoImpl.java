@@ -59,7 +59,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Value("${frontTemplate}")
     private String frontTemplate;
 
-    @Value("${gitlab.privateToken}")
+    @Value("${gitlab.normal.privateToken}")
     private String privateToken;
 
     @Autowired
@@ -80,17 +80,13 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     private ProjectDao projectDao;
 
     @Autowired
-    private DeployService deployService;
-
-    @Autowired
     private ProjectPublisher projectPublisher;
 
     @Autowired
     private DeployPublisher deployPublisher;
 
-
     @Override
-    public ResPageDTO<ProjectListVo> queryBackProjectInfo(QueryProjectListVo queryProjectListVo) {
+    public ResPageDTO<ProjectListVo> queryBackProjectInfo(QueryProjectListVo queryProjectListVo,UserDo userDo) {
         Pager<ProjectListVo> pager = new Pager<>();
         //查询数据条数
         Map<String,Object> map = new HashMap<>();
@@ -100,6 +96,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             map.put("projectName",projectName);
         }
         map.put("projectStatus",queryProjectListVo.getProjectStatus());
+        if (!ObjectUtils.isEmpty(userDo) && !userDo.getUserName().equals(ADMIN_USER)){
+            map.put("userId",userDo.getId().intValue());
+        }
         Integer count = mapper.queryBackProjectTotal(map);
         pager.setTotal(count);
         pager.setPageNo(queryProjectListVo.getPageNum());
@@ -152,7 +151,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
                }
            }
            //创建新的gitlab后台项目
-            GitlabProjectDo gitlabProjectDo = new GitlabProjectDo();
+            GitlabProjectDo gitlabProjectDo;
             try {
                 GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,privateToken);
                 gitlabProjectDo = gitlabAPI.createNewProject(insertBackProjectVo.getProjectName(),insertBackProjectVo.getProjectDesc());
@@ -167,9 +166,6 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
         mapper.insertSelective(projectDo);
-        //事件添加webhook
-        /*ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/backEnd/deployBackProject",AUTO_DEPLOY1);
-        projectPublisher.publish(projectEvent);*/
     }
 
     @Override
@@ -184,7 +180,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     }
 
     @Override
-    public ResPageDTO<ProjectListVo> queryFrontProjectInfo(QueryProjectListVo queryProjectListVo) {
+    public ResPageDTO<ProjectListVo> queryFrontProjectInfo(QueryProjectListVo queryProjectListVo,UserDo userDo) {
         Pager<ProjectListVo> pager = new Pager<>();
         Map<String,Object> map = new HashMap<>();
         //查询前台项目条数
@@ -194,6 +190,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             map.put("projectName",projectName);
         }
         map.put("projectStatus",queryProjectListVo.getProjectStatus());
+        if (!ObjectUtils.isEmpty(userDo) && !userDo.getUserName().equals(ADMIN_USER)){
+            map.put("userId",userDo.getId().intValue());
+        }
         Integer count = mapper.queryFrontProjectTotal(map);
         pager.setTotal(count);
         pager.setPageNo(queryProjectListVo.getPageNum());
@@ -260,13 +259,11 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
         mapper.insertSelective(projectDo);
-        //事件添加webhook
-        /*ProjectEvent projectEvent = new ProjectEvent(new Object(),projectCode,"http://"+ IpUtil.getIp() +":"+port+"/project/frontEnd/deployFrontProject",AUTO_DEPLOY1);
-        projectPublisher.publish(projectEvent);*/
     }
 
     @Override
-    public void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo) {
+    public void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo,String deployId) {
+        //插入项目部署日志
         ProjectDoExample example = new ProjectDoExample();
         example.createCriteria().andProjectCodeEqualTo(deployBackPorjectVo.getProjectCode());
         List<ProjectDo> projectDoList = mapper.selectByExample(example);
@@ -287,6 +284,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         dto.setBranchName(deployBackPorjectVo.getBranchName());
         String port = String.valueOf(map.get("port"));
         dto.setProjectPort(port);
+        dto.setDeployLogId(deployId);
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),dto,null,PROJECT_TYPE2,projectDo.getId().intValue());
         deployPublisher.publish(deployEvent);
@@ -359,7 +357,8 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     }
 
     @Override
-    public void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo) {
+    public void execDeployFrontProject(DeployFrontPorjectVo deployFrontPorjectVo,String deployId) {
+        //部署项目
         ProjectDoExample example = new ProjectDoExample();
         example.createCriteria().andProjectCodeEqualTo(deployFrontPorjectVo.getProjectCode());
         List<ProjectDo> projectDoList = mapper.selectByExample(example);
@@ -381,6 +380,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         String port = String.valueOf(map.get("port"));
         deployDTO.setProjectPort(port);
         deployDTO.setServiceUrl(deployFrontPorjectVo.getServiceUrl());
+        deployDTO.setDeployLogId(deployId);
         //调取服务器部署项目脚本
         DeployEvent deployEvent = new DeployEvent(new Object(),null,deployDTO,PROJECT_TYPE1,projectDo.getId().intValue());
         deployPublisher.publish(deployEvent);
@@ -433,7 +433,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
     @Override
     public RunProfileListVo findRunProfile() {
         List<ServerVo> serverVoList = serverBo.queryListServer();
-        List<String> list = serverVoList.stream().map(r -> r.getServerIp()).collect(Collectors.toList());
+        List<String> list = serverVoList.stream().map(ServerVo::getServerIp).collect(Collectors.toList());
         RunProfileListVo runProfileListVo = new RunProfileListVo();
         runProfileListVo.setIps(list);
         return runProfileListVo;

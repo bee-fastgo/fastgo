@@ -9,7 +9,6 @@ import com.bee.team.fastgo.vo.server.QueryAlertInfoVo;
 import com.bee.team.fastgo.vo.server.ResAlertInfoVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.spring.simple.development.core.annotation.base.IsApiService;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
@@ -25,6 +24,7 @@ public class AlertInfoBoImpl extends AbstractLavaBoImpl<AlertInfoDo, AlertInfoDo
 
     @Autowired
     private BaseSupport baseSupport;
+
 
     @Autowired
     @NoApiMethod
@@ -48,5 +48,7 @@ public class AlertInfoBoImpl extends AbstractLavaBoImpl<AlertInfoDo, AlertInfoDo
         alertInfoDo.setAlertTime(new Date());
         insert(alertInfoDo);
     }
+
+
 
 }
