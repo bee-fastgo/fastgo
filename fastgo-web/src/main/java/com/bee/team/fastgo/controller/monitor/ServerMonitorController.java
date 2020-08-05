@@ -75,7 +75,7 @@ public class ServerMonitorController {
         return new ResBody().buildSuccessResBody(serverMonitorVo);
     }
 
-
+    @NoLogin
     @ApiOperation(value = "添加服务器监控信息记录")
     @RequestMapping(value = "/saveServerMonitorInfo", method = RequestMethod.POST, consumes = "application/json")
     public ResBody saveServerMonitorInfo(@RequestBody String paramBean) {
