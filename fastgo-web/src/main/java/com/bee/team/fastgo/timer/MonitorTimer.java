@@ -3,20 +3,17 @@ package com.bee.team.fastgo.timer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bee.team.fastgo.common.MonitorTypeConstant;
-import com.bee.team.fastgo.hander.SimpleExecutorCmd;
-import com.bee.team.fastgo.job.core.biz.ExecutorBiz;
-import com.bee.team.fastgo.job.core.biz.model.LogParam;
-import com.bee.team.fastgo.job.core.biz.model.LogResult;
-import com.bee.team.fastgo.job.core.biz.model.ReturnT;
-import com.bee.team.fastgo.job.core.glue.GlueTypeEnum;
-import com.bee.team.fastgo.model.*;
-import com.bee.team.fastgo.server.core.scheduler.SimpleJobScheduler;
-import com.bee.team.fastgo.service.server.*;
+import com.bee.team.fastgo.model.AlertInfoDo;
+import com.bee.team.fastgo.model.ServerDo;
+import com.bee.team.fastgo.model.ServerRunProfileDo;
+import com.bee.team.fastgo.model.ServerSoftwareProfileDo;
+import com.bee.team.fastgo.service.server.AlertInfoBo;
+import com.bee.team.fastgo.service.server.ServerBo;
+import com.bee.team.fastgo.service.server.ServerRunProfileBo;
+import com.bee.team.fastgo.service.server.ServerSoftwareProfileBo;
 import com.bee.team.fastgo.vo.server.ServerVo;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.support.constant.CommonConstant;
-import com.spring.simple.development.support.exception.GlobalException;
-import com.spring.simple.development.support.exception.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,14 +21,15 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
 
 /**
  * @author jgz
@@ -52,38 +50,69 @@ public class MonitorTimer {
 
     @Autowired
     private BaseSupport baseSupport;
-    @Autowired
-    private ServerBo serverBo;
-    @Autowired
-    private AlertInfoBo alertInfoBo;
-    @Autowired
-    private ServerRunProfileBo serverRunProfileBo;
 
     @Autowired
-    private ServerExecutorLogBo serverExecutorLogBo;
+    private ServerBo serverBo;
+
+    @Autowired
+    private AlertInfoBo alertInfoBo;
+
+    @Autowired
+    private ServerRunProfileBo serverRunProfileBo;
 
     @Autowired
     private ServerSoftwareProfileBo serverSoftwareProfileBo;
 
 
     /**
-     * 每分钟执行一次任务调度
+     * 每5分钟执行一次项目
      *
      * @author jgz
      * @date 2020/8/4
      * @desc
      */
-    @Scheduled(cron = "0 0/1 * * * ?")
-    public void execute() {
-        //软件环境监控
-        List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = serverSoftwareProfileBo.getAll();
-
+    @Scheduled(cron = "0 0/2 * * * ?")
+    public void projectMonitor() {
 
         //运行环境监控
         List<ServerRunProfileDo> serverRunProfileDoList = serverRunProfileBo.getListServerRunProfileDo();
-
+        serverRunProfileDoList.forEach(serverRunProfileDo -> {
+            JSONObject jsonObject = JSON.parseObject(serverRunProfileDo.getSoftwareConfig());
+            //如果无法连接
+            if(!isHostConnectable((String) jsonObject.get("ip"), Integer.parseInt((String) jsonObject.get("port")))){
+                //入库并且执行告警 TODO
+            }
+        });
 
     }
+
+    @Scheduled(cron = "0 0/2 * * * ?")
+    public void softwareMonitor() {
+        //软件环境监控
+        List<ServerSoftwareProfileDo> serverSoftwareProfileDoList = serverSoftwareProfileBo.getAll();
+        serverSoftwareProfileDoList.forEach(serverSoftwareProfileDo -> {
+            JSONObject jsonObject = JSON.parseObject(serverSoftwareProfileDo.getSoftwareConfig());
+            //如果无法连接
+            if(!isHostConnectable((String) jsonObject.get("ip"), Integer.parseInt((String) jsonObject.get("port")))){
+                //入库
+                AlertInfoDo alertInfoDo = new AlertInfoDo();
+                alertInfoDo.setAlertTime(new Date());
+                alertInfoDo.setType(MonitorTypeConstant.SOFTWARE);
+                Map<String,String> info = new HashMap<>(5);
+                info.put("ip", (String) jsonObject.get("ip"));
+                info.put("port",(String) jsonObject.get("port"));
+                info.put("name",serverSoftwareProfileDo.getSoftwareName());
+                info.put("status","death");
+                alertInfoDo.setInfo(JSON.toJSONString(info));
+                alertInfoBo.insertAlertInfo(alertInfoDo);
+                //告警 TODO
+
+            }
+        });
+    }
+
+
+
 
     /**
      * 服务是否存活
