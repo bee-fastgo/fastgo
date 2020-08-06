@@ -48,7 +48,12 @@ public class ConfigApiImpl implements ConfigApi {
 
         // 封装要修改的配置项格式为 mysql.spring-datasource-port
         Map<String, Object> updateMap = new HashMap<>();
-        list.stream().forEach(e -> updateMap.put(e.getSoftName() + "." + e.getKey().replace(".", "-"), e.getValue()));
+        for (UpdateConfigDTO updateConfigDTO : list) {
+            Map<String, Object> map = new HashMap<>();
+            updateConfigDTO.getList().forEach(e -> map.put(e.getKey(), e.getValue()));
+            updateMap.put(updateConfigDTO.getSoftName(), map);
+        }
+
         UpdateResult result = configProjectBo.updateOneProject(queryMap, updateMap);
 
         // 修改失败

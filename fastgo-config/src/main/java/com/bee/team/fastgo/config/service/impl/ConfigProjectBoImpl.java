@@ -15,13 +15,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
@@ -157,13 +154,15 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         Update update = new Update();
         // 获取要修改的所有软件名
         List<Object> listSet = Arrays.asList(updateMap.keySet().toArray());
-        List<String> newSofts = listSet.stream().map(e -> e.toString().substring(0, e.toString().indexOf("."))).collect(Collectors.toList());
+
+        List<Object> newList = new ArrayList<>();
+        newList.addAll(listSet);
 
         // 获取原本项目的所有软件名
         List<Object> oldSofts = Arrays.asList(template.findOne(query, Map.class, MongoCollectionValue.CONFIG_PROJECT).keySet().toArray());
 
         // 如果有新增的软件，就将模板中该软件的配置信息取出来作为该软件的配置信息
-        for (String e : newSofts) {
+        for (Object e : newList) {
             // 如果不包含就增加基础配置
             if (!oldSofts.contains(e)) {
                 // 根据软件名查询模板信息
@@ -177,19 +176,22 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                     tempMap.remove(MongoCommonValue.TEMPLATE_CODE);
                     tempMap.remove(MongoCommonValue.TEMPLATE_DESCRIPTION);
                 }
-
                 // 转移到修改的map中
-                update.set(e, softConfig(e, (Map<String, Object>) updateMap.get(e), tempMap).get(e));
+                update.set(e.toString(), softConfig(e.toString(), (Map<String, Object>) updateMap.get(e), tempMap).get(e));
 
                 // 清除已经修改的软件数据软件数据
                 updateMap.remove(e);
-                listSet.remove(e);
+                newList.remove(e);
+                if (CollectionUtils.isEmpty(newList)) {
+                    break;
+                }
             }
         }
 
         // 修改已存在的软件配置
-        listSet.forEach(e -> update.set(e.toString(), updateMap.get(e)));
-
+        if (!CollectionUtils.isEmpty(newList)) {
+            newList.forEach(e -> update.set(e.toString(), updateMap.get(e)));
+        }
         // 修改指定的值，如果数据不存在键就添加该键值对
         return template.updateFirst(query, update, MongoCollectionValue.CONFIG_PROJECT);
     }

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @ClassName SoftReqVo
@@ -21,5 +22,5 @@ public class SoftReqVo {
     private String softName;
 
     @ApiModelProperty(value = "要修改的参数键值对", required = true)
-    private MapReqVo mapReqVo;
+    private List<MapReqVo> mapReqVos;
 }
