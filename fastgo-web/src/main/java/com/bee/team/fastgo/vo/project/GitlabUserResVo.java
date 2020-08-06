@@ -6,12 +6,13 @@ import lombok.Data;
 
 /**
  * @author hs
- * @date 2020/8/5 15:12
- * @desc gitlab 用户信息
+ * @date 2020/8/5 17:13
+ * @desc 用户信息展示
  **/
+
 @Data
 @ApiModel(value = "gitlabUserInfoResVo",description = "gitlab用户信息vo")
-public class GitlabUserInfoResVo {
+public class GitlabUserResVo {
 
     @ApiModelProperty(value = "主键id",example = "1")
     private Integer id;
@@ -24,8 +25,5 @@ public class GitlabUserInfoResVo {
 
     @ApiModelProperty(value = "邮箱地址",example = "163163@163.com")
     private String gitlabEmail;
-
-    @ApiModelProperty(value = "状态: 1-active，2-blocked",example = "1")
-    private Integer status;
 
 }

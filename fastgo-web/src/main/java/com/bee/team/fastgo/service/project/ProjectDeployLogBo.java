@@ -4,7 +4,10 @@ import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ProjectDeployLogDo;
 import com.bee.team.fastgo.model.ProjectDeployLogDoExample;
 import com.bee.team.fastgo.model.UserDo;
+import com.bee.team.fastgo.vo.project.ProjectDeployResVo;
 import com.bee.team.fastgo.vo.project.req.DeployFrontPorjectVo;
+
+import java.util.List;
 
 public interface ProjectDeployLogBo extends com.alibaba.lava.base.LavaBo<com.bee.team.fastgo.model.ProjectDeployLogDo, com.bee.team.fastgo.model.ProjectDeployLogDoExample> {
 
@@ -18,4 +21,14 @@ public interface ProjectDeployLogBo extends com.alibaba.lava.base.LavaBo<com.bee
      */
 
     String addProjectDeployLog(ProjectDeployLogDo projectDeployLogDo, UserDo userDo);
+
+    /**
+     * @param projectCode
+     * @return {@link List< ProjectDeployResVo>}
+     * @author hs
+     * @date 2020/8/5
+     * @desc 查询项目部署记录
+     */
+
+    List<ProjectDeployResVo> queryProjectDeployList(String projectCode);
 }

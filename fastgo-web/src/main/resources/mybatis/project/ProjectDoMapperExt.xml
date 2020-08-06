@@ -108,5 +108,24 @@
         where p.projectCode = #{projectCode}
     </select>
 
+    <!--查询项目详情-->
+    <select id="findProjectDetail" resultType="com.bee.team.fastgo.vo.project.ProjectInfoResVo">
+        select id,projectName,projectCode,projectDesc,gitUrl,projectStatus,packageName,autoDeploy from t_project
+        <where>
+            <if test="projectCode!='' and projectCode!=null">
+                projectCode = #{projectCode}
+            </if>
+        </where>
+    </select>
+
+    <!--查询项目成员-->
+    <select id="findProjectMember" resultType="com.bee.team.fastgo.vo.project.GitlabUserResVo">
+        select tgu.id,tgu.gitlabUserName,tgu.gitlabName,tgu.gitlabEmail from t_gitlab_user tgu
+        inner join t_user_project tup  on tgu.userId = tup.userId
+        inner join t_project tp on tp.id = tup.projectId
+        where tp.projectCode = #{projectCode}
+    </select>
+
+
 
 </mapper>
