@@ -109,7 +109,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     public UpdateResult removeOneDataByCondition(String code, String key) {
         // MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE = base.configCode
         Query query = new Query(Criteria.where(MongoCommonValue.PROJECT_BASE_KEY + "." + MongoCommonValue.PROJECT_CODE).is(code));
-        Update update = new Update().unset(key.replace(".", "-"));
+        Update update = new Update().unset(key);
         return template.updateFirst(query, update, MongoCollectionValue.CONFIG_PROJECT);
     }
 
@@ -255,7 +255,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                 map.put("kafka", kafkaConfig(project, template));
                 break;
             default:
-                map.put(templateName,project);
+                map.put(templateName, project);
         }
         return map;
     }
