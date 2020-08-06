@@ -4,7 +4,7 @@
 
     <!--查询项目部署列表-->
     <select id="findProjectDeployList" parameterType="java.lang.String" resultType="com.bee.team.fastgo.vo.project.ProjectDeployResVo">
-        select tpdl.branchName,tpdl.deployLogId,tpdl.user,p.projectName,tpdl.gmt_create as gmtCreate from t_project_deploy_log tpdl
+        select tpdl.branchName,tpdl.deployLogId,tpdl.user,p.projectName,tpdl.gmt_create as gmtCreate,projectDeployStatus from t_project_deploy_log tpdl
         inner join t_project p on p.projectCode = tpdl.projectCode
         where p.projectCode = #{projectCode}
     </select>
