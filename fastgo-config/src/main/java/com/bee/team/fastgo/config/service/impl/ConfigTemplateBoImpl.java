@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
 
     @Override
     public Map<String, Object> insertTemplate(Map map) {
-        if (map.isEmpty()) {
+        if (ObjectUtils.isEmpty(map) || map.isEmpty()) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "参数不能为空");
             // 抛出异常
         }
@@ -51,13 +52,14 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
     public Collection<Map<String, Object>> insertManyTemplateList(List list) {
         if (CollectionUtils.isEmpty(list)) {
             // 抛出异常
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "参数不能为空");
         }
         return template.insert(list, MongoCollectionValue.CONFIG_TEMPLATE);
     }
 
     @Override
     public DeleteResult removeTemplateByCondition(Map map) {
-        if (map.isEmpty()) {
+        if (ObjectUtils.isEmpty(map) || map.isEmpty()) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数不能为空");
         }
         // 获取所有的条件key
@@ -84,11 +86,13 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
 
     @Override
     public UpdateResult updateTemplate(Map conditionMap, Map setMap) {
-        if (conditionMap.isEmpty()) {
+        if (ObjectUtils.isEmpty(conditionMap) || conditionMap.isEmpty()) {
             // 抛出异常
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "参数不能为空");
         }
-        if (setMap.isEmpty()) {
+        if (ObjectUtils.isEmpty(setMap) || setMap.isEmpty()) {
             // 抛出异常
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "参数不能为空");
         }
         // 获取所有的条件key
         List<Object> conditionKeys = Arrays.asList(conditionMap.keySet().toArray());
@@ -116,8 +120,9 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
 
     @Override
     public Object findTemplateByCondition(Map map, Class t) {
-        if (map.isEmpty()) {
+        if (ObjectUtils.isEmpty(map) || map.isEmpty()) {
             // 抛出异常
+            throw new GlobalException(RES_PARAM_IS_EMPTY, "参数不能为空");
         }
         List<Object> list = Arrays.asList(map.keySet().toArray());
         // 定义查询条件
@@ -131,7 +136,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
     public List findTemplateListByCondition(Map map, Class t) {
         Query query = new Query();
         // 如果map为空，就查询所有的模板信息
-        if (!map.isEmpty()) {
+        if (!ObjectUtils.isEmpty(map) && !map.isEmpty()) {
             List<Object> list = Arrays.asList(map.keySet().toArray());
             // 定义查询条件
             Criteria criteria = new Criteria();
@@ -150,7 +155,7 @@ public class ConfigTemplateBoImpl<T> implements ConfigTemplateBo {
     public Long countTemplateByCondition(Map map) {
         Query query = new Query();
         // 如果map为空，就查询所有的模板信息的数量
-        if (!map.isEmpty()) {
+        if (!ObjectUtils.isEmpty(map) && !map.isEmpty()) {
             List<Object> list = Arrays.asList(map.keySet().toArray());
             // 定义查询条件
             Criteria criteria = new Criteria();

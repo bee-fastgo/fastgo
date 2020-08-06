@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     @Override
     public String insertProject(Map map) {
         // map不能为空
-        if (map.isEmpty()) {
+        if (ObjectUtils.isEmpty(map) || map.isEmpty()) {
             // 抛出异常
             throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数不能为空");
         }
@@ -89,12 +90,12 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
 
     @Override
     public DeleteResult removeOneProject(Map map) {
-        if (map.isEmpty()) {
+        if (ObjectUtils.isEmpty(map) || map.isEmpty()) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数为空");
         }
         List<Object> list = Arrays.asList(map.keySet().toArray());
         Criteria criteria = new Criteria();
-        list.stream().forEach(key -> criteria.and(key.toString()).is(map.get(key)));
+        list.forEach(key -> criteria.and(key.toString()).is(map.get(key)));
         Query query = new Query(criteria);
         return template.remove(query, MongoCollectionValue.CONFIG_PROJECT);
     }
@@ -115,10 +116,9 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
 
     @Override
     public String getOneProjectConfigToJSON(Map map) {
-        if (map.isEmpty()) {
+        if (ObjectUtils.isEmpty(map) || map.isEmpty()) {
             return null;
         }
-
         // 根据条件获取配置信息
         Map<String, Object> configMap = (Map<String, Object>) this.getOneProjectConfigInfo(map, Map.class);
         // 过滤id
@@ -135,7 +135,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
 
         // 将内嵌文档的内容提取出来，并且放到新的map对象中
         Map<String, Object> newMap = new HashMap<>();
-        list.stream().forEach(e -> {
+        list.forEach(e -> {
             Map<String, Object> inMap = (Map<String, Object>) configMap.get(e.toString());
             inMap.remove(MongoCommonValue.TEMPLATE_DESCRIPTION);
             newMap.putAll(inMap);
@@ -171,10 +171,12 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
                 map.put(MongoCommonValue.TEMPLATE_NAME, e);
                 Map<String, Object> tempMap = (Map<String, Object>) configTemplateBo.findTemplateByCondition(map, Map.class);
 
-                // 过滤name、id和code
-                tempMap.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
-                tempMap.remove(MongoCommonValue.TEMPLATE_CODE);
-                tempMap.remove(MongoCommonValue.TEMPLATE_DESCRIPTION);
+                if (!ObjectUtils.isEmpty(tempMap)) {
+                    // 过滤name、id和code
+                    tempMap.remove(MongoCommonValue.CONFIG_TEMPLATE_ID);
+                    tempMap.remove(MongoCommonValue.TEMPLATE_CODE);
+                    tempMap.remove(MongoCommonValue.TEMPLATE_DESCRIPTION);
+                }
 
                 // 转移到修改的map中
                 update.set(e, softConfig(e, (Map<String, Object>) updateMap.get(e), tempMap).get(e));
@@ -201,7 +203,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     public List getProjectConfigList(Map map, Class t) {
         Query query = new Query();
         // 获取所有的key,如果map是空，就默认查询所有的信息
-        if (!map.isEmpty()) {
+        if (!ObjectUtils.isEmpty(map) && !map.isEmpty()) {
             Criteria criteria = new Criteria();
             List<Object> list = Arrays.asList(map.keySet().toArray());
             list.stream().forEach(key -> criteria.and(key.toString()).regex(".*" + map.get(key) + ".*"));
@@ -212,7 +214,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
 
     @Override
     public Object getOneProjectConfigInfo(Map map, Class t) {
-        if (map.isEmpty()) {
+        if (ObjectUtils.isEmpty(map) || map.isEmpty()) {
             throw new GlobalException(RES_PARAM_IS_EMPTY, "请求参数不能为空");
         }
         List<Object> list = Arrays.asList(map.keySet().toArray());
@@ -232,7 +234,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
     public Long countProjectByCondition(Map map) {
         Query query = new Query();
         // 获取所有的key,如果map是空，就默认查询所有的信息
-        if (!map.isEmpty()) {
+        if (!ObjectUtils.isEmpty(map) && !map.isEmpty()) {
             Criteria criteria = new Criteria();
             List<Object> list = Arrays.asList(map.keySet().toArray());
             list.stream().forEach(key -> criteria.and(key.toString()).regex(".*" + map.get(key) + ".*"));
