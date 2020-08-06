@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.bee.team.fastgo.exception.config.ProjectConfigException.REMOVE_PROJECT_FAILED;
-import static com.bee.team.fastgo.exception.config.ProjectConfigException.UPDATE_PROJECT_FAILED;
+import static com.bee.team.fastgo.exception.config.ProjectConfigException.*;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
@@ -133,11 +132,11 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
         String key = delOneDataReqVo.getSoftName();
         if (!StringUtils.isEmpty(delOneDataReqVo.getKey())) {
             // 如果delOneDataReqVo.getKey()是空的，表示要删除的是软件信息，不为空表示删除某个软件的某个配置项
-            key = key + delOneDataReqVo.getKey().replace(".", "-");
+            key = key + "." + delOneDataReqVo.getKey().replace(".", "-");
         }
         UpdateResult result = configProjectBo.removeOneDataByCondition(delOneDataReqVo.getProjectCode(), key);
         if (result.getModifiedCount() < 1) {
-            throw new GlobalException(REMOVE_PROJECT_FAILED);
+            throw new GlobalException(REMOVE_PROJECT_CONFIG_FAILED);
         }
     }
 }
