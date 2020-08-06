@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.bee.team.fastgo.exception.config.ProjectConfigException.*;
+import static com.bee.team.fastgo.exception.config.ProjectConfigException.REMOVE_PROJECT_CONFIG_FAILED;
+import static com.bee.team.fastgo.exception.config.ProjectConfigException.UPDATE_PROJECT_FAILED;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_PARAM_IS_EMPTY;
 
@@ -99,8 +100,12 @@ public class ProjectConfigBoImpl implements ProjectConfigBo {
             throw new GlobalException(RES_DATA_NOT_EXIST, "项目不存在");
         }
 
-        // 提出软件名和key值，作为要修改的新参数，并且把key值的.换成-，例如mysql.spring-datasource****
-        list.forEach(e -> updateMap.put((e.getSoftName() + "." + e.getMapReqVo().getKey().replace(".", "-")), e.getMapReqVo().getValue()));
+        // 封装修改的map格式为{mysql,{url,3306}}
+        for (SoftReqVo softReqVo : list) {
+            Map<String, Object> map = new HashMap<>();
+            softReqVo.getMapReqVos().forEach(e -> map.put(e.getKey(), e.getValue()));
+            updateMap.put(softReqVo.getSoftName(), map);
+        }
         UpdateResult result = configProjectBo.updateOneProject(queryMap, updateMap);
 
         // 修改失败
