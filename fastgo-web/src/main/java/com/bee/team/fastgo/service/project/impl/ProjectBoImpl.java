@@ -451,5 +451,25 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         return projectDo.getProjectStatus();
     }
 
+    @Override
+    public ProjectInfoResVo getProjectInfoByCode(String projectCode) {
+        if (StringUtils.isEmpty(projectCode)){
+            throw new GlobalException(RES_PARAM_IS_EMPTY,"项目唯一标识不能为空");
+        }
+        ProjectInfoResVo projectInfoResVo = mapper.findProjectDetail(projectCode);
+        //查询项目分支信息、
+        List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(projectCode);
+        List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
+            Map runMap = StringUtil.strToMap(ProjectBranchAndAccessAddrVo.getRunProfileConfig());
+            ProjectBranchAndAccessAddrVo.setAccessAddr("http://"+runMap.get("ip")+":"+runMap.get("port"));
+            return ProjectBranchAndAccessAddrVo;
+        }).collect(Collectors.toList());
+        projectInfoResVo.setAccessAddrs(projectBranchAndAccessAddrVos);
+        //查询项目成员
+        List<GitlabUserResVo> gitlabUserResVos = mapper.findProjectMember(projectCode);
+        projectInfoResVo.setGitlabUserResVos(gitlabUserResVos);
+        return projectInfoResVo;
+    }
+
 
 }

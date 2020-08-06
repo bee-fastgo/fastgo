@@ -32,7 +32,6 @@ import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_ACCESS_TYPE2;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
 
 @Service
-@IsApiService
 public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.model.GitlabUserDo, GitlabUserDoMapperExt, com.bee.team.fastgo.model.GitlabUserDoExample> implements GitlabUserBo {
 
     @Value("${gitlab.url}")

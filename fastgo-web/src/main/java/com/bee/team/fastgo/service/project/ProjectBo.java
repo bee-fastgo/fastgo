@@ -4,6 +4,8 @@ import com.alibaba.lava.base.LavaBo;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.model.ProjectDoExample;
 import com.bee.team.fastgo.model.UserDo;
+import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
+import com.bee.team.fastgo.vo.project.ProjectInfoResVo;
 import com.bee.team.fastgo.vo.project.RunProfileListVo;
 import com.bee.team.fastgo.vo.project.SofrwateProfileListVo;
 import com.bee.team.fastgo.vo.project.req.*;
@@ -124,4 +126,14 @@ public interface ProjectBo extends LavaBo<ProjectDo, ProjectDoExample> {
      */
 
     String getProjectStatus(String projectCode);
+
+    /**
+     * @param projectCode
+     * @return {@link ProjectInfoResVo}
+     * @author hs
+     * @date 2020/8/5
+     * @desc 查询项目详情
+     */
+
+    ProjectInfoResVo getProjectInfoByCode(String projectCode);
 }

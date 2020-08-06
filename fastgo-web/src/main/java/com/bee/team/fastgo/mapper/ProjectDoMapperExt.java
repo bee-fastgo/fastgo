@@ -3,9 +3,8 @@ package com.bee.team.fastgo.mapper;
 import com.bee.team.fastgo.model.ProfileRunprofileRelationDo;
 import com.bee.team.fastgo.model.ProjectDo;
 import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
-import com.bee.team.fastgo.vo.project.DeployInfoVo;
-import com.bee.team.fastgo.vo.project.ProjectBranchAndAccessAddrVo;
-import com.bee.team.fastgo.vo.project.ProjectListVo;
+import com.bee.team.fastgo.vo.project.*;
+import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
 import java.util.List;
@@ -80,4 +79,24 @@ public interface ProjectDoMapperExt extends com.alibaba.lava.base.LavaMapper<com
      */
 
     List<ProjectBranchAndAccessAddrVo> findProjectAccessAddr(String projectCode);
+
+    /**
+     * @param projectCode
+     * @return {@link GitlabUserInfoResVo}
+     * @author hs
+     * @date 2020/8/5
+     * @desc 查询项目详情
+     */
+
+    ProjectInfoResVo findProjectDetail(@Param("projectCode") String projectCode);
+
+    /**
+     * @param projectCode
+     * @return {@link List< GitlabUserResVo>}
+     * @author hs
+     * @date 2020/8/5
+     * @desc 查询项目成员
+     */
+
+    List<GitlabUserResVo> findProjectMember(@Param("projectCode") String projectCode);
 }

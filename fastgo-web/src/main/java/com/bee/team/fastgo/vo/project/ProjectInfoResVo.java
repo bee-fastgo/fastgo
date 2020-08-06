@@ -4,12 +4,17 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author hs
+ * @date 2020/8/5 17:04
+ * @desc 项目详情
+ **/
+
 @Data
-@ApiModel(value = "projectListVo",description = "项目展示vo")
-public class ProjectListVo implements Serializable {
+@ApiModel(value = "projectInfoResVo",description = "项目详情vo")
+public class ProjectInfoResVo {
 
     @ApiModelProperty(value = "主键id", required = true, example = "11")
     private Integer id;
@@ -37,5 +42,8 @@ public class ProjectListVo implements Serializable {
 
     @ApiModelProperty(value = "访问地址", required = true)
     private List<ProjectBranchAndAccessAddrVo> accessAddrs;
+
+    @ApiModelProperty(value = "用户成员", required = true)
+    private List<GitlabUserResVo> gitlabUserResVos;
 
 }

@@ -296,4 +296,11 @@ public class ProjectController {
         return ResBody.buildFailResBody();
     }
 
+    @RequestMapping(value = "/getProjectInfoByCode", method = RequestMethod.POST)
+    @ApiOperation(value = "根据项目code查询项目信息")
+    public ResBody<ProjectInfoResVo> getProjectInfoByCode(@RequestBody String projectCode){
+        ProjectInfoResVo projectInfoResVo = projectBo.getProjectInfoByCode(projectCode);
+        return new ResBody().buildSuccessResBody(projectInfoResVo);
+    }
+
 }
