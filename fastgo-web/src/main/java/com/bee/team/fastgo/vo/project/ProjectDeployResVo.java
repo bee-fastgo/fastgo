@@ -29,7 +29,7 @@ public class ProjectDeployResVo {
     @ApiModelProperty(value = "部署日志id", example = "sasdasd")
     private String deployLogId;
 
-    @ApiModelProperty(value = "部署状态：4-项目部署中；5-项目部署完成；7-项目部署失败", example = "4")
+    @ApiModelProperty(value = "部署状态：3-项目部署中；4-项目部署完成；7-项目部署失败", example = "4")
     private Integer projectDeployStatus;
 
 }

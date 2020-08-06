@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_STATUS3;
 import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_STATUS4;
 
 @Service
@@ -34,7 +35,7 @@ public class ProjectDeployLogBoImpl extends AbstractLavaBoImpl<com.bee.team.fast
         projectDeployLogDo.setUser(userDo.getUserName());
         String deployId = StringUtil.getRandomUUID();
         projectDeployLogDo.setDeployLogId(deployId);
-        projectDeployLogDo.setProjectDeployStatus(PROJECT_STATUS4.toString());
+        projectDeployLogDo.setProjectDeployStatus(PROJECT_STATUS3.toString());
         mapper.insertSelective(projectDeployLogDo);
         return deployId;
     }

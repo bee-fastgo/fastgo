@@ -2,8 +2,6 @@ package com.bee.team.fastgo.context;
 
 import com.bee.team.fastgo.service.api.server.dto.req.SimpleDeployDTO;
 import com.bee.team.fastgo.service.api.server.dto.req.VueDeployDTO;
-import com.bee.team.fastgo.tools.deploy.DeployDTO;
-import io.swagger.models.auth.In;
 import org.springframework.context.ApplicationEvent;
 
 /**
