@@ -3,10 +3,16 @@
 <mapper namespace="com.bee.team.fastgo.mapper.ProjectDeployLogDoMapperExt">
 
     <!--查询项目部署列表-->
-    <select id="findProjectDeployList" parameterType="java.lang.String" resultType="com.bee.team.fastgo.vo.project.ProjectDeployResVo">
+    <select id="findProjectDeployList" parameterType="map" resultType="com.bee.team.fastgo.vo.project.ProjectDeployResVo">
         select tpdl.branchName,tpdl.deployLogId,tpdl.user,p.projectName,tpdl.gmt_create as gmtCreate,projectDeployStatus from t_project_deploy_log tpdl
         inner join t_project p on p.projectCode = tpdl.projectCode
         where p.projectCode = #{projectCode}
+        limit #{start},#{limit}
+    </select>
+
+    <!--查询项目部署列表条数-->
+    <select id="findProjectDeployListCount" parameterType="map" resultType="java.lang.Integer">
+        select count(1) from t_project_deploy_log where projectCode = #{projectCode}
     </select>
 
 </mapper>

@@ -5,7 +5,9 @@ import com.bee.team.fastgo.service.project.ProjectDeployLogBo;
 import com.bee.team.fastgo.tools.log.DeployJobFileAppender;
 import com.bee.team.fastgo.tools.log.DeployLogResult;
 import com.bee.team.fastgo.vo.project.ProjectDeployResVo;
+import com.bee.team.fastgo.vo.project.req.ProjectDeployListVo;
 import com.bee.team.fastgo.vo.server.ServerExecutorLogVo;
+import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
 import com.spring.simple.development.support.exception.GlobalException;
 import com.spring.simple.development.support.exception.ResponseCode;
@@ -68,11 +70,8 @@ public class ProjectDeployLogController {
 
     @ApiOperation(value = "项目部署记录")
     @RequestMapping(value = "/deployList", method = RequestMethod.POST)
-    public ResBody<List<ProjectDeployResVo>> projectDeployList(@RequestBody String projectCode) {
-        if (StringUtils.isEmpty(projectCode)) {
-            throw new GlobalException(ResponseCode.RES_PARAM_IS_EMPTY, "参数为空");
-        }
-        List<ProjectDeployResVo> projectDeployResVos = projectDeployLogBo.queryProjectDeployList(projectCode);
-        return new ResBody().buildSuccessResBody(projectDeployResVos);
+    public ResBody<ProjectDeployResVo> projectDeployList(@RequestBody ProjectDeployListVo projectDeployListVo) {
+        ResPageDTO resPageDTO = projectDeployLogBo.queryProjectDeployList(projectDeployListVo);
+        return new ResBody().buildSuccessResBody(resPageDTO);
     }
 }

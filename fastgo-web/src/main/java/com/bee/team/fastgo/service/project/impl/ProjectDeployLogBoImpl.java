@@ -7,12 +7,17 @@ import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.service.project.ProjectDeployLogBo;
 import com.bee.team.fastgo.utils.StringUtil;
 import com.bee.team.fastgo.vo.project.ProjectDeployResVo;
+import com.bee.team.fastgo.vo.project.req.ProjectDeployListVo;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
+import com.spring.simple.development.core.component.mvc.page.ResPageDTO;
+import com.spring.simple.development.core.component.mvc.utils.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_STATUS3;
 import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_STATUS4;
@@ -41,7 +46,20 @@ public class ProjectDeployLogBoImpl extends AbstractLavaBoImpl<com.bee.team.fast
     }
 
     @Override
-    public List<ProjectDeployResVo> queryProjectDeployList(String projectCode) {
-        return mapper.findProjectDeployList(projectCode);
+    public ResPageDTO queryProjectDeployList(ProjectDeployListVo projectDeployListVo) {
+        Pager<ProjectDeployResVo> pager = new Pager();
+        Map<String,Object> map = new HashMap<>();
+        map.put("projectCode",projectDeployListVo.getProjectCode());
+        Integer count = mapper.findProjectDeployListCount(map);
+        pager.setLimit(projectDeployListVo.getPageSize());
+        pager.setPageNo(projectDeployListVo.getPageNum());
+        pager.setTotal(count);
+        if (count > 0){
+            map.put("start",pager.getStart());
+            map.put("limit",pager.getLimit());
+            List<ProjectDeployResVo> projectDeployList = mapper.findProjectDeployList(map);
+            pager.setData(projectDeployList);
+        }
+        return baseSupport.pagerCopy(pager,ProjectDeployResVo.class);
     }
 }
