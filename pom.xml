@@ -58,11 +58,6 @@
             <artifactId>simple-development-core</artifactId>
             <version>3.0</version>
         </dependency>
-        <dependency>
-            <artifactId>simple-development-core-data-process</artifactId>
-            <groupId>com.spring</groupId>
-            <version>3.0</version>
-        </dependency>
     </dependencies>
     <distributionManagement>
         <repository>

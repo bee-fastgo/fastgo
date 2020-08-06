@@ -1,6 +1,5 @@
 package com.bee.team.fastgo.service.server.impl;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.lava.base.AbstractLavaBoImpl;
 import com.bee.team.fastgo.mapper.ServerSourceDoMapperExt;
 import com.bee.team.fastgo.model.ServerSourceDo;
@@ -16,6 +15,7 @@ import com.spring.simple.development.support.utils.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;

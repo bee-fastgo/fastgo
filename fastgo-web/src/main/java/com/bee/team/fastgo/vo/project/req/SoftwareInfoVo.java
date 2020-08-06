@@ -3,7 +3,6 @@ package com.bee.team.fastgo.vo.project.req;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import scala.util.parsing.combinator.testing.Str;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
