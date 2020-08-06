@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@IsApiService
 public class StrategyBoImpl extends AbstractLavaBoImpl<StrategyDo, StrategyDoMapperExt, StrategyDoExample> implements StrategyBo {
 
     @Autowired

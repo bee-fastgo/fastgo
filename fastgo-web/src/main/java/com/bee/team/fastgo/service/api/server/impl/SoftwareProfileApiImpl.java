@@ -418,6 +418,7 @@ public class SoftwareProfileApiImpl implements SoftwareProfileApi, JobPush {
         list.add(softwareName);
         list.add(version);
         list.add(downloadUrl);
+        list.add(reqCreateSoftwareDTO.getIp());
         String param = StringUtils.join(list, ",");
 
         //获取脚本并执行
