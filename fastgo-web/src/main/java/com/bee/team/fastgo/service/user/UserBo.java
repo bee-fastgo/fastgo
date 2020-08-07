@@ -40,6 +40,19 @@ public interface UserBo extends LavaBo<UserDo, UserDoExample> {
     void insertUser(String userName, String password, Long roleId);
 
     /**
+     * 修改密码
+     *
+     * @param userName
+     * @param newPassword
+     * @param request
+     * @return
+     * @author xqx
+     * @date 2020/8/7
+     * @desc 修改密码
+     */
+    void updatePassword(HttpServletRequest request, String userName, String newPassword);
+
+    /**
      * 获取用户列表, 可模糊查询
      *
      * @param pageNum
