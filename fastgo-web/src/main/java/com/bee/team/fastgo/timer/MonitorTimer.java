@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.bee.team.fastgo.common.MonitorTypeConstant;
 import com.bee.team.fastgo.hander.alert.AlertBody;
 import com.bee.team.fastgo.hander.alert.AlertHandler;
-import com.bee.team.fastgo.hander.event.EventPublisher;
 import com.bee.team.fastgo.model.ServerDo;
 import com.bee.team.fastgo.model.ServerRunProfileDo;
 import com.bee.team.fastgo.model.ServerSoftwareProfileDo;
@@ -73,7 +72,6 @@ public class MonitorTimer {
      */
     @Scheduled(cron = "0 0/5 * * * ?")
     public void projectMonitor() {
-
         //运行环境监控
         List<ServerRunProfileDo> serverRunProfileDoList = serverRunProfileBo.getListServerRunProfileDo();
         serverRunProfileDoList.forEach(serverRunProfileDo -> {

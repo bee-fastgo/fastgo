@@ -1,6 +1,5 @@
 package com.bee.team.fastgo.hander.alert;
 
-import com.alibaba.fastjson.JSON;
 import com.bee.team.fastgo.common.MonitorTypeConstant;
 import com.bee.team.fastgo.hander.event.AlertEvent;
 import com.dingtalk.api.DefaultDingTalkClient;
@@ -27,7 +26,7 @@ import java.util.Date;
 @EnableAsync
 @Component
 public class AlertListener {
-
+    
     @Async
     @EventListener
     public void alertHandle(AlertEvent alertEvent){
