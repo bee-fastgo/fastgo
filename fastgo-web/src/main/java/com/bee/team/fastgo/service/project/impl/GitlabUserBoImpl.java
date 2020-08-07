@@ -79,7 +79,7 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
             gitlabUserDo.setId(null);
             mapper.insertSelective(gitlabUserDo);
         }catch (Exception e){
-            e.printStackTrace();
+            throw new GlobalException(RES_DATA_NOT_EXIST,"gitlab用户创建失败");
         }
     }
 
