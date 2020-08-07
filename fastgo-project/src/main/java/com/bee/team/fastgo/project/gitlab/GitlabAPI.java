@@ -19,7 +19,7 @@ import static com.spring.simple.development.support.exception.ResponseCode.RES_P
 /**
  * @author hs
  * @date 2020/8/3 17:21
- * @desc gitlab 访问权限
+ * @desc gitlab 接口
  **/
 
 @Service

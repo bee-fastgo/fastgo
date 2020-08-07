@@ -15,6 +15,14 @@ public class StringUtil {
         return (Map<String,String>)JSONObject.parseObject(str, Map.class);
     }
 
+    /**
+     * @param
+     * @return {@link String}
+     * @author hs
+     * @date 2020/8/7
+     * @desc 获取16位随机数
+     */
+
     public static String getRandomUUID(){
         return UUID.randomUUID().toString().replace("-","").substring(0,16);
     }

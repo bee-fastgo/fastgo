@@ -63,9 +63,11 @@ public class DeployListen {
         projectDo.setId(id.longValue());
         try{
             if (PROJECT_TYPE1.equals(type)){
+                //前台项目部署
                 VueDeployDTO deployDTO = deployEvent.getVueDeployDTO();
                 deployService.deploySimple(deployDTO);
             }else if (PROJECT_TYPE2.equals(type)){
+                //后台项目部署
                 SimpleDeployDTO deployDTO = deployEvent.getDeployDTO();
                 deployService.deploySimple(deployDTO);
             }

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_STATUS3;
-import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_STATUS4;
 
 @Service
 public class ProjectDeployLogBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.model.ProjectDeployLogDo, ProjectDeployLogDoMapperExt, com.bee.team.fastgo.model.ProjectDeployLogDoExample> implements ProjectDeployLogBo {
@@ -36,7 +35,7 @@ public class ProjectDeployLogBoImpl extends AbstractLavaBoImpl<com.bee.team.fast
 
     @Override
     public String addProjectDeployLog(ProjectDeployLogDo projectDeployLogDo, UserDo userDo) {
-        //插入项目日志
+        //插入项目部署日志
         projectDeployLogDo.setUser(userDo.getUserName());
         String deployId = StringUtil.getRandomUUID();
         projectDeployLogDo.setDeployLogId(deployId);

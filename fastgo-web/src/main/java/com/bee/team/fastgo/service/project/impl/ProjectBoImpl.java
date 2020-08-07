@@ -107,6 +107,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             map.put("start",pager.getStart());
             map.put("limit",pager.getLimit());
             List<ProjectListVo> projectListVoList = mapper.findBackPorjectList(map);
+            //项目添加访问地址
             List<ProjectListVo> projectListVos = projectListVoList.stream().map(ProjectListVo -> {
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(ProjectListVo.getProjectCode());
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
@@ -136,13 +137,16 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         InsertBackProjectProfileVo insertBackProjectProfileVo = baseSupport.objectCopy(insertBackProjectVo,InsertBackProjectProfileVo.class);
         insertBackProjectProfileVo.setProjectCode(projectCode);
         Integer flag = projectDao.addProjectProfile(insertBackProjectProfileVo);
+        //设置项目当前状态
         projectDo.setProjectStatus(flag.toString());
 
         //生成后台项目模板
         if (StringUtils.isEmpty(insertBackProjectVo.getGitUrl())){
+           //默认上传的项目文件路径
            String filePath = publicTemplate;
            //是否生成simple框架
            if (insertBackProjectVo.getIsConfirm().equals(IS_CONFIRM1)){
+               //获取项目框架的生成路径
                filePath = projectDao.generateSimpleTemplate(projectDo);
                if (!StringUtils.isEmpty(filePath)){
                    System.out.println(filePath);
@@ -150,9 +154,9 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
                    throw new GlobalException(RES_DATA_NOT_EXIST,"自动生成代码框架失败");
                }
            }
-           //创建新的gitlab后台项目
             GitlabProjectDo gitlabProjectDo;
             try {
+                //调取gitlab接口，创建gitlab后台项目
                 GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,privateToken);
                 gitlabProjectDo = gitlabAPI.createNewProject(insertBackProjectVo.getProjectName(),insertBackProjectVo.getProjectDesc());
                 if (ObjectUtils.isEmpty(gitlabProjectDo)){
@@ -161,7 +165,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             }catch (Exception e){
                 throw new GlobalException(RES_ILLEGAL_OPERATION,"gitlab项目创建失败");
             }
-            //上传后台模板代码到gitlab项目中
+            //上传后台项目模板代码到gitlab项目中
             projectDao.uploadBackCodeIntoGitlab(gitlabProjectDo,filePath);
             projectDo.setGitUrl(gitlabProjectDo.getHttpUrl());
         }
@@ -201,6 +205,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             map.put("start",pager.getStart());
             map.put("limit",pager.getLimit());
             List<ProjectListVo> projectListVoList = mapper.findFrontPorjectList(map);
+            //获取部署后前台项目访问地址
             List<ProjectListVo> projectListVos = projectListVoList.stream().map(ProjectListVo -> {
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(ProjectListVo.getProjectCode());
                 List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
@@ -237,6 +242,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             //创建新的gitlab后台项目
             GitlabProjectDo gitlabProjectDo;
             try {
+                //调取gitlab接口，创建gitlab项目
                 GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,privateToken);
                 gitlabProjectDo = gitlabAPI.createNewProject(insertFrontProjectVo.getProjectName(),insertFrontProjectVo.getProjectDesc());
                 if (ObjectUtils.isEmpty(gitlabProjectDo)){
@@ -247,9 +253,10 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             }
             //是否生成vue框架
             if (IS_CONFIRM0.equals(insertFrontProjectVo.getIsConfirm())){
+                //上传项目默认文件到gitlab
                 projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, publicTemplate);
             }else if (IS_CONFIRM1.equals(insertFrontProjectVo.getIsConfirm())){
-                //上传后台模板代码到gitlab项目中
+                //上传对应的前台项目模板代码到gitlab项目中
                 if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE1)){
                     projectDao.uploadFrontCodeIntoGitlab(gitlabProjectDo, frontTemplate+FRONT_PROJECT_TYPE1);
                 }else if (insertFrontProjectVo.getProjectType().equals(FRONT_PROJECT_TEMPLATE2)){
@@ -263,7 +270,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Override
     public void execDeployBackProject(DeployBackPorjectVo deployBackPorjectVo,String deployId) {
-        //插入项目部署日志
+        //获取项目信息
         ProjectDoExample example = new ProjectDoExample();
         example.createCriteria().andProjectCodeEqualTo(deployBackPorjectVo.getProjectCode());
         List<ProjectDo> projectDoList = mapper.selectByExample(example);
@@ -271,6 +278,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
+        //项目只有创建完成，部署完成，部署失败，这三个状态才可以部署
         if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS7.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目当前状态不能部署");
         }
@@ -302,6 +310,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
      */
     @Override
     public void updateProjectStatus(UpdateProjectStatusVo updateProjectStatusVo) {
+        //获取当前项目信息
         Map<String,Object> map = new HashMap<>();
         map.put("code",updateProjectStatusVo.getCode());
         map.put("type",updateProjectStatusVo.getType());
@@ -309,6 +318,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         if (ObjectUtils.isEmpty(projectDo)){
             throw new GlobalException(RES_DATA_NOT_EXIST,"未找到对应的项目信息");
         }
+        //项目  软件环境部署成功+运行环境部署成功 = 项目创建完成
         if (OBJECT_TYPE1.equals(updateProjectStatusVo.getType())){
             //运行环境
             if (PROJECT_STATUS1.toString().equals(projectDo.getProjectStatus())){
@@ -338,7 +348,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
         }
         ProjectDo projectDo = projectDoList.get(0);
         GitlabAPI gitlabAPI = new GitlabAPI(gitUrl,privateToken);
-        //获取项目gtilab id
+        //获取项目的gtilab id（该id为项目在gitlab中的id，并非数据库中项目的id）
         try{
             List<GitlabProjectDo> gitlibProjects = gitlabAPI.getAllProject();
             List<GitlabProjectDo> gitlibProjectList= gitlibProjects.stream().filter(r -> r.getName().equals(projectDo.getProjectName())).collect(Collectors.toList());
@@ -366,6 +376,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目信息不存在");
         }
         ProjectDo projectDo = projectDoList.get(0);
+        //项目只有创建完成，部署完成，部署失败，这三个状态才可以部署
         if (!PROJECT_STATUS2.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS4.toString().equals(projectDo.getProjectStatus()) && !PROJECT_STATUS7.toString().equals(projectDo.getProjectStatus())){
             throw new GlobalException(RES_ILLEGAL_OPERATION,"项目当前状态不能部署");
         }
@@ -432,6 +443,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Override
     public RunProfileListVo findRunProfile() {
+        //调取服务器接口，查询支持项目运行的服务器信息
         List<ServerVo> serverVoList = serverBo.queryListServer();
         List<String> list = serverVoList.stream().map(ServerVo::getServerIp).collect(Collectors.toList());
         RunProfileListVo runProfileListVo = new RunProfileListVo();
@@ -441,6 +453,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
 
     @Override
     public String getProjectStatus(String projectCode) {
+        //查询项目状态，通过项目唯一标识code
         ProjectDoExample example = new ProjectDoExample();
         example.createCriteria().andProjectCodeEqualTo(projectCode);
         List<ProjectDo> projectDoList = mapper.selectByExample(example);
@@ -457,7 +470,7 @@ public class ProjectBoImpl extends AbstractLavaBoImpl<ProjectDo, ProjectDoMapper
             throw new GlobalException(RES_PARAM_IS_EMPTY,"项目唯一标识不能为空");
         }
         ProjectInfoResVo projectInfoResVo = mapper.findProjectDetail(projectCode);
-        //查询项目分支信息、
+        //查询项目基础信息及访问地址
         List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVoList = mapper.findProjectAccessAddr(projectCode);
         List<ProjectBranchAndAccessAddrVo> projectBranchAndAccessAddrVos = projectBranchAndAccessAddrVoList.stream().map(ProjectBranchAndAccessAddrVo -> {
             Map runMap = StringUtil.strToMap(ProjectBranchAndAccessAddrVo.getRunProfileConfig());
