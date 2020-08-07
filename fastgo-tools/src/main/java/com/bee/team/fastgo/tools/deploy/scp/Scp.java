@@ -32,7 +32,7 @@ public class Scp {
         Connection conn = null;
         try {
             conn = new Connection(dataServerIp, port);
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"开始远程传输文件");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"开始远程传输文件"+"\n");
             conn.connect();
 
             boolean isAuthenticated = conn.authenticateWithPassword(user, password);
@@ -53,7 +53,7 @@ public class Scp {
             os.flush();
             fis.close();
             os.close();
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"远程传输文件完成");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"远程传输文件完成"+"\n");
             localFile.delete();
         } catch (IOException e) {
             throw new GlobalException(SERVICE_FAILED);
@@ -79,12 +79,12 @@ public class Scp {
         Connection conn = null;
         try {
             conn = new Connection(dataServerIp);
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"开始部署");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"开始部署"+"\n");
             conn.connect();
 
             boolean isAuthenticated = conn.authenticateWithPassword(user, password);
             if (isAuthenticated == false) {
-                DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"Authentication failed.文件scp到数据服务器时发生异常");
+                DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"Authentication failed.文件scp到数据服务器时发生异常"+"\n");
                 throw new IOException("Authentication failed.文件scp到数据服务器时发生异常");
             }
             // 解压
@@ -105,7 +105,7 @@ public class Scp {
             //invokeCmd(conn.openSession(), step7);
             //invokeCmd(conn.openSession(), step8);
             invokeCmd(conn.openSession(), step3+"\n"+step4+"\n"+step5+"\n"+step6 + "\n" + step7 + "\n" + step8);
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"部署完成");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"部署完成"+"\n");
 
         } finally {
             if (conn != null) {
@@ -129,14 +129,14 @@ public class Scp {
         Connection conn = null;
         try {
             conn = new Connection(dataServerIp, port);
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"vue项目开始部署");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"vue项目开始部署"+"\n");
 
             conn.connect();
 
             boolean isAuthenticated = conn.authenticateWithPassword(user, password);
             if (isAuthenticated == false) {
                 DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"Authentication failed.文件scp到数据服务器时发生异常");
-                throw new IOException("Authentication failed.文件scp到数据服务器时发生异常");
+                throw new IOException("Authentication failed.文件scp到数据服务器时发生异常"+"\n");
             }
             // 解压
             String step1 = "cd  " + remotePath + "\n" + "tar -zxvf  dist.tar.gz";
@@ -159,7 +159,7 @@ public class Scp {
             //-v /data/nginx/html:/usr/share/nginx/html
             String step8 = "docker   run --name=" + projectName + "Docker -d -p " + projectPort + ":" + projectPort + " -v " + remotePath + "/default.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -v " + remotePath + "/dist:/usr/share/nginx/html " + projectName;
             invokeCmd(conn.openSession(), step1+"\n"+step2+"\n"+step3+"\n"+step5+"\n"+step6 + "\n" + step7 + "\n" + step8);
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"部署完成");
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"部署完成"+"\n");
         } finally {
             if (conn != null) {
                 conn.close();
@@ -232,10 +232,10 @@ public class Scp {
     }
 
     public static void invokeCmd(Session session, String cmd) throws IOException {
-        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),DateUtils.getCurrentTime()+"执行命令：" + cmd);
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),DateUtils.getCurrentTime()+"执行命令：" + cmd+"\n");
         session.execCommand(cmd);
         //显示执行命令后的信息
-        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"Here is some information about the remote host:");
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"Here is some information about the remote host:"+"\n");
         InputStream stdout = new StreamGobbler(session.getStdout());
         BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
         while (true) {
@@ -243,12 +243,12 @@ public class Scp {
             if (line == null) {
                 break;
             }
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),line);
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),line+"\n");
         }
-        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"ExitCode: " + session.getExitStatus());
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),"ExitCode: " + session.getExitStatus()+"\n");
 
         //关闭远程连接
         session.close();
-        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),DateUtils.getCurrentTime() + "执行命令：" + cmd + "完成");
+        DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(),DateUtils.getCurrentTime() + "执行命令：" + cmd + "完成"+"\n");
     }
 }

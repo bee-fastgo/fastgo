@@ -31,7 +31,7 @@ public class MavenUtil {
         InvocationOutputHandler invocationOutputHandler = new InvocationOutputHandler() {
             @Override
             public void consumeLine(String line){
-                DeployJobFileAppender.appendLog(logPath, line);
+                DeployJobFileAppender.appendLog(logPath, line+"\n");
             }
         };
         request.setOutputHandler(invocationOutputHandler);

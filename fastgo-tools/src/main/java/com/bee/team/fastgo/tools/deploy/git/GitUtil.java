@@ -71,7 +71,7 @@ public class GitUtil {
             PullCommand pullCmd = git.pull();
             pullCmd.setCredentialsProvider(credential);
             PullResult call = pullCmd.call();
-            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(), call.toString());
+            DeployJobFileAppender.appendLog(DeployHandler.logPathThreadLocal.get(), call.toString()+"\n");
         } finally {
             if (repo != null) {
                 repo.close();
