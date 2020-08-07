@@ -63,6 +63,7 @@ public class ProjectAccessListen {
         //项目信息
         Integer projectId = projectAccessEvent.getProjectId();
         ProjectDo projectDo = projectDoMapperExt.selectByPrimaryKey(projectId.longValue());
+        //获取gitlab api接口
         GitlabAPI gitlabAPI = new GitlabAPI(gitlabUrl,privateToken);
         GitlabProjectDo gitlabProjectDo = null;
         try {
@@ -80,7 +81,7 @@ public class ProjectAccessListen {
         }
         if (type.equals(PROJECT_ACCESS_TYPE1)){
             try{
-                //项目分配访问权限
+                //项目添加成员
                 for (Integer id : gitlabUserIds){
                     GitlabAccess gitlabAccess = gitlabAPI.addProjectMember(gitlabProjectDo.getId(), id);
                     if (ObjectUtils.isEmpty(gitlabAccess)){
@@ -92,7 +93,7 @@ public class ProjectAccessListen {
             }
 
         }else if (type.equals(PROJECT_ACCESS_TYPE2)){
-            //项目移除访问权限
+            //项目移除成员
             try{
                 for (Integer id : gitlabUserIds){
                     GitlabAccess gitlabAccess = gitlabAPI.delProjectMember(gitlabProjectDo.getId(),id);

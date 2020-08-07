@@ -32,6 +32,7 @@
         </where>
     </update>
 
+    <!--查询所有Gitlab用户信息-->
     <select id="findGitlabUsersInfo" resultType="com.bee.team.fastgo.vo.project.GitlabUserInfoResVo">
         select id,gitlabUserName,gitlabName,gitlabEmail,status from t_gitlab_user
     </select>

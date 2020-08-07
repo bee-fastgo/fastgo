@@ -15,7 +15,6 @@ import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
 import com.bee.team.fastgo.vo.project.req.ProjectAddMemberVo;
-import com.spring.simple.development.core.annotation.base.IsApiService;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
 import com.spring.simple.development.support.exception.GlobalException;
@@ -67,7 +66,7 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
             if (ObjectUtils.isEmpty(gitlibUser)){
                 throw new GlobalException(RES_DATA_NOT_EXIST,"gitlab用户创建失败");
             }
-            //调用邮箱工具类
+            //调用邮箱工具类，发送通知邮件
             EmailUtil.sendEmail(gitlabUserInfoVo.getEmail(),"新建gitlab用户",EmailUtil.contentTemplate(gitlabUserInfoVo.getName(),gitlabUserInfoVo.getUsername()));
             //添加gitlab用户
             GitlabUserDo gitlabUserDo = new GitlabUserDo();
