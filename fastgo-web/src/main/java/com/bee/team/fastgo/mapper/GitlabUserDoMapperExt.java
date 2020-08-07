@@ -2,6 +2,7 @@ package com.bee.team.fastgo.mapper;
 
 import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
+import com.bee.team.fastgo.vo.project.req.ProjectAddMemberVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -21,14 +22,14 @@ public interface GitlabUserDoMapperExt extends com.alibaba.lava.base.LavaMapper<
 
 
     /**
-     * @param maps
+     * @param projectAddMemberVos
      * @return
      * @author hs
      * @date 2020/8/4
      * @desc 批量添加用户项目关联表
      */
 
-    void insertUserProject(List<Map<String, Object>> maps);
+    void insertUserProject(List<ProjectAddMemberVo> projectAddMemberVos);
 
     /**
      * @param userIds

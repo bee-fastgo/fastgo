@@ -10,14 +10,14 @@
     <!--批量添加项目用户关联记录-->
     <insert id="insertUserProject">
         insert into t_user_project(`gmt_create`, `creator`, `gmt_modified`, `modifier`, `is_deleted`,`userId`,`projectId`) values
-        <foreach collection="maps" item="map" separator=",">
+        <foreach collection="list" item="ProjectAddMemberVo" separator=",">
             (now(),
             'system',
             now(),
             'system',
             'n',
-            userId = #{userId},
-            projectId = #{projectId})
+            #{ProjectAddMemberVo.userId},
+            #{ProjectAddMemberVo.projectId})
         </foreach>
     </insert>
 

@@ -14,6 +14,7 @@ import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
+import com.bee.team.fastgo.vo.project.req.ProjectAddMemberVo;
 import com.spring.simple.development.core.annotation.base.IsApiService;
 import com.spring.simple.development.core.annotation.base.NoApiMethod;
 import com.spring.simple.development.core.component.mvc.BaseSupport;
@@ -87,14 +88,14 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
     public void gitlabUserGetProject(GitlabUserGetProjectVo gitlabUserGetProjectVo) {
         List<Integer> userIds = gitlabUserGetProjectVo.getUserIds();
         Integer projectId = gitlabUserGetProjectVo.getProjectId();
-        List<Map<String,Object>> maps = userIds.stream().map(userId -> {
-            Map<String,Object> map = new HashMap<>();
-            map.put("userId",userId);
-            map.put("projectId",projectId);
-            return map;
+        List<ProjectAddMemberVo> projectAddMemberVos = userIds.stream().map(userId -> {
+            ProjectAddMemberVo projectAddMemberVo = new ProjectAddMemberVo();
+            projectAddMemberVo.setProjectId(projectId);
+            projectAddMemberVo.setUserId(userId);
+            return projectAddMemberVo;
         }).collect(Collectors.toList());
         //批量添加用户项目关联表
-        mapper.insertUserProject(maps);
+        mapper.insertUserProject(projectAddMemberVos);
         //添加项目分配用户事件
         ProjectAccessEvent projectAccessEvent = new ProjectAccessEvent(new Object(),gitlabUserGetProjectVo.getProjectId(),gitlabUserGetProjectVo.getUserIds(),PROJECT_ACCESS_TYPE1);
         publisher.publish(projectAccessEvent);

@@ -190,7 +190,14 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
 
         // 修改已存在的软件配置
         if (!CollectionUtils.isEmpty(newList)) {
-            newList.forEach(e -> update.set(e.toString(), updateMap.get(e)));
+            for (Object o : newList) {
+                Map<String, Object> up = (Map<String, Object>) updateMap.get(o);
+                List<Object> listKeys = Arrays.asList(up.keySet().toArray());
+                listKeys.forEach(e -> {
+                    String key = o.toString() + "." + e.toString().replace(".", "-");
+                    update.set(key, up.get(e));
+                });
+            }
         }
         // 修改指定的值，如果数据不存在键就添加该键值对
         return template.updateFirst(query, update, MongoCollectionValue.CONFIG_PROJECT);
