@@ -6,6 +6,7 @@ import com.bee.team.fastgo.model.GitlabUserDoExample;
 import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
+import com.bee.team.fastgo.vo.project.req.DistributionGitlabUserVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
 
@@ -59,4 +60,14 @@ public interface GitlabUserBo extends com.alibaba.lava.base.LavaBo<com.bee.team.
      * @desc 获取所有gitlab用户信息
      */
     List<GitlabUserInfoResVo> getGitlabUserInfo();
+
+    /**
+     * @param
+     * @return
+     * @author hs
+     * @date 2020/8/7
+     * @desc 给gitlab用户分配系统用户
+     */
+
+    void distributionGitlabUser(DistributionGitlabUserVo vo);
 }

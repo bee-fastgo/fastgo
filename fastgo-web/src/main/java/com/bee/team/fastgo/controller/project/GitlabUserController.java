@@ -5,6 +5,7 @@ import com.bee.team.fastgo.model.UserDo;
 import com.bee.team.fastgo.service.project.GitlabUserBo;
 import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
+import com.bee.team.fastgo.vo.project.req.DistributionGitlabUserVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
 import com.spring.simple.development.core.component.mvc.res.ResBody;
@@ -69,6 +70,13 @@ public class GitlabUserController {
     public ResBody<List<GitlabUserInfoResVo>> getGitlabUsersInfo(){
         List<GitlabUserInfoResVo> gitlabUserInfoResVoList = gitlabUserBo.getGitlabUserInfo();
         return new ResBody().buildSuccessResBody(gitlabUserInfoResVoList);
+    }
+
+    @RequestMapping(value = "/distributionGitlabUser", method = RequestMethod.POST)
+    @ApiOperation(value = "给gitlab用户分配系统用户")
+    public ResBody<Void> distributionGitlabUser(@RequestBody DistributionGitlabUserVo vo){
+        gitlabUserBo.distributionGitlabUser(vo);
+        return new ResBody().buildSuccessResBody();
     }
 
 }

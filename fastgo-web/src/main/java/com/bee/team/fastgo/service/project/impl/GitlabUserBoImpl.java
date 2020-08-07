@@ -12,6 +12,7 @@ import com.bee.team.fastgo.service.project.GitlabUserBo;
 import com.bee.team.fastgo.utils.EmailUtil;
 import com.bee.team.fastgo.vo.project.GitlabUserInfoResVo;
 import com.bee.team.fastgo.vo.project.UserInfoResVo;
+import com.bee.team.fastgo.vo.project.req.DistributionGitlabUserVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserGetProjectVo;
 import com.bee.team.fastgo.vo.project.req.GitlabUserInfoVo;
 import com.bee.team.fastgo.vo.project.req.ProjectAddMemberVo;
@@ -51,6 +52,9 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
 
     @Autowired
     private ProjectPublisher publisher;
+
+    @Autowired
+    private GitlabUserDoMapperExt gitlabUserDoMapperExt;
 
 
     @Override
@@ -114,5 +118,13 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
     @Override
     public List<GitlabUserInfoResVo> getGitlabUserInfo() {
         return mapper.findGitlabUsersInfo();
+    }
+
+    @Override
+    public void distributionGitlabUser(DistributionGitlabUserVo vo) {
+        GitlabUserDo gitlabUserDo = new GitlabUserDo();
+        gitlabUserDo.setId(vo.getId().longValue());
+        gitlabUserDo.setUserId(vo.getUserId());
+        gitlabUserDoMapperExt.updateByPrimaryKeySelective(gitlabUserDo);
     }
 }
