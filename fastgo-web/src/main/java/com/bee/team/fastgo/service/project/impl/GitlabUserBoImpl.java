@@ -28,9 +28,9 @@ import org.springframework.util.ObjectUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_ACCESS_TYPE1;
-import static com.bee.team.fastgo.constant.ProjectConstant.PROJECT_ACCESS_TYPE2;
+import static com.bee.team.fastgo.constant.ProjectConstant.*;
 import static com.spring.simple.development.support.exception.ResponseCode.RES_DATA_NOT_EXIST;
+import static com.spring.simple.development.support.exception.ResponseCode.RES_ILLEGAL_OPERATION;
 
 @Service
 public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.model.GitlabUserDo, GitlabUserDoMapperExt, com.bee.team.fastgo.model.GitlabUserDoExample> implements GitlabUserBo {
@@ -122,8 +122,14 @@ public class GitlabUserBoImpl extends AbstractLavaBoImpl<com.bee.team.fastgo.mod
 
     @Override
     public void distributionGitlabUser(DistributionGitlabUserVo vo) {
-        GitlabUserDo gitlabUserDo = new GitlabUserDo();
-        gitlabUserDo.setId(vo.getId().longValue());
+        GitlabUserDo gitlabUserDo = gitlabUserDoMapperExt.selectByPrimaryKey(vo.getId().longValue());
+        if (gitlabUserDo == null){
+            throw new GlobalException(RES_DATA_NOT_EXIST,"gitlab账号不存在");
+        }
+        String role = mapper.queryUserRole(gitlabUserDo.getUserId());
+        if (!role.equals(ADMIN_USER)){
+            throw new GlobalException(RES_ILLEGAL_OPERATION,"该gitlab账号已经绑定用户");
+        }
         gitlabUserDo.setUserId(vo.getUserId());
         gitlabUserDoMapperExt.updateByPrimaryKeySelective(gitlabUserDo);
     }

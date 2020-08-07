@@ -37,4 +37,11 @@
         select id,gitlabUserName,gitlabName,gitlabEmail,status from t_gitlab_user
     </select>
 
+    <!--查询用户角色-->
+    <select id="queryUserRole" resultType="java.lang.String">
+        select roleName from t_user_role ur
+        inner join t_user u on u.roleId = ur.id
+        where u.id = #{gitlabUserId}
+    </select>
+
 </mapper>

@@ -51,4 +51,14 @@ public interface GitlabUserDoMapperExt extends com.alibaba.lava.base.LavaMapper<
      */
 
     List<GitlabUserInfoResVo> findGitlabUsersInfo();
+
+    /**
+     * @param gitlabUserId
+     * @return {@link String}
+     * @author hs
+     * @date 2020/8/7
+     * @desc 查询用户角色
+     */
+
+    String queryUserRole(Integer gitlabUserId);
 }
