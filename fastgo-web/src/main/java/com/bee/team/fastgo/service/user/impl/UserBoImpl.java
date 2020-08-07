@@ -92,6 +92,25 @@ public class UserBoImpl extends AbstractLavaBoImpl<UserDo, UserDoMapperExt, User
     }
 
     @Override
+    public void updatePassword(HttpServletRequest request, String userName, String newPassword) {
+        // 获取用户信息
+        UserDoExample example = new UserDoExample();
+        example.createCriteria().andUserNameEqualTo(userName).andIsDeletedEqualTo("n");
+        List<UserDo> list = selectByExample(example);
+        if (CollectionUtils.isEmpty(list)) {
+            throw new GlobalException(RES_DATA_NOT_EXIST, "用户不存在");
+        }
+        // 修改密码
+        UserDo userDo = list.get(0);
+        userDo.setUserPassword(Md5Utils.getTwoMD5Str(newPassword));
+        update(userDo);
+
+        // 修改密码成功就清空session
+        HttpSession session = request.getSession();
+        session.removeAttribute(CommonLoginValue.SESSION_LOGIN_KEY);
+    }
+
+    @Override
     public ResPageDTO ListUsers(Integer pageNum, Integer pageSize, String name) {
         // 设置默认分页
         ResPageDTO resPageDTO = new ResPageDTO();

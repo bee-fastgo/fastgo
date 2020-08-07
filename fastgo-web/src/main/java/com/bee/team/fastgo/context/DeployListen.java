@@ -51,7 +51,7 @@ public class DeployListen {
         ProjectDeployLogDoExample example = new ProjectDeployLogDoExample();
         SimpleDeployDTO simpleDeployDTO = deployEvent.getDeployDTO();
         VueDeployDTO vueDeployDTO = deployEvent.getVueDeployDTO();
-        example.createCriteria().andDeployLogIdEqualTo(simpleDeployDTO == null ? simpleDeployDTO.getDeployLogId() : vueDeployDTO.getDeployLogId());
+        example.createCriteria().andDeployLogIdEqualTo(simpleDeployDTO == null ? vueDeployDTO.getDeployLogId() : simpleDeployDTO.getDeployLogId());
         List<ProjectDeployLogDo>  projectDeployLogDos = projectDeployLogDoMapperExt.selectByExample(example);
         if (CollectionUtils.isEmpty(projectDeployLogDos)){
             throw new GlobalException(RES_DATA_NOT_EXIST,"项目部署记录不存在");
@@ -63,9 +63,11 @@ public class DeployListen {
         projectDo.setId(id.longValue());
         try{
             if (PROJECT_TYPE1.equals(type)){
+                //前台项目部署
                 VueDeployDTO deployDTO = deployEvent.getVueDeployDTO();
                 deployService.deploySimple(deployDTO);
             }else if (PROJECT_TYPE2.equals(type)){
+                //后台项目部署
                 SimpleDeployDTO deployDTO = deployEvent.getDeployDTO();
                 deployService.deploySimple(deployDTO);
             }

@@ -153,7 +153,7 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
         // 要修改的键值对,相当于set语句
         Update update = new Update();
         // 获取要修改的所有软件名
-        List<Object> listSet = Arrays.asList(updateMap.keySet().toArray());
+        List<Object> listSet = new ArrayList<>(Arrays.asList(updateMap.keySet().toArray()));
 
         List<Object> newList = new ArrayList<>();
         newList.addAll(listSet);
@@ -181,16 +181,13 @@ public class ConfigProjectBoImpl implements ConfigProjectBo {
 
                 // 清除已经修改的软件数据软件数据
                 updateMap.remove(e);
-                newList.remove(e);
-                if (CollectionUtils.isEmpty(newList)) {
-                    break;
-                }
+                listSet.remove(e);
             }
         }
 
         // 修改已存在的软件配置
-        if (!CollectionUtils.isEmpty(newList)) {
-            for (Object o : newList) {
+        if (!CollectionUtils.isEmpty(listSet)) {
+            for (Object o : listSet) {
                 Map<String, Object> up = (Map<String, Object>) updateMap.get(o);
                 List<Object> listKeys = Arrays.asList(up.keySet().toArray());
                 listKeys.forEach(e -> {

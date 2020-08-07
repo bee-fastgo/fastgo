@@ -175,7 +175,7 @@ public class ProjectDaoImpl implements ProjectDao {
     public Integer addProjectProfile(InsertBackProjectProfileVo insertBackProjectProfileVo) {
         //项目信息
         //flag 新增环境时，项目的状态
-        int flag = 1;
+        int flag;
         Map<String,Object> map = new HashMap<>();
 
         //1.项目，项目环境关联信息
@@ -192,7 +192,7 @@ public class ProjectDaoImpl implements ProjectDao {
         //2.项目环境，运行环境关联信息
         ProfileRunprofileRelationDo pDo = baseSupport.objectCopy(insertBackProjectProfileVo,ProfileRunprofileRelationDo.class);
         pDo.setProfileCode(projectProfileCode);
-        //调取服务器接口，创建新的运行环境,获取运行环境元配置,修改flag
+        //调取服务器接口，创建新的运行环境,获取运行环境元配置,修改项目状态（flag）
         AddServerRunProfileVo vo = new AddServerRunProfileVo();
         vo.setServerIp(insertBackProjectProfileVo.getRunServerIp());
         vo.setSoftwareName(insertBackProjectProfileVo.getProjectName());
@@ -221,7 +221,6 @@ public class ProjectDaoImpl implements ProjectDao {
                 ProfileSoftwareRelationDo psDo = baseSupport.objectCopy(softwareInfoVo,ProfileSoftwareRelationDo.class);
                 psDo.setPrifileCode(projectProfileCode);
                 psDo.setRunServerIp(softwareInfoVo.getSoftwareServerIp());
-
                 //获取软件元配置信息
                 ReqCreateSoftwareDTO dto = new ReqCreateSoftwareDTO();
                 dto.setIp(psDo.getRunServerIp());
@@ -230,9 +229,11 @@ public class ProjectDaoImpl implements ProjectDao {
                 dto.setProfileCode(projectProfileCode);
                 //数据库配置
                 if (softwareInfoVo.getSoftwareName().equals(SoftwareEnum.MYSQL.name().toLowerCase())){
+                    //检验数据库配置
                     Map<String,String> mysqlMap = mysqlConfigCheck(softwareInfoVo,insertBackProjectProfileVo);
                     dto.setConfig(mysqlMap);
                 }
+                //调取软件环境接口，获取软件环境基础信息
                 ResCreateSoftwareDTO softwareDTO = softwareProfileApi.createSoftwareEnvironment(dto);
                 psDo.setSoftwareCode(softwareDTO.getSoftwareCode());
                 psDo.setSoftwareConfig(softwareDTO.getSoftwareConfig());
@@ -258,7 +259,7 @@ public class ProjectDaoImpl implements ProjectDao {
             }
         }
 
-        //4.项目环境，配置中心关联信息
+        //4.插入项目配置到项目配置中心，获取配置中心code
         String configCode = configProjectBo.insertProject(map);
         ProfileConfigRelationDo pcDo = new ProfileConfigRelationDo();
         pcDo.setConfigCode(configCode);
